@@ -223,7 +223,7 @@ create table public.scoring_rules (
   label text not null check (char_length(label) between 1 and 120),
   field_key text not null check (field_key ~ '^[a-z][a-z0-9_]{0,39}$'),
   operator text not null check (operator in ('eq', 'neq', 'in', 'not_in', 'gt', 'gte', 'lt', 'lte', 'between', 'contains', 'is_true', 'answered', 'not_answered')),
-  condition_json jsonb not null default 'null'::jsonb check (pg_column_size(condition_json) <= 4096),
+  condition_json jsonb default 'null'::jsonb check (pg_column_size(condition_json) <= 4096),
   points integer not null check (points between -100 and 100),
   priority integer not null default 100 check (priority between 0 and 10000),
   enabled boolean not null default true,
@@ -266,7 +266,7 @@ create table public.distribution_rules (
   enabled boolean not null default true,
   field_key text not null check (field_key ~ '^[a-z][a-z0-9_]{0,39}$'),
   operator text not null check (operator in ('eq', 'neq', 'in', 'not_in', 'gt', 'gte', 'lt', 'lte', 'between', 'contains', 'is_true', 'answered', 'not_answered')),
-  condition_json jsonb not null default 'null'::jsonb check (pg_column_size(condition_json) <= 4096),
+  condition_json jsonb default 'null'::jsonb check (pg_column_size(condition_json) <= 4096),
   assign_to uuid not null,
   created_at timestamptz not null default now(),
   foreign key (organization_id, assign_to) references public.organization_members (organization_id, user_id) on delete cascade

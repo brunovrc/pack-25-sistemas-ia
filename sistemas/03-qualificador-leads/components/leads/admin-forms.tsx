@@ -100,11 +100,11 @@ export function DistributionRules({ rules, people }: { rules: DistributionRuleRo
   );
 }
 
-export function DistributeButton() {
+export function DistributeButton({ disabled }: { disabled: boolean }) {
   const [msg, setMsg] = useState<ActionState & { count?: number }>({});
   return (
     <div className="space-y-2">
-      <ActionButton label="Distribuir leads sem responsável" pendingLabel="Distribuindo…" variant="primary" action={async () => { const r = await distributePending(); setMsg(r); return r; }} />
+      <ActionButton label="Distribuir leads sem responsável" pendingLabel="Distribuindo…" variant="primary" disabled={disabled} action={async () => { const r = await distributePending(); setMsg(r); return r; }} />
       {msg.message && msg.ok ? <Alert tone="success">{msg.message}</Alert> : null}
     </div>
   );

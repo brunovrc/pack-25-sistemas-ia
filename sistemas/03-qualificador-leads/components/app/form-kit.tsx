@@ -113,7 +113,7 @@ export function FormShell({ onSubmit, pending, state, submitLabel, children, sec
 }
 
 /** Botão de ação simples (arquivar, concluir, apagar) com confirmação opcional e retorno visível. */
-export function ActionButton({ label, pendingLabel = '…', action, confirm, variant = 'secondary', onDone }: { label: string; pendingLabel?: string; action: () => Promise<ActionState>; confirm?: string; variant?: 'primary' | 'secondary' | 'danger' | 'ghost'; onDone?: (result: ActionState) => void }) {
+export function ActionButton({ label, pendingLabel = '…', action, confirm, variant = 'secondary', onDone, disabled = false }: { label: string; pendingLabel?: string; action: () => Promise<ActionState>; confirm?: string; variant?: 'primary' | 'secondary' | 'danger' | 'ghost'; onDone?: (result: ActionState) => void; disabled?: boolean }) {
   const router = useRouter();
   const [pending, start] = useTransition();
   const [message, setMessage] = useState<ActionState>({});
@@ -122,7 +122,7 @@ export function ActionButton({ label, pendingLabel = '…', action, confirm, var
       <Button
         type="button"
         variant={variant}
-        disabled={pending}
+        disabled={pending || disabled}
         onClick={() => {
           if (confirm && !window.confirm(confirm)) return;
           start(async () => {

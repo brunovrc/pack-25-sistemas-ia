@@ -258,6 +258,12 @@ begin
   assert (select count(*) from public.scoring_rules where model_id = nd) = 4, 'rascunho copia as 4 regras';
   assert (select status from public.scoring_models where id = d) = 'published', 'publicado segue vigente até publicar o novo';
   perform set_config('t.m2', nd::text, true);
+  -- um modelo único serve a vários formulários: regra sobre pergunta que o formulário não tem é ignorada
+  insert into public.scoring_rules (organization_id, model_id, label, field_key, operator, points) values (org, nd, 'Fora do formulário', 'inexistente_x', 'not_answered', 40);
+  r := public.lead_simulate(nd, '{"orcamento":8000,"prazo":"ate_30","decisor":true,"empresa":"Acme"}');
+  assert (r ->> 'score')::int = 100, 'sem o formulário, a regra vale (90 + 40 limitado a 100)';
+  r := public.lead_simulate(nd, '{"orcamento":8000,"prazo":"ate_30","decisor":true,"empresa":"Acme"}', current_setting('t.f')::uuid);
+  assert (r ->> 'score')::int = 90 and r::text not like '%inexistente_x%', 'com o formulário, a regra sobre pergunta inexistente é ignorada';
   raise notice 'PASS: simulador e novo rascunho a partir do publicado';
 end $$;
 reset role;

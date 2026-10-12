@@ -150,7 +150,7 @@ export function Simulator({ modelId, forms }: { modelId: string; forms: FormForS
         <Button type="button" disabled={pending} onClick={() => {
           setMsg(null);
           start(async () => {
-            const r = await simulateScore(modelId, { answers });
+            const r = await simulateScore(modelId, { answers }, formId);
             if (r.ok) setResult(r.result as ScoreResult); else { setResult(null); setMsg(r.message ?? 'Não foi possível simular.'); }
           });
         }}>{pending ? 'Calculando…' : 'Simular score'}</Button>

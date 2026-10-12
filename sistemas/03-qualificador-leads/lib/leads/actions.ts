@@ -399,14 +399,14 @@ export async function applySuggestedRules(templateId: string): Promise<ActionSta
 }
 
 const simulateSchema = z.object({ answers: z.record(z.string().max(40), z.unknown()) });
-export async function simulateScore(modelId: string, input: unknown): Promise<ActionState & { result?: unknown }> {
+export async function simulateScore(modelId: string, input: unknown, formId: string | null = null): Promise<ActionState & { result?: unknown }> {
   const auth = await withContext(MANAGERS);
   if ('error' in auth) return auth.error;
   const { ctx } = auth;
   if (!idSchema.safeParse(modelId).success) return fail('Registro inválido.');
   const parsed = simulateSchema.safeParse(input);
   if (!parsed.success || JSON.stringify(parsed.data).length > 20_000) return fail('Respostas inválidas.');
-  const { data, error } = await ctx.supabase.rpc('lead_simulate', { p_model: modelId, p_answers: parsed.data.answers });
+  const { data, error } = await ctx.supabase.rpc('lead_simulate', { p_model: modelId, p_answers: parsed.data.answers, p_form: formId && idSchema.safeParse(formId).success ? formId : null });
   if (error) return fail(dbMessage(error));
   return { ...succeed(), result: data };
 }
@@ -417,8 +417,13 @@ export async function setSeller(userId: string, active: boolean): Promise<Action
   if ('error' in auth) return auth.error;
   const { ctx } = auth;
   if (!idSchema.safeParse(userId).success) return fail('Registro inválido.');
-  const { error } = await ctx.supabase.from('lead_sellers').upsert({ organization_id: org(ctx), user_id: userId, active }, { onConflict: 'organization_id,user_id' });
-  if (error) return fail(dbMessage(error));
+  // atualiza e, se ainda não existe, insere (upsert exigiria permissão de alterar a chave, que as colunas protegidas não dão)
+  const upd = await ctx.supabase.from('lead_sellers').update({ active }).eq('organization_id', org(ctx)).eq('user_id', userId).select('user_id');
+  if (upd.error) return fail(dbMessage(upd.error));
+  if (!upd.data?.length) {
+    const { error } = await ctx.supabase.from('lead_sellers').insert({ organization_id: org(ctx), user_id: userId, active });
+    if (error) return fail(dbMessage(error));
+  }
   bust('/distribuicao');
   return succeed(active ? 'Vendedor ativo no rodízio.' : 'Vendedor pausado no rodízio.');
 }
@@ -510,11 +515,13 @@ export async function saveAiConfig(input: unknown): Promise<ActionState> {
   const parsed = aiConfigSchema.safeParse(input);
   if (!parsed.success) return fail('Verifique os campos.', fieldErrorsFrom(parsed.error));
   if (parsed.data.enabled && !readAiEnv()) return fail('Defina AI_API_KEY, AI_BASE_URL e AI_MODEL no ambiente do servidor antes de habilitar (docs/DEPLOYMENT.md).');
-  const { error } = await ctx.supabase.from('integration_configs').upsert(
-    { organization_id: org(ctx), provider: 'ai', enabled: parsed.data.enabled, config_json: { daily_limit: parsed.data.daily_limit }, secret_reference: 'AI_API_KEY' },
-    { onConflict: 'organization_id,provider' },
-  );
-  if (error) return fail(dbMessage(error));
+  const row = { enabled: parsed.data.enabled, config_json: { daily_limit: parsed.data.daily_limit }, secret_reference: 'AI_API_KEY' };
+  const upd = await ctx.supabase.from('integration_configs').update(row).eq('organization_id', org(ctx)).eq('provider', 'ai').select('id');
+  if (upd.error) return fail(dbMessage(upd.error));
+  if (!upd.data?.length) {
+    const { error } = await ctx.supabase.from('integration_configs').insert({ organization_id: org(ctx), provider: 'ai', ...row });
+    if (error) return fail(dbMessage(error));
+  }
   bust('/configuracoes');
   return succeed(parsed.data.enabled ? 'Análise por IA habilitada.' : 'Análise por IA desabilitada.');
 }

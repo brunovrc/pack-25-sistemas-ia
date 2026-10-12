@@ -17,14 +17,15 @@ export type BoardLead = {
   owner: string | null; source: string | null; canWrite: boolean;
 };
 
-function Card({ lead, onMove }: { lead: BoardLead; onMove: (id: string, to: LeadStatus) => void }) {
-  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: lead.id, disabled: !lead.canWrite || TRANSITIONS[lead.status].length === 0 });
+function Card({ lead, busy, onMove }: { lead: BoardLead; busy: boolean; onMove: (id: string, to: LeadStatus) => void }) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: lead.id, disabled: busy || !lead.canWrite || TRANSITIONS[lead.status].length === 0 });
   const targets = TRANSITIONS[lead.status];
   return (
     <li
       ref={setNodeRef}
       style={transform ? { transform: `translate3d(${transform.x}px, ${transform.y}px, 0)` } : undefined}
-      className={cn('rounded-md border border-border bg-card p-3 text-sm shadow-sm', isDragging && 'z-10 opacity-80 shadow-lg')}
+      aria-busy={busy}
+      className={cn('rounded-md border border-border bg-card p-3 text-sm shadow-sm', isDragging && 'z-10 opacity-80 shadow-lg', busy && 'opacity-60')}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
@@ -43,7 +44,7 @@ function Card({ lead, onMove }: { lead: BoardLead; onMove: (id: string, to: Lead
       {lead.canWrite && targets.length > 0 ? (
         <div className="mt-2">
           <label className="sr-only" htmlFor={`mv-${lead.id}`}>Mover {lead.name} para</label>
-          <Select id={`mv-${lead.id}`} value="" onChange={(e) => { if (e.target.value) onMove(lead.id, e.target.value as LeadStatus); }} className="min-h-9 text-xs">
+          <Select id={`mv-${lead.id}`} value="" disabled={busy} onChange={(e) => { if (e.target.value) onMove(lead.id, e.target.value as LeadStatus); }} className="min-h-9 text-xs">
             <option value="">Mover para…</option>
             {targets.map((s) => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
           </Select>
@@ -53,7 +54,7 @@ function Card({ lead, onMove }: { lead: BoardLead; onMove: (id: string, to: Lead
   );
 }
 
-function Column({ status, leads, activeFrom, onMove }: { status: LeadStatus; leads: BoardLead[]; activeFrom: LeadStatus | null; onMove: (id: string, to: LeadStatus) => void }) {
+function Column({ status, leads, activeFrom, busy, onMove }: { status: LeadStatus; leads: BoardLead[]; activeFrom: LeadStatus | null; busy: ReadonlySet<string>; onMove: (id: string, to: LeadStatus) => void }) {
   const { setNodeRef, isOver } = useDroppable({ id: status });
   const allowed = activeFrom === null || canTransition(activeFrom, status);
   return (
@@ -63,8 +64,8 @@ function Column({ status, leads, activeFrom, onMove }: { status: LeadStatus; lea
       className={cn('flex w-72 shrink-0 flex-col rounded-lg border border-border bg-black/[0.03] p-3 dark:bg-white/[0.03]', isOver && allowed && 'ring-2 ring-ring', activeFrom !== null && !allowed && 'opacity-50')}
     >
       <h3 className="mb-3 flex items-center justify-between text-sm font-semibold">{STATUS_LABELS[status]} <span className="rounded-full border border-border px-2 text-xs tabular-nums text-muted">{leads.length}</span></h3>
-      <ul className="flex min-h-16 flex-col gap-2">
-        {leads.map((l) => <Card key={l.id} lead={l} onMove={onMove} />)}
+      <ul className="flex max-h-[70vh] min-h-16 flex-col gap-2 overflow-y-auto">
+        {leads.map((l) => <Card key={l.id} lead={l} busy={busy.has(l.id)} onMove={onMove} />)}
         {leads.length === 0 ? <li className="rounded-md border border-dashed border-border p-3 text-center text-xs text-muted">Nenhum lead</li> : null}
       </ul>
     </section>
@@ -82,22 +83,25 @@ export function Kanban({ leads, reasons }: { leads: BoardLead[]; reasons: string
   const [ask, setAsk] = useState<{ id: string } | null>(null);
   const [reason, setReason] = useState('');
   const [other, setOther] = useState('');
+  const [busy, setBusy] = useState<ReadonlySet<string>>(new Set());
   const [, start] = useTransition();
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }), useSensor(KeyboardSensor));
 
   function apply(id: string, to: LeadStatus, why: string) {
     const before = rows;
     setRows((r) => r.map((l) => (l.id === id ? { ...l, status: to } : l)));
+    setBusy((b) => new Set(b).add(id)); // uma mudança por vez em cada lead: a próxima parte do estado já confirmado
     start(async () => {
       const res = await changeStatus(id, { status: to, reason: why });
       if (res.ok) { setMessage({ ok: true, text: 'Status atualizado.' }); router.refresh(); }
       else { setRows(before); setMessage({ ok: false, text: res.message ?? 'Não foi possível mover o lead.' }); }
+      setBusy((b) => { const n = new Set(b); n.delete(id); return n; });
     });
   }
 
   function request(id: string, to: LeadStatus) {
     const lead = rows.find((l) => l.id === id);
-    if (!lead || lead.status === to) return;
+    if (!lead || lead.status === to || busy.has(id)) return;
     if (!canTransition(lead.status, to)) { setMessage({ ok: false, text: `Não é possível ir de «${STATUS_LABELS[lead.status]}» para «${STATUS_LABELS[to]}».` }); return; }
     if (to === 'disqualified') { setAsk({ id }); setReason(''); setOther(''); return; }
     apply(id, to, '');
@@ -113,8 +117,8 @@ export function Kanban({ leads, reasons }: { leads: BoardLead[]; reasons: string
     <div>
       <div className="mb-3 min-h-10" aria-live="polite">{message ? <Alert tone={message.ok ? 'success' : 'error'}>{message.text}</Alert> : null}</div>
       <DndContext sensors={sensors} onDragStart={(e) => setActiveFrom(rows.find((l) => l.id === String(e.active.id))?.status ?? null)} onDragEnd={onDragEnd} onDragCancel={() => setActiveFrom(null)}>
-        <div className="flex gap-4 overflow-x-auto pb-4" tabIndex={0} aria-label="Quadro do pipeline (role para o lado)">
-          {LEAD_STATUSES.map((s) => <Column key={s} status={s} leads={rows.filter((l) => l.status === s)} activeFrom={activeFrom} onMove={request} />)}
+        <div className="relative flex gap-4 overflow-x-auto pb-4" tabIndex={0} aria-label="Quadro do pipeline (role para o lado)">
+          {LEAD_STATUSES.map((s) => <Column key={s} status={s} leads={rows.filter((l) => l.status === s)} activeFrom={activeFrom} busy={busy} onMove={request} />)}
         </div>
       </DndContext>
       <Modal open={ask !== null} onClose={() => setAsk(null)} title="Motivo da desqualificação">

@@ -114,15 +114,25 @@ begin
 end $$;
 
 -- ======================================================================= score do lead
-create function private.lead_score_lead(p_lead uuid, p_submission uuid, p_answers jsonb, p_hidden text[]) returns jsonb
+-- Regras do modelo em JSON. Com o esquema do formulário, regras sobre perguntas que o formulário NÃO tem são ignoradas
+-- (não pontuam nem aparecem como dado ausente): um modelo único serve a vários formulários.
+create function private.lead_rules_json(p_model uuid, p_schema jsonb) returns jsonb
+language sql stable security invoker set search_path = '' as $$
+  select coalesce(jsonb_agg(jsonb_build_object('id', r.id, 'label', r.label, 'field_key', r.field_key, 'operator', r.operator, 'condition', r.condition_json, 'points', r.points, 'enabled', r.enabled) order by r.priority, r.created_at), '[]'::jsonb)
+  from public.scoring_rules r
+  where r.model_id = p_model and (p_schema is null or exists (select 1 from jsonb_array_elements(p_schema -> 'fields') f where f ->> 'key' = r.field_key));
+$$;
+revoke all on function private.lead_rules_json(uuid, jsonb) from public;
+grant execute on function private.lead_rules_json(uuid, jsonb) to authenticated;
+
+create function private.lead_score_lead(p_lead uuid, p_submission uuid, p_answers jsonb, p_hidden text[], p_schema jsonb default null) returns jsonb
 language plpgsql security definer set search_path = '' as $$
 declare l public.leads%rowtype; m public.scoring_models%rowtype; rules jsonb; res jsonb;
 begin
   select * into l from public.leads where id = p_lead;
   select * into m from public.scoring_models where organization_id = l.organization_id and status = 'published';
   if not found then return null; end if;
-  select coalesce(jsonb_agg(jsonb_build_object('id', r.id, 'label', r.label, 'field_key', r.field_key, 'operator', r.operator, 'condition', r.condition_json, 'points', r.points, 'enabled', r.enabled) order by r.priority, r.created_at), '[]'::jsonb)
-    into rules from public.scoring_rules r where r.model_id = m.id;
+  rules := private.lead_rules_json(m.id, p_schema);
   res := public.lead_score_compute(rules, p_answers, m.thresholds_json, p_hidden);
   insert into public.lead_score_events (organization_id, lead_id, scoring_model_id, submission_id, score, classification, qualified, explanation_json)
   values (l.organization_id, l.id, m.id, p_submission, (res ->> 'score')::int, res ->> 'classification', (res ->> 'qualified')::boolean,
@@ -130,7 +140,7 @@ begin
   update public.leads set current_score = (res ->> 'score')::int, qualification = res ->> 'classification', qualified = (res ->> 'qualified')::boolean where id = l.id;
   return res;
 end $$;
-revoke all on function private.lead_score_lead(uuid, uuid, jsonb, text[]) from public;
+revoke all on function private.lead_score_lead(uuid, uuid, jsonb, text[], jsonb) from public;
 
 -- Recalcula com o modelo vigente (ACRESCENTA um evento; o histórico fica).
 create function public.lead_rescore(p_lead uuid) returns jsonb
@@ -144,7 +154,7 @@ begin
   if not found then raise exception 'o lead não tem respostas de formulário' using errcode = '23514'; end if;
   select * into v from public.lead_form_versions where id = s.form_version_id;
   chk := public.lead_validate_answers(v.schema_json, v.conditional_logic_json, s.answers_json);
-  return private.lead_score_lead(l.id, s.id, s.answers_json, array(select jsonb_array_elements_text(chk -> 'hidden')));
+  return private.lead_score_lead(l.id, s.id, s.answers_json, array(select jsonb_array_elements_text(chk -> 'hidden')), v.schema_json);
 end $$;
 
 create function public.lead_rescore_all(p_org uuid) returns integer
@@ -206,16 +216,17 @@ begin
   return jsonb_build_object('ok', true, 'version', m.version);
 end $$;
 
--- Simula um lead antes de ativar as regras (usa as regras do modelo informado).
-create function public.lead_simulate(p_model uuid, p_answers jsonb) returns jsonb
+-- Simula um lead antes de ativar as regras (usa as regras do modelo informado; com p_form, só as que valem para as perguntas do formulário).
+create function public.lead_simulate(p_model uuid, p_answers jsonb, p_form uuid default null) returns jsonb
 language plpgsql stable security invoker set search_path = '' as $$
-declare m public.scoring_models%rowtype; rules jsonb;
+declare m public.scoring_models%rowtype; sch jsonb;
 begin
   select * into m from public.scoring_models where id = p_model;
   if not found then raise exception 'modelo não encontrado' using errcode = 'P0002'; end if;
-  select coalesce(jsonb_agg(jsonb_build_object('id', r.id, 'label', r.label, 'field_key', r.field_key, 'operator', r.operator, 'condition', r.condition_json, 'points', r.points, 'enabled', r.enabled) order by r.priority, r.created_at), '[]'::jsonb)
-    into rules from public.scoring_rules r where r.model_id = m.id;
-  return public.lead_score_compute(rules, p_answers, m.thresholds_json);
+  if p_form is not null then
+    select v.schema_json into sch from public.lead_form_versions v where v.form_id = p_form order by v.version_number desc limit 1;
+  end if;
+  return public.lead_score_compute(private.lead_rules_json(m.id, sch), p_answers, m.thresholds_json);
 end $$;
 
 -- ======================================================================= formulários (construtor, versões, publicação)
@@ -409,7 +420,7 @@ begin
   values (f.organization_id, f.id, v.id, lid, clean, coalesce(p_consent, false), p_submission_key, dup, v_source, u_source, u_medium, u_campaign, u_content, u_term, landing)
   returning id into sid;
 
-  perform private.lead_score_lead(lid, sid, clean, hidden);
+  perform private.lead_score_lead(lid, sid, clean, hidden, v.schema_json);
   perform private.lead_assign_auto(lid, clean);
   return jsonb_build_object('ok', true);
 end $$;
@@ -569,7 +580,7 @@ begin
   foreach f in array array[
     'public.lead_validate_form_def(jsonb, jsonb, jsonb)', 'public.lead_validate_answers(jsonb, jsonb, jsonb)', 'public.lead_score_compute(jsonb, jsonb, jsonb, text[])',
     'public.lead_assign(uuid, uuid)', 'public.lead_distribute_pending(uuid)', 'public.lead_rescore(uuid)', 'public.lead_rescore_all(uuid)',
-    'public.lead_model_draft(uuid)', 'public.lead_model_publish(uuid)', 'public.lead_simulate(uuid, jsonb)',
+    'public.lead_model_draft(uuid)', 'public.lead_model_publish(uuid)', 'public.lead_simulate(uuid, jsonb, uuid)',
     'public.lead_form_create(uuid, text, text, jsonb, jsonb, jsonb)', 'public.lead_form_save_draft(uuid, jsonb)', 'public.lead_form_publish(uuid)',
     'public.lead_form_archive(uuid, boolean)', 'public.lead_form_duplicate(uuid, text, text)',
     'public.lead_create(uuid, jsonb)', 'public.lead_import(uuid, jsonb, boolean)', 'public.lead_change_status(uuid, public.lead_status, text)',

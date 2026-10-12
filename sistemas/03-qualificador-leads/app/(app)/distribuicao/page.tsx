@@ -23,7 +23,8 @@ export default async function DistributionPage() {
       <div className="grid gap-4 lg:grid-cols-2">
         <Card title="Leads aguardando" description="Leads em aberto sem responsável.">
           <p className="mb-3 text-3xl font-semibold tabular-nums">{waiting}</p>
-          {waiting > 0 ? <DistributeButton /> : <p className="text-sm text-muted">Nenhum lead aguardando.</p>}
+          <DistributeButton disabled={waiting === 0} />
+          {waiting === 0 ? <p className="mt-2 text-sm text-muted">Nenhum lead aguardando.</p> : null}
           {settings.assignment_strategy === 'manual' && waiting > 0 ? <p className="mt-2 text-xs text-muted">Na estratégia manual, atribua pelo lead ou pelo pipeline; o botão acima distribui conforme a estratégia atual, então mude a estratégia antes se quiser automatizar.</p> : null}
         </Card>
         <Card title="Vendedores no rodízio"><SellerList sellers={sellers} people={options} /></Card>
