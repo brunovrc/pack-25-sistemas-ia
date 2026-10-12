@@ -1,6 +1,6 @@
 # FEATURES — CRM Completo
 
-Status permitido: TODO, IN_PROGRESS, VERIFIED (com evidência: arquivo/teste), NÃO EXECUTADO.
+Estados usados: VERIFIED (com evidência), PENDENTE ou NÃO EXECUTADO.
 Os testes E2E ficam em `tests/e2e/`, os unitários em `tests/unit/` e os de banco em `supabase/tests/`.
 
 ## Funcionalidades

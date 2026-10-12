@@ -1,5 +1,5 @@
 # MEMORY — CRM COMPLETO
-Atualizado em: 2026-10-12 | Versão: 0.2.0 | Estado: EM_DESENVOLVIMENTO (aguardando CI verde para VALIDADO)
+Atualizado em: 2026-10-12 | Versão: 0.2.0 | Estado: VALIDADO (CI verde em 2026-10-12)
 
 ## Missão do sistema
 CRM B2B: do lead ao negócio fechado, com funil, metas, ranking e indicadores calculados do banco.
@@ -13,7 +13,7 @@ Todas as funcionalidades de `docs/FEATURES.md` (24 testes da seção 13, exceto 
 
 ## Pendências e riscos
 - Instalação isolada: `export-system.mjs` → install, lint, typecheck, 114 unit, build, `test:db` e 33 E2E ok (2026-10-12). No Windows, use caminho curto: o caminho longo quebra o Vitest/Vite.
-- CI do CRM criado, ainda sem execução verde registrada.
+- CI do CRM (web + e2e) verde no GitHub em 2026-10-12.
 - Risco LGPD: médio.
 
 ## Decisões relevantes
@@ -26,7 +26,7 @@ Todas as funcionalidades de `docs/FEATURES.md` (24 testes da seção 13, exceto 
 - Última verificação local: 2026-10-12, tudo verde (ver acima). Deploy: não configurado (responsabilidade de quem implanta).
 
 ## Próxima tarefa recomendada
-1. Conferir o CI no GitHub; estando verde, marcar VALIDADO no catálogo e regenerar o README do hub.
+1. Publicar o repositório `crm-completo` (publish-mirrors) quando o titular decidir; versão/tag v0.2.0.
 
 ## Referências
 - docs/PLANO_IMPLEMENTACAO.md; docs/FEATURES.md; docs/METRICS.md; docs/DATA_MODEL.md; docs/DEPLOYMENT.md
