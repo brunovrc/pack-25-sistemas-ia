@@ -13,7 +13,7 @@ Next 16.4.0 + React 19.3.0 + TypeScript 6.0.3 + Tailwind 4 + Supabase (ADR-009).
 - Core de banco (orgs, membros, papéis, RLS, auditoria imutável, solicitações LGPD) — `node scripts/test-core-db.mjs`: todos os testes passaram em Postgres 17 (Docker). Teste de mutação: política quebrada propositalmente foi reprovada pela suíte.
 - Auditoria de referências/licenças — `docs/REFERENCE_AUDIT.md`.
 - Exportador por sistema (`export-system.mjs`): recusou sistema PLANEJADO (exit 3); reprovou pacote contaminado com `workspace:`, referência fora da pasta e JWT (exit 1); exportou pasta limpa com manifesto e checksums. Gerador idempotente (2ª execução: 0 criados).
-- Repositório público `brunovrc/pack-25-sistemas-ia` com secret scanning, push protection e proteção do `main` (sem force-push; checks do CI obrigatórios). CI: ver histórico de execuções. `publish-mirrors.yml` **NÃO EXECUTADO** (sem sistema VALIDADO).
+- Repositório público `pack-25-sistemas-ia/pack-25-sistemas-ia` (organização `pack-25-sistemas-ia`, transferido em 2026-10-12) com secret scanning, push protection e proteção do `main` (sem force-push; checks do CI obrigatórios). CI: ver histórico de execuções. `publish-mirrors.yml` **NÃO EXECUTADO** (sem sistema VALIDADO).
 
 ## Em implementação
 - Nada em andamento.
