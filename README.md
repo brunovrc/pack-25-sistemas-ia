@@ -35,24 +35,19 @@
 | 24 | Gestão Escolar | Verticais | `pack25-24-escolas` | PLANEJADO |
 | 25 | Eventos e Credenciamento | Verticais | `pack25-25-eventos` | PLANEJADO |
 
-## Como obter só o sistema que você quer
+## Como usar um sistema (o caminho simples)
 
-**Opção A — repositório do sistema (mais simples):** cada sistema validado é publicado em um repositório próprio.
+1. Na área de membros, abra a aula e clique no link do repositório.
+2. Escolha o sistema na lista acima e entre no repositório dele (`pack25-NN-…`).
+3. Clique em **Code** e copie o link de clone.
+4. No VS Code, abra a pasta do seu projeto, cole o link num `git clone` e abra a pasta com **Claude Code** ou **Codex**.
+5. Peça ao agente para ler o `AGENTS.md` e o `MEMORY.md` e adapte para a empresa do seu cliente.
 
-```bash
-git clone https://github.com/<ORG>/pack25-01-crm-comercial.git
-```
+Passo a passo completo, com os cuidados de privacidade, em [guias/primeiros-passos.md](guias/primeiros-passos.md).
 
-**Opção B — só a pasta, a partir deste repositório (sparse checkout):**
+> Os repositórios individuais só são criados quando o sistema passa nos testes de qualidade. Até lá, a coluna "Repositório individual" mostra o nome reservado, não um link ativo.
 
-```bash
-git clone --filter=blob:none --no-checkout https://github.com/<ORG>/pack-25-sistemas-ia.git
-cd pack-25-sistemas-ia
-git sparse-checkout set --cone sistemas/01-crm-comercial
-git checkout main
-```
-
-O GitHub **não** permite `git clone` de uma subpasta; use uma das opções acima. Repositórios privados exigem autenticação e permissão de leitura. Detalhes em [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md).
+Alternativa (apenas uma pasta deste repositório, via *sparse checkout*) em [docs/DISTRIBUTION.md](docs/DISTRIBUTION.md). O GitHub **não** permite `git clone` de uma subpasta.
 
 ## Pilares
 

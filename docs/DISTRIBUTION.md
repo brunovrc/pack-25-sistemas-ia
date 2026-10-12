@@ -44,6 +44,8 @@ Um sistema só é exportável quando `status` ≠ `PLANEJADO`; só é **publicá
 
 Definido pelo titular em 2026-10-12: o comprador adquire o **curso** na plataforma e recebe por e-mail as aulas com os **links dos repositórios**. A plataforma entrega o e-mail; ela **não** cria acesso ao GitHub.
 
+Fluxo do aluno (definido pelo titular em 2026-10-12): aula na área de membros → link do repositório → escolhe o sistema → copia o link de clone → cola no VS Code com Claude/Codex → clona na pasta do projeto → adapta para a empresa do cliente. Por isso **cada sistema tem o próprio repositório com link de clone próprio** (`pack25-NN-slug`) e README/AGENTS/MEMORY que funcionam sozinhos.
+
 Consequências:
 - **Repositório público = qualquer pessoa com o link acessa**, comprando ou não. O que protege o produto passa a ser a licença (`LICENSE.md`), não o acesso técnico. O titular aceitou esse modelo (hub público desde 2026-10-12).
 - **Repositório privado não funciona só com link**: o comprador precisaria de convite individual no GitHub. Isso exigiria pedir o usuário do GitHub na compra e automatizar o convite (webhook da plataforma → API do GitHub), com atrito e fila de suporte.
