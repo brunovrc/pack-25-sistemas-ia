@@ -46,6 +46,12 @@ export function formatDate(value: string | null | undefined): string {
   return m ? `${m[3]}/${m[2]}/${m[1]}` : '—';
 }
 
+const dateOnly = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeZone: TZ });
+/** Instante ISO -> data no horário de Brasília (sem hora). */
+export function formatDateBR(value: string | null | undefined): string {
+  return value ? dateOnly.format(new Date(value)) : '—';
+}
+
 const dateTime = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'short', timeStyle: 'short', timeZone: TZ });
 export function formatDateTimeBR(value: string | null | undefined): string {
   return value ? dateTime.format(new Date(value)) : '—';

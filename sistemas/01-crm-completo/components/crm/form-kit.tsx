@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState, useTransition, type ReactNode } from 'react';
+import { useId, useState, useTransition, type ReactNode } from 'react';
 import { useForm, type DefaultValues, type FieldValues, type Path, type UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { ZodType } from 'zod';
@@ -57,18 +57,20 @@ function errorOf<T extends FieldValues>(form: UseFormReturn<T, unknown, unknown>
 
 export function TextField<T extends FieldValues>({ form, name, label, hint, type = 'text', placeholder, inputMode, maxLength }: FieldProps<T> & { type?: string; placeholder?: string; inputMode?: 'text' | 'numeric' | 'decimal' | 'email' | 'tel'; maxLength?: number }) {
   const errors = errorOf(form, name);
+  const id = useId(); // id único: várias telas têm vários formulários com o mesmo nome de campo
   return (
-    <Field label={label} name={name} hint={hint} errors={errors}>
-      <Input id={name} type={type} placeholder={placeholder} inputMode={inputMode} maxLength={maxLength} aria-invalid={Boolean(errors)} {...form.register(name)} />
+    <Field label={label} name={id} hint={hint} errors={errors}>
+      <Input id={id} type={type} placeholder={placeholder} inputMode={inputMode} maxLength={maxLength} aria-invalid={Boolean(errors)} {...form.register(name)} />
     </Field>
   );
 }
 
 export function SelectField<T extends FieldValues>({ form, name, label, hint, options, empty }: FieldProps<T> & { options: Opt[]; empty?: string }) {
   const errors = errorOf(form, name);
+  const id = useId();
   return (
-    <Field label={label} name={name} hint={hint} errors={errors}>
-      <Select id={name} aria-invalid={Boolean(errors)} {...form.register(name)}>
+    <Field label={label} name={id} hint={hint} errors={errors}>
+      <Select id={id} aria-invalid={Boolean(errors)} {...form.register(name)}>
         {empty !== undefined ? <option value="">{empty}</option> : null}
         {options.map((o) => (
           <option key={o.value} value={o.value}>{o.label}</option>
@@ -80,9 +82,10 @@ export function SelectField<T extends FieldValues>({ form, name, label, hint, op
 
 export function TextAreaField<T extends FieldValues>({ form, name, label, hint, maxLength }: FieldProps<T> & { maxLength?: number }) {
   const errors = errorOf(form, name);
+  const id = useId();
   return (
-    <Field label={label} name={name} hint={hint} errors={errors}>
-      <Textarea id={name} maxLength={maxLength} aria-invalid={Boolean(errors)} {...form.register(name)} />
+    <Field label={label} name={id} hint={hint} errors={errors}>
+      <Textarea id={id} maxLength={maxLength} aria-invalid={Boolean(errors)} {...form.register(name)} />
     </Field>
   );
 }

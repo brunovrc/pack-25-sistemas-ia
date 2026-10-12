@@ -112,7 +112,8 @@ export function KanbanBoard({ stages, opportunities, reasons }: { stages: KStage
     <>
       {message ? <div className="mb-3"><Alert tone="error">{message}</Alert></div> : null}
       <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd} onDragCancel={() => setDragging(null)}>
-        <div className="flex gap-4 overflow-x-auto pb-4" aria-busy={busy}>
+        {/* relative: sem isso os rótulos sr-only (position:absolute) escapam do recorte e alargam a página no celular */}
+        <div className="relative flex gap-4 overflow-x-auto pb-4" aria-busy={busy}>
           {stages.map((s) => <Column key={s.id} stage={s} stages={stages} opps={items.filter((o) => o.stage_id === s.id)} onMove={requestMove} />)}
         </div>
         <DragOverlay>{dragging ? <div className="w-72"><ul><Card opp={dragging} stages={stages} onMove={() => {}} overlay /></ul></div> : null}</DragOverlay>

@@ -3,7 +3,7 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/primitives';
-import { formatBRL, formatDate, formatDateTimeBR } from '@/lib/crm/format';
+import { formatBRL, formatDate, formatDateBR, formatDateTimeBR } from '@/lib/crm/format';
 import { ACTIVITY_KIND_LABELS, LEAD_STATUS_LABELS, PRIORITY_LABELS, TEMPERATURE_LABELS } from '@/lib/crm/validation';
 import { DataTable } from './data-table';
 import { CompleteActivityButton } from './row-actions';
@@ -26,7 +26,7 @@ export function LeadsTable({ rows, sources, owners, empty }: { rows: LeadRow[]; 
     { accessorKey: 'status', header: 'Status', cell: ({ row }) => <Badge tone={LEAD_TONE[row.original.status] ?? 'neutral'}>{LEAD_STATUS_LABELS[row.original.status] ?? row.original.status}</Badge> },
     { accessorKey: 'temperature', header: 'Classificação', cell: ({ row }) => <Badge tone={TEMP_TONE[row.original.temperature] ?? 'neutral'}>{TEMPERATURE_LABELS[row.original.temperature] ?? row.original.temperature}</Badge> },
     { id: 'owner', header: 'Responsável', accessorFn: (r) => (r.owner_id ? owners[r.owner_id] ?? '' : ''), cell: ({ getValue }) => (getValue() as string) || <span className="text-muted">Sem responsável</span> },
-    { accessorKey: 'created_at', header: 'Criado em', cell: ({ getValue }) => <span className="whitespace-nowrap text-muted">{formatDateTimeBR(getValue() as string)}</span> },
+    { accessorKey: 'created_at', header: 'Criado em', cell: ({ getValue }) => <span className="whitespace-nowrap text-muted">{formatDateBR(getValue() as string)}</span> },
   ];
   return <DataTable columns={columns} data={rows} caption="Leads" empty={empty} />;
 }
@@ -40,7 +40,7 @@ export function CompaniesTable({ rows, owners, empty }: { rows: CompanyRow[]; ow
     { accessorKey: 'segment', header: 'Segmento', cell: ({ getValue }) => (getValue() as string | null) ?? dash },
     { accessorKey: 'phone', header: 'Telefone', cell: ({ getValue }) => (getValue() as string | null) ?? dash },
     { id: 'owner', header: 'Responsável', accessorFn: (r) => (r.owner_id ? owners[r.owner_id] ?? '' : ''), cell: ({ getValue }) => (getValue() as string) || dash },
-    { accessorKey: 'created_at', header: 'Criada em', cell: ({ getValue }) => <span className="whitespace-nowrap text-muted">{formatDateTimeBR(getValue() as string)}</span> },
+    { accessorKey: 'created_at', header: 'Criada em', cell: ({ getValue }) => <span className="whitespace-nowrap text-muted">{formatDateBR(getValue() as string)}</span> },
   ];
   return <DataTable columns={columns} data={rows} caption="Empresas" empty={empty} />;
 }

@@ -63,6 +63,8 @@ test('configurações, equipe, auditoria e solicitação LGPD funcionam e persis
   await page.getByLabel('Cor primária').fill('#aa2244');
   await page.getByRole('button', { name: 'Salvar configurações' }).click();
   await expect(page.getByText('Configurações salvas.')).toBeVisible();
+  // a cor da marca precisa aparecer SEM recarregar (navegação suave sob a CSP estrita)
+  await expect.poll(() => page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--primary').trim())).toBe('#aa2244');
   await page.reload();
   await expect(page.getByLabel('Nome exibido')).toHaveValue('Marca E2E');
   const primary = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--primary').trim());

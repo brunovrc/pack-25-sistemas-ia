@@ -1,5 +1,3 @@
-import { headers } from 'next/headers';
-import Image from 'next/image';
 import Link from 'next/link';
 import { signOut } from '@/app/(auth)/actions';
 import { switchOrganization } from '@/app/(app)/actions';
@@ -7,12 +5,12 @@ import { NavLink } from '@/components/ui/client';
 import { Button, Select } from '@/components/ui/primitives';
 import { requireContext } from '@/lib/auth/session';
 import { systemConfig } from '@/lib/system.config';
-import { readableOn, safePrimary } from '@/lib/utils';
+import { themeParam } from '@/lib/theme';
+import { safePrimary } from '@/lib/utils';
 import { isAdminRole, isPrivacyRole, ROLE_LABELS } from '@/lib/validation/org';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const ctx = await requireContext();
-  const nonce = (await headers()).get('x-nonce') ?? undefined;
   const { role, organization_id } = ctx.membership;
 
   const { data: settings } = await ctx.supabase
@@ -43,8 +41,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
   return (
     <>
-      {/* Tema da organização: cor validada (#RRGGBB) e nonce da CSP; nunca estilo inline em atributo. */}
-      <style nonce={nonce}>{`:root{--primary:${primary};--primary-foreground:${readableOn(primary)}}`}</style>
+      {/* Tema da organização como folha de estilo do próprio domínio (ver lib/theme.ts): funciona em qualquer navegação sob a CSP. */}
+      <link rel="stylesheet" href={`/theme.css?c=${themeParam(primary)}`} precedence="theme" />
       <a href="#conteudo" className="sr-only focus:not-sr-only focus:absolute focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-card focus:px-3 focus:py-2">
         Ir para o conteúdo
       </a>
@@ -52,7 +50,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         <aside className="hidden border-r border-border bg-card p-4 md:block">
           <Link href="/dashboard" className="mb-6 flex items-center gap-2 px-3 text-base font-semibold">
             {/* Logotipo trocável: substitua public/brand/logo.svg (ou ajuste lib/system.config.ts). */}
-            <Image src={systemConfig.logo} alt="" width={28} height={28} unoptimized className="size-7 shrink-0 rounded" />
+            {/* <img> e não next/image: o next/image injeta style="color:transparent", bloqueado pela CSP estrita. É um SVG estático. */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={systemConfig.logo} alt="" width={28} height={28} className="size-7 shrink-0 rounded" />
             <span className="truncate">{displayName}</span>
           </Link>
           {links}

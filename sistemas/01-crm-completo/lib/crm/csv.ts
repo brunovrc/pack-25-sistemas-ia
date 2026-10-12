@@ -21,15 +21,17 @@ export function csvNumber(value: number | null | undefined, decimals = 2): strin
   return value.toFixed(decimals).replace('.', ',');
 }
 
-export type CsvCell = string | number | null | undefined;
+/** `{ int }` = contagem (sem casas decimais); `number` = valor em reais (2 casas, vírgula decimal). */
+export type CsvCell = string | number | null | undefined | { int: number };
+export const int = (n: number): CsvCell => ({ int: n });
 
 /** `;` como separador e vírgula decimal (padrão do Excel em português), UTF-8 com BOM. */
 export function toCsv(headers: string[], rows: CsvCell[][]): string {
   const lines = [headers.map((h) => csvText(h)).join(';')];
   for (const row of rows) {
-    lines.push(row.map((c) => (typeof c === 'number' ? csvNumber(c) : csvText(c))).join(';'));
+    lines.push(row.map((c) => (typeof c === 'object' && c !== null ? String(c.int) : typeof c === 'number' ? csvNumber(c) : csvText(c))).join(';'));
   }
-  return `﻿${lines.join('\r\n')}\r\n`;
+  return `\uFEFF${lines.join('\r\n')}\r\n`;
 }
 
 // ---------------------------------------------------------------- importação
@@ -62,7 +64,7 @@ export type ParsedCsv =
 /** Lê o CSV de leads aplicando limites de tamanho e de linhas e mapeando cabeçalhos em português ou inglês. */
 export function parseLeadsCsv(text: string): ParsedCsv {
   if (text.length > MAX_IMPORT_BYTES) return { ok: false, error: 'Arquivo muito grande (máximo de 1 MB).' };
-  const clean = text.replace(/^﻿/, '');
+  const clean = text.replace(/^\uFEFF/, '');
   const result = Papa.parse<string[]>(clean, { skipEmptyLines: 'greedy' });
   const data = result.data;
   if (data.length < 2) return { ok: false, error: 'O arquivo precisa ter a linha de cabeçalho e ao menos um lead.' };

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { activitySchema, companySchema, contactSchema, goalSchema, leadSchema, opportunitySchema, stageSchema } from '@/lib/crm/validation';
-import { csvNumber, csvText, normalizeHeader, parseLeadsCsv, toCsv } from '@/lib/crm/csv';
+import { csvNumber, csvText, int, normalizeHeader, parseLeadsCsv, toCsv } from '@/lib/crm/csv';
 
 const UUID = '123e4567-e89b-42d3-a456-426614174000';
 
@@ -111,9 +111,12 @@ describe('CSV: exportação segura', () => {
     expect(csvNumber(-10)).toBe('-10,00');
     expect(csvNumber(null)).toBe('');
   });
+  it('contagens saem como inteiros, sem casas decimais', () => {
+    expect(toCsv(['n'], [[int(3)], [int(0)]])).toContain('\r\n3\r\n0\r\n');
+  });
   it('monta CSV com BOM, separador ; e CRLF', () => {
     const out = toCsv(['Nome', 'Valor'], [['=x', 10], ['Ana', 0.5]]);
-    expect(out.startsWith('﻿')).toBe(true);
+    expect(out.startsWith('\uFEFF')).toBe(true);
     expect(out).toContain('"Nome";"Valor"\r\n');
     expect(out).toContain('"\'=x";10,00\r\n');
     expect(out).toContain('"Ana";0,50\r\n');
@@ -131,7 +134,7 @@ describe('CSV: importação', () => {
     }
   });
   it('aceita vírgula, BOM e cabeçalhos com acento', () => {
-    const r = parseLeadsCsv('﻿nome,observações\nBia,"gosta de café, muito"\n');
+    const r = parseLeadsCsv('\uFEFFnome,observações\nBia,"gosta de café, muito"\n');
     expect(r.ok).toBe(true);
     if (r.ok) expect(r.rows[0]?.values).toEqual({ name: 'Bia', notes: 'gosta de café, muito' });
   });

@@ -134,3 +134,15 @@ describe('tema da organização', () => {
     expect(readableOn('#22d3ee')).toBe('#0b1220');
   });
 });
+
+describe('tema servido como CSS do próprio domínio', () => {
+  it('gera variáveis só a partir de uma cor validada', async () => {
+    const { themeCss, themeParam } = await import('@/lib/theme');
+    expect(themeCss('#AA2244')).toBe(':root:root{--primary:#aa2244;--primary-foreground:#ffffff}');
+    expect(themeParam('#AA2244')).toBe('aa2244');
+    // entradas maliciosas nunca chegam ao CSS
+    for (const bad of ['red', '#12345', 'url(javascript:x)', '#0B1220;}body{display:none}', '</style><script>', null, undefined]) {
+      expect(themeCss(bad)).toBe(':root:root{--primary:#162a43;--primary-foreground:#ffffff}');
+    }
+  });
+});

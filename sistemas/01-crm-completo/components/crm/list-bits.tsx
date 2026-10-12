@@ -4,10 +4,12 @@ import { PAGE_SIZE } from '@/lib/crm/data';
 
 /** Busca e filtros via GET (URL compartilhável, funciona sem JavaScript). */
 export function ListFilters({
-  action, q, placeholder = 'Buscar…', selects = [], hidden = {},
+  action, q, placeholder = 'Buscar…', selects = [], hidden = {}, search = true,
 }: {
   action: string;
   q: string;
+  /** false: esconde o campo de busca (páginas sem busca por texto). */
+  search?: boolean;
   placeholder?: string;
   selects?: Array<{ name: string; label: string; value: string; options: Array<{ value: string; label: string }>; all: string }>;
   hidden?: Record<string, string>;
@@ -15,10 +17,12 @@ export function ListFilters({
   return (
     <form action={action} method="get" className="mb-4 flex flex-wrap items-end gap-3" role="search">
       {Object.entries(hidden).map(([k, v]) => <input key={k} type="hidden" name={k} value={v} />)}
-      <div className="min-w-48 flex-1">
-        <label htmlFor="q" className="mb-1 block text-xs font-medium text-muted">Busca</label>
-        <Input id="q" name="q" defaultValue={q} placeholder={placeholder} maxLength={60} />
-      </div>
+      {search ? (
+        <div className="min-w-48 flex-1">
+          <label htmlFor="q" className="mb-1 block text-xs font-medium text-muted">Busca</label>
+          <Input id="q" name="q" defaultValue={q} placeholder={placeholder} maxLength={60} />
+        </div>
+      ) : null}
       {selects.map((s) => (
         <div key={s.name}>
           <label htmlFor={`f-${s.name}`} className="mb-1 block text-xs font-medium text-muted">{s.label}</label>

@@ -37,7 +37,7 @@ export default async function PipelinePage({ searchParams }: { searchParams: Sea
       <PageHeader title="Pipeline" description="Arraste as oportunidades entre as etapas, ou use o seletor “Mover para…” de cada cartão. Em Ganho e Perdido aparecem as 20 mais recentes.">
         {write ? <Link className="inline-flex min-h-10 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground hover:opacity-90" href="/opportunities/new">Nova oportunidade</Link> : null}
       </PageHeader>
-      {manager ? <ListFilters action="/pipeline" q="" selects={[{ name: 'owner', label: 'Responsável', value: owner ?? '', all: 'Todos', options: personOptions(options.people) }]} /> : null}
+      {manager ? <ListFilters action="/pipeline" q="" search={false} selects={[{ name: 'owner', label: 'Responsável', value: owner ?? '', all: 'Todos', options: personOptions(options.people) }]} /> : null}
       {stages.length === 0 ? <EmptyState title="Funil sem etapas" description="Peça a um administrador para configurar as etapas em Configurações do CRM." /> : (
         <KanbanBoardClient
           stages={stages.map((s) => ({ id: s.id, name: s.name, kind: s.kind, color: s.color, probability: s.probability }))}

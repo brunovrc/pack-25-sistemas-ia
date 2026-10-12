@@ -129,3 +129,19 @@ test('isolamento entre organizações, cookie adulterado e papéis aplicados no 
   await ctxA.close();
   await ctxB.close();
 });
+
+test('nenhuma página autenticada viola a CSP (estilos e scripts em linha)', async ({ page }) => {
+  const violations: string[] = [];
+  page.on('console', (m) => {
+    if (/content security policy|refused to (execute|load|apply)/i.test(m.text())) violations.push(m.text().slice(0, 160));
+  });
+  const email = uniqueEmail('csp');
+  await apiSignUp(email);
+  await uiLogin(page, email);
+  await onboardAndEnrollMfa(page, 'Empresa CSP');
+  for (const path of ['/dashboard', '/members', '/settings', '/audit', '/privacy']) {
+    await page.goto(path);
+    await page.waitForLoadState('networkidle');
+  }
+  expect(violations).toEqual([]);
+});

@@ -37,6 +37,7 @@ export default async function ActivitiesPage({ searchParams }: { searchParams: S
       <ListFilters
         action="/activities"
         q=""
+        search={false}
         selects={[
           { name: 'state', label: 'Situação', value: state, all: 'Pendentes', options: Object.entries(STATES).filter(([k]) => k !== 'pending').map(([value, label]) => ({ value, label })) },
           { name: 'kind', label: 'Tipo', value: kind, all: 'Todos', options: Object.entries(ACTIVITY_KIND_LABELS).map(([value, label]) => ({ value, label })) },

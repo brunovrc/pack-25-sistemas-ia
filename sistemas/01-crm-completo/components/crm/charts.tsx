@@ -16,7 +16,7 @@ const brlTooltip = (v: unknown) => formatBRL(Number(v));
 
 function ChartFrame({ title, description, empty, children, table }: { title: string; description: string; empty: boolean; children: React.ReactNode; table: React.ReactNode }) {
   return (
-    <section className="rounded-lg border border-border bg-card p-4 shadow-sm" aria-label={title}>
+    <section className="min-w-0 rounded-lg border border-border bg-card p-4 shadow-sm" aria-label={title}>
       <h3 className="text-base font-semibold">{title}</h3>
       <p className="mb-3 text-xs text-muted">{description}</p>
       {empty ? (
@@ -47,7 +47,7 @@ export function SalesChart({ rows }: { rows: SalesRow[] }) {
         <AreaChart data={rows} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="currentColor" strokeOpacity={0.2} />
           <XAxis dataKey="label" tick={TICK} />
-          <YAxis tick={TICK} tickFormatter={(v) => formatBRLCompact(Number(v))} width={64} />
+          <YAxis tick={TICK} tickFormatter={(v) => formatBRLCompact(Number(v))} width={84} />
           <Tooltip formatter={brlTooltip} labelFormatter={(l) => `Período ${l}`} contentStyle={{ background: 'var(--card)', border: '1px solid var(--border)', color: 'var(--foreground)' }} />
           <Area type="monotone" dataKey="won_value" name="Vendas ganhas" stroke="#0891b2" fill="#0891b2" fillOpacity={0.25} />
         </AreaChart>
@@ -90,7 +90,7 @@ export function RepChart({ rows }: { rows: RepData[] }) {
         <BarChart data={rows} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="currentColor" strokeOpacity={0.2} />
           <XAxis dataKey="name" tick={TICK} interval={0} />
-          <YAxis tick={TICK} tickFormatter={(v) => formatBRLCompact(Number(v))} width={64} />
+          <YAxis tick={TICK} tickFormatter={(v) => formatBRLCompact(Number(v))} width={84} />
           <Tooltip formatter={brlTooltip} contentStyle={{ background: 'var(--card)', border: '1px solid var(--border)', color: 'var(--foreground)' }} />
           <Bar dataKey="won_value" name="Valor ganho" fill="#047857" radius={[4, 4, 0, 0]} />
         </BarChart>
@@ -154,7 +154,7 @@ export function GoalsChart({ rows }: { rows: GoalData[] }) {
         <BarChart data={rows} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="currentColor" strokeOpacity={0.2} />
           <XAxis dataKey="name" tick={TICK} interval={0} />
-          <YAxis tick={TICK} tickFormatter={(v) => formatBRLCompact(Number(v))} width={64} />
+          <YAxis tick={TICK} tickFormatter={(v) => formatBRLCompact(Number(v))} width={84} />
           <Tooltip formatter={brlTooltip} contentStyle={{ background: 'var(--card)', border: '1px solid var(--border)', color: 'var(--foreground)' }} />
           <Legend />
           <Bar dataKey="target" name="Meta" fill="#94a3b8" radius={[4, 4, 0, 0]} />

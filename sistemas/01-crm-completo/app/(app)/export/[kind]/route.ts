@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { z } from 'zod';
 import { resolveContext } from '@/lib/auth/session';
-import { toCsv } from '@/lib/crm/csv';
+import { int, toCsv } from '@/lib/crm/csv';
 import { labelMap, loadDashboard, loadOptions, lostReasonsReport, nameMap, searchToken, type Lead, type Opportunity } from '@/lib/crm/data';
 import { parseFilters, todaySaoPaulo } from '@/lib/crm/filters';
 import { LEAD_STATUS_LABELS, TEMPERATURE_LABELS } from '@/lib/crm/validation';
@@ -71,19 +71,19 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
   const filters = parseFilters(sp);
   if (kind === 'sales-by-rep') {
     const d = await loadDashboard(ctx, filters);
-    return csvResponse('vendas-por-vendedor', toCsv(['Vendedor', 'Negócios ganhos', 'Valor ganho (R$)', 'Negócios perdidos', 'Taxa de conversão (%)', 'Metas atingidas'], d.reps.map((r) => [owners.get(r.user_id) ?? 'Usuário', r.won_count, r.won_value, r.lost_count, r.conversion_rate, r.goals_met])));
+    return csvResponse('vendas-por-vendedor', toCsv(['Vendedor', 'Negócios ganhos', 'Valor ganho (R$)', 'Negócios perdidos', 'Taxa de conversão (%)', 'Metas atingidas'], d.reps.map((r) => [owners.get(r.user_id) ?? 'Usuário', int(r.won_count), r.won_value, int(r.lost_count), r.conversion_rate, int(r.goals_met)])));
   }
   if (kind === 'funnel') {
     const d = await loadDashboard(ctx, filters);
-    return csvResponse('funil', toCsv(['Etapa', 'Oportunidades abertas', 'Valor (R$)'], d.funnel.map((f) => [f.stage_name, f.opp_count, f.opp_value])));
+    return csvResponse('funil', toCsv(['Etapa', 'Oportunidades abertas', 'Valor (R$)'], d.funnel.map((f) => [f.stage_name, int(f.opp_count), f.opp_value])));
   }
   if (kind === 'lead-sources') {
     const d = await loadDashboard(ctx, filters);
-    return csvResponse('leads-por-origem', toCsv(['Origem', 'Leads criados no período'], d.sources.map((s) => [s.source_name, s.lead_count])));
+    return csvResponse('leads-por-origem', toCsv(['Origem', 'Leads criados no período'], d.sources.map((s) => [s.source_name, int(s.lead_count)])));
   }
   if (kind === 'lost-reasons') {
     const rows = await lostReasonsReport(ctx, filters, options.reasons);
-    return csvResponse('perdas-por-motivo', toCsv(['Motivo', 'Negócios perdidos', 'Valor perdido (R$)'], rows.map((r) => [r.reason, r.count, r.value])));
+    return csvResponse('perdas-por-motivo', toCsv(['Motivo', 'Negócios perdidos', 'Valor perdido (R$)'], rows.map((r) => [r.reason, int(r.count), r.value])));
   }
   return new NextResponse('Exportação inexistente.', { status: 404 });
 }
