@@ -1,5 +1,5 @@
 # MEMORY — PACK 25 SISTEMAS IA (raiz)
-Atualizado em: 2026-10-12 | Versão: 0.1.0 | Estado: EM_DESENVOLVIMENTO (fundação)
+Atualizado em: 2026-10-12 | Versão: 0.2.0 | Estado: EM_DESENVOLVIMENTO (Fase C concluída; 1 de 25 VALIDADO)
 
 ## Missão
 Produto de R$ 47 com 25 sistemas MVP independentes. Hub `pack-25-sistemas-ia` + um repositório espelho por sistema (`<slug>` (ex.: `crm-completo`)).
@@ -8,7 +8,8 @@ Produto de R$ 47 com 25 sistemas MVP independentes. Hub `pack-25-sistemas-ia` + 
 Next 16.4.0 + React 19.3.0 + TypeScript 6.0.3 + Tailwind 4 + Supabase (ADR-009). Existe: `catalogo/`, `core/supabase/` (3 migrações + testes), `core/web/` (app), `scripts/`, `docs/`, `sistemas/` (25 pastas planejadas). Detalhes em `docs/CORE_WEB.md`.
 
 ## Implementado e verificado
-- Catálogo de 25 sistemas, todos `PLANEJADO` — `node scripts/validate-catalog.mjs`: OK.
+- Catálogo de 25 sistemas: 01 `crm-completo` VALIDADO, 24 `PLANEJADO` — `node scripts/validate-catalog.mjs`: OK.
+- **CRM Completo (Fase C)**: 24 testes obrigatórios com evidência em `sistemas/01-crm-completo/docs/FEATURES.md`; 114 unitários, testes de banco (RLS, regras, indicadores), 33 E2E, build; instalação isolada (export → install → testes) ok; CI do GitHub (web + e2e do Core e do CRM) verde em 2026-10-12. `sync-core` implementado (`--check` no CI).
 - 25 pastas geradas com AGENTS/CLAUDE/MEMORY/README/.env.example/docs — `node scripts/generate-systems.mjs`.
 - Core de banco (orgs, membros, papéis, RLS, auditoria imutável, solicitações LGPD) — `node scripts/test-core-db.mjs`: todos os testes passaram em Postgres 17 (Docker). Teste de mutação: política quebrada propositalmente foi reprovada pela suíte.
 - Auditoria de referências/licenças — `docs/REFERENCE_AUDIT.md`.
@@ -16,13 +17,13 @@ Next 16.4.0 + React 19.3.0 + TypeScript 6.0.3 + Tailwind 4 + Supabase (ADR-009).
 - Repositório público `pack-25-sistemas-ia/pack-25-sistemas-ia` (organização `pack-25-sistemas-ia`, transferido em 2026-10-12) com secret scanning, push protection e proteção do `main` (sem force-push; checks do CI obrigatórios). CI: ver histórico de execuções. `publish-mirrors.yml` **NÃO EXECUTADO** (sem sistema VALIDADO).
 
 ## Em implementação
-- Nada em andamento.
+- Nada em andamento. Próximo: sistema 02 (Fase D), um por vez, cada um com `docs/PLANO_IMPLEMENTACAO.md` antes do código.
 
 ## Pendências e riscos
 - DECIDIDO: sem convite por e-mail no MVP (fora do escopo; "se previsto" no prompt). Adicionar pessoas = convite do painel Supabase + SQL documentado e testado em `docs/MEMBROS.md`.
 - ALTA: decisões do titular — `LICENSE.md` (rascunho), e-mail de segurança, repositórios espelho e token (modelo de venda definido: plataforma de cursos + links por e-mail, ver `docs/DISTRIBUTION.md`; falta decidir por sistema público x ZIP) (ver `docs/DISTRIBUTION.md`).
 - ALTA: **produção exige configuração do Supabase** diferente do padrão (TOTP, senha 12, confirmação de e-mail) — ver `docs/CORE_WEB.md`.
-- MÉDIA: `sync-core` (ADR-004) ainda não implementado; limitador de taxa do app é por instância; sem upload de logo (Storage).
+- MÉDIA: limitador de taxa do app é por instância; sem upload de logo (Storage).
 - MÉDIA: gitleaks/`pnpm audit` no CI; SBOM; teste de restauração de backup.
 - MÉDIA: acessibilidade verificada só por inspeção e teclado básico; falta auditoria automatizada (axe).
 
@@ -38,7 +39,9 @@ Next 16.4.0 + React 19.3.0 + TypeScript 6.0.3 + Tailwind 4 + Supabase (ADR-009).
 - Ambiente de deploy: não configurado
 
 ## Próxima tarefa recomendada
-1. `sync-core` (ADR-004) e o CRM piloto (Etapa C): PRD enxuto e fluxos testáveis para aprovação antes de implementar.
+1. Decisões do titular (LICENSE, contato de segurança, repositórios espelho/token) e publicar `crm-completo`.
+2. Fase D: sistema 02 (Gerador de Propostas), começando pelo PLANO_IMPLEMENTACAO.
+3. Guia de personalização: `guias/personalizacao.md`.
 
 ## Referências
 - `docs/ARCHITECTURE.md`; `docs/DECISIONS.md`; `docs/SECURITY_STANDARD.md`; `docs/LGPD_GUIDE.md`; `docs/DISTRIBUTION.md`
