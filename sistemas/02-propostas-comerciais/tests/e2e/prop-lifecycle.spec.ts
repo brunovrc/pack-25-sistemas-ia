@@ -140,6 +140,9 @@ test('alterações não salvas: aviso ao fechar; salvar libera; trocar de modelo
   await page.getByRole('button', { name: 'Criar proposta e abrir o editor' }).click();
   await page.waitForURL(/\/editar$/);
 
+  await page.waitForTimeout(1000);
+  await expect(page.getByText('Alterações não salvas')).toHaveCount(0); // abrir o editor não suja o estado
+
   await page.getByLabel('Título da proposta').fill('Título alterado sem salvar');
   const dialog = page.waitForEvent('dialog', { timeout: 5000 });
   await page.close({ runBeforeUnload: true });

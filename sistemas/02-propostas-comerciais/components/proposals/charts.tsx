@@ -119,10 +119,11 @@ export function StatusChart({ rows }: { rows: StatusData[] }) {
     >
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
-          <Pie data={rows.map((r) => ({ name: STATUS_LABELS[r.status], value: r.count, status: r.status }))} dataKey="value" nameKey="name" innerRadius={50} outerRadius={85} paddingAngle={2} label={(e) => `${e.name}: ${e.value}`}>
+          <Pie data={rows.map((r) => ({ name: STATUS_LABELS[r.status], value: r.count, status: r.status }))} dataKey="value" nameKey="name" innerRadius={45} outerRadius={78} paddingAngle={2} isAnimationActive={false}>
             {rows.map((r) => <Cell key={r.status} fill={STATUS_COLOR[r.status]} />)}
           </Pie>
           <Tooltip contentStyle={TOOLTIP} />
+          <Legend />
         </PieChart>
       </ResponsiveContainer>
     </ChartFrame>

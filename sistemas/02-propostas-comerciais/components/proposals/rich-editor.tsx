@@ -3,12 +3,15 @@
 import { EditorContent, useEditor, useEditorState, type Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { useEffect, useRef, useState } from 'react';
-import { safeHref, sanitizeDoc, type PMDoc } from '@/lib/proposals/content';
+import { EMPTY_DOC, isDocEmpty, safeHref, sanitizeDoc, type PMDoc } from '@/lib/proposals/content';
 import './rich-editor.css';
 
 // Editor do texto comercial (Tiptap, só extensões MIT do núcleo). Só os recursos permitidos pelo conteúdo seguro:
 // negrito, itálico, títulos 2/3, listas, link (http/https/mailto) e linha. Tudo que sai passa por sanitizeDoc.
 // injectCSS: false — a CSP estrita bloqueia o <style> que o Tiptap injetaria; os estilos vêm de rich-editor.css.
+
+// Forma canônica: documento sem texto (só parágrafos vazios) é o documento vazio. Evita "alterações" fantasma ao abrir o editor.
+const canon = (d: unknown): PMDoc => { const c = sanitizeDoc(d); return isDocEmpty(c) ? EMPTY_DOC : c; };
 
 type Props = { value: PMDoc; onChange: (doc: PMDoc) => void; label: string; id: string; disabled?: boolean };
 
@@ -85,7 +88,7 @@ function Toolbar({ editor }: { editor: Editor }) {
 
 export function RichEditor({ value, onChange, label, id, disabled }: Props) {
   const [initial] = useState(value);
-  const emitted = useRef(JSON.stringify(sanitizeDoc(value)));
+  const emitted = useRef(JSON.stringify(canon(value)));
   const editor = useEditor({
     immediatelyRender: false,
     injectCSS: false,
@@ -99,8 +102,10 @@ export function RichEditor({ value, onChange, label, id, disabled }: Props) {
     content: initial.content.length ? initial : undefined,
     editorProps: { attributes: { 'aria-label': label, 'aria-multiline': 'true', role: 'textbox', id } },
     onUpdate: ({ editor: e }) => {
-      const clean = sanitizeDoc(e.getJSON());
-      emitted.current = JSON.stringify(clean);
+      const clean = canon(e.getJSON());
+      const json = JSON.stringify(clean);
+      if (json === emitted.current) return; // nada mudou de verdade
+      emitted.current = json;
       onChange(clean);
     },
   });
@@ -108,7 +113,7 @@ export function RichEditor({ value, onChange, label, id, disabled }: Props) {
   // valor trocado de fora (ex.: restaurar): só atualiza o editor se for diferente do que ele mesmo emitiu
   useEffect(() => {
     if (!editor) return;
-    const incoming = JSON.stringify(sanitizeDoc(value));
+    const incoming = JSON.stringify(canon(value));
     if (incoming !== emitted.current) {
       emitted.current = incoming;
       editor.commands.setContent(value.content.length ? value : '', { emitUpdate: false });

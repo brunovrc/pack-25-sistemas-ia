@@ -114,6 +114,7 @@ test('vendedor só vê e abre as próprias propostas e não administra', async (
   await expect(page.getByText('Proposta do vendedor')).toBeVisible();
   await expect(page.getByText('Proposta do dono A')).toHaveCount(0);
   await expect(page.getByLabel('Responsável')).toHaveCount(0); // filtro de gestão
+  expect((await page.goto(`/propostas/${pSeller.proposalId}`))!.status()).toBe(200); // a própria abre
   expect((await page.goto(`/propostas/${pOwner.proposalId}`))!.status()).toBe(404);
   expect((await page.goto('/configuracoes'))!.status()).toBe(404);
   await page.goto('/catalogo');

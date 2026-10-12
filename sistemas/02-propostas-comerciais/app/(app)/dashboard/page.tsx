@@ -57,7 +57,8 @@ export default async function DashboardPage({ searchParams }: { searchParams: Se
   const goals = goalsInPeriod(data.goals, filters.from, filters.to);
   const goalSum = summarizeGoals(goals);
   const alertsByKind = (kind: AlertRow['kind']) => data.alerts.filter((a) => a.kind === kind);
-  const empty = k.created_count === 0 && k.sent_count === 0 && k.accepted_count === 0 && k.declined_count === 0 && k.pipeline_count === 0;
+  // vazio = nada aconteceu NO PERÍODO (o valor em negociação é situação atual e não conta)
+  const empty = k.created_count === 0 && k.sent_count === 0 && k.accepted_count === 0 && k.declined_count === 0;
 
   return (
     <>

@@ -123,7 +123,7 @@ begin
     content := (select content_json from public.proposal_revisions where id = r);
     content := jsonb_set(content, '{sections}', (
       select coalesce(jsonb_agg(case s ->> 'kind'
-          when 'presentation' then jsonb_set(s, '{content}', private.prop_text_to_doc('Somos uma empresa de demonstração e preparamos esta proposta para ' || names[((n - 1) % 12) + 1] || '.'))
+          when 'presentation' then jsonb_set(s, '{content}', private.prop_text_to_doc('Somos uma empresa de demonstração e preparamos esta proposta para ' || rtrim(names[((n - 1) % 12) + 1], '.') || '.'))
           when 'objective' then jsonb_set(s, '{content}', private.prop_text_to_doc('Atender às necessidades levantadas com entregas claras e prazos acordados.'))
           when 'scope' then jsonb_set(s, '{content}', private.prop_text_to_doc(E'Planejamento e execução dos serviços descritos na tabela de investimento.\nAcompanhamento durante toda a vigência.'))
           when 'deliverables' then jsonb_set(s, '{content}', private.prop_text_to_doc(E'Relatório de entrega\nTreinamento básico da equipe'))
