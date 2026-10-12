@@ -83,11 +83,13 @@ test('lead: criar, editar, persistir, bloquear duplicado, arquivar e restaurar',
   await page.goto('/leads');
   await page.getByRole('link', { name: leadName }).click();
   await page.getByRole('button', { name: 'Arquivar' }).click();
+  await expect(page.getByRole('button', { name: 'Restaurar' })).toBeVisible(); // ação concluída no servidor
   await page.goto('/leads');
   await expect(page.getByRole('link', { name: leadName })).toHaveCount(0);
   await page.goto('/leads?view=archived');
   await page.getByRole('link', { name: leadName }).click();
   await page.getByRole('button', { name: 'Restaurar' }).click();
+  await expect(page.getByRole('button', { name: 'Arquivar' })).toBeVisible();
   await page.goto('/leads');
   await expect(page.getByRole('link', { name: leadName })).toBeVisible();
 

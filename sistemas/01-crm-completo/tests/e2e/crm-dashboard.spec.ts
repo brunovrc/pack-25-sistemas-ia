@@ -155,7 +155,7 @@ test('dados de demonstração: gerente vê tudo e vendedor só o que é dele', a
   await expect(page.getByRole('table', { name: 'Ranking de vendedores' })).toContainText('Camila Vendas');
   await expect(page.getByRole('table', { name: 'Ranking de vendedores' })).toContainText('Diego Vendas');
   // filtro por vendedor: só a Camila aparece no ranking
-  await page.getByLabel('Vendedor').selectOption({ label: 'Camila Vendas' });
+  await page.getByLabel('Vendedor', { exact: true }).selectOption({ label: 'Camila Vendas' });
   await page.getByRole('button', { name: 'Aplicar' }).click();
   await page.waitForURL(/owner=/);
   const ranking = page.getByRole('table', { name: 'Ranking de vendedores' });
