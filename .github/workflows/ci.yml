@@ -123,3 +123,6 @@ jobs:
         with:
           node-version: 22
       - run: node scripts/test-core-db.mjs
+      - name: CRM Completo (banco, RLS e indicadores)
+        working-directory: sistemas/01-crm-completo
+        run: node scripts/test-db.mjs
