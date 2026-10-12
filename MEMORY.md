@@ -1,5 +1,5 @@
 # MEMORY — PACK 25 SISTEMAS IA (raiz)
-Atualizado em: 2026-10-12 | Versão: 0.2.0 | Estado: EM_DESENVOLVIMENTO (2 de 25 VALIDADOS)
+Atualizado em: 2026-10-12 | Versão: 0.2.0 | Estado: EM_DESENVOLVIMENTO (3 de 25 VALIDADOS)
 
 ## Missão
 Produto de R$ 47 com 25 sistemas MVP independentes. Hub `pack-25-sistemas-ia` + um repositório espelho por sistema (`<slug>` (ex.: `crm-completo`)).
@@ -8,7 +8,8 @@ Produto de R$ 47 com 25 sistemas MVP independentes. Hub `pack-25-sistemas-ia` + 
 Next 16.4.0 + React 19.3.0 + TypeScript 6.0.3 + Tailwind 4 + Supabase (ADR-009). Existe: `catalogo/`, `core/supabase/` (3 migrações + testes), `core/web/` (app), `scripts/`, `docs/`, `sistemas/` (25 pastas planejadas). Detalhes em `docs/CORE_WEB.md`.
 
 ## Implementado e verificado
-- Catálogo de 25 sistemas: 01 `crm-completo` e 02 `propostas-comerciais` VALIDADOS, 23 `PLANEJADO` — `node scripts/validate-catalog.mjs`: OK.
+- Catálogo de 25 sistemas: 01 `crm-completo`, 02 `propostas-comerciais` e 03 `qualificador-leads` VALIDADOS, 22 `PLANEJADO` — `node scripts/validate-catalog.mjs`: OK.
+- **Qualificador de Leads (03)**: validação e pontuação no banco com espelho TS (mesmas fixtures de score e de formulário), versões imutáveis de formulário e modelo, captação pública (honeypot, limite de taxa no banco, duplicidade, UTM), distribuição com trava, Kanban, painel (10 KPIs, 9 gráficos), IA opcional separada do score, seed de 150 leads; 163 unit, DB com 31 mutações reprovadas, 31 E2E (também na cópia exportada), CI verde.
 - **Gestão de Propostas Comerciais (02)**: cálculo no banco com espelho TS (mesmas fixtures), snapshot imutável, PDF react-pdf, link público por hash, painel (8 KPIs, 7 gráficos), 115 unit, DB com 14 mutações detectadas, 37 E2E (também na cópia exportada), CI verde. Core ganhou `PUBLIC_ENDPOINT` e `public-prefixes`.
 - **CRM Completo (Fase C)**: 24 testes obrigatórios com evidência em `sistemas/01-crm-completo/docs/FEATURES.md`; 114 unitários, testes de banco (RLS, regras, indicadores), 33 E2E, build; instalação isolada (export → install → testes) ok; CI do GitHub (web + e2e do Core e do CRM) verde em 2026-10-12. `sync-core` implementado (`--check` no CI).
 - 25 pastas geradas com AGENTS/CLAUDE/MEMORY/README/.env.example/docs — `node scripts/generate-systems.mjs`.
