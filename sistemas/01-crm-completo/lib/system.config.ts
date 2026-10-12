@@ -1,13 +1,23 @@
-// Ponto de extensão de cada sistema. O Core traz este arquivo com o padrão; cada sistema o
-// sobrescreve (e o declara em .core-overrides) para definir nome, logotipo e navegação.
-// Para personalizar para um cliente: troque `name`, substitua public/brand/logo.svg e ajuste `primaryNav`.
+// Configuração do CRM Completo. Para personalizar para um cliente:
+//  1. troque `name`;  2. substitua public/brand/logo.svg;  3. ajuste a navegação em `primaryNav`.
+// Este arquivo é do sistema (listado em .core-overrides): o sync-core nunca o sobrescreve.
 import type { OrgRole } from '@/lib/validation/org';
 
 export type NavItem = { href: string; label: string; roles?: readonly OrgRole[] };
 
 export const systemConfig: { name: string; logo: string; primaryNav: NavItem[] } = {
-  name: 'Pack 25 Sistemas IA',
+  name: 'CRM Completo',
   logo: '/brand/logo.svg',
-  // Itens do sistema, exibidos antes dos itens comuns do Core (Equipe, Privacidade, Auditoria, Configurações).
-  primaryNav: [{ href: '/dashboard', label: 'Painel' }],
+  primaryNav: [
+    { href: '/dashboard', label: 'Painel' },
+    { href: '/pipeline', label: 'Pipeline' },
+    { href: '/leads', label: 'Leads' },
+    { href: '/opportunities', label: 'Oportunidades' },
+    { href: '/companies', label: 'Empresas' },
+    { href: '/contacts', label: 'Contatos' },
+    { href: '/activities', label: 'Atividades' },
+    { href: '/goals', label: 'Metas' },
+    { href: '/reports', label: 'Relatórios' },
+    { href: '/crm-settings', label: 'Configurações do CRM', roles: ['owner', 'admin'] },
+  ],
 };
