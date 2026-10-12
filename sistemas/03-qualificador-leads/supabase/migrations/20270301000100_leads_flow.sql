@@ -333,7 +333,7 @@ begin
   if p_slug is null or p_slug !~ '^[a-z0-9]+(-[a-z0-9]+)*$' or char_length(p_slug) > 60 then return jsonb_build_object('ok', false, 'error', 'unavailable'); end if;
   -- limite de taxa (compartilhado): por visitante e por formulário
   if p_client_key is null or char_length(p_client_key) not between 8 and 128 then p_client_key := 'anon'; end if;
-  if not private.lead_rate_hit('v:' || p_slug || ':' || p_client_key, interval '10 minutes', 5)
+  if not private.lead_rate_hit('v:' || p_slug || ':' || p_client_key, interval '10 minutes', 15)
      or not private.lead_rate_hit('f:' || p_slug, interval '1 hour', 600) then
     return jsonb_build_object('ok', false, 'error', 'rate_limited');
   end if;
@@ -526,6 +526,42 @@ begin
   return n;
 end $$;
 
+-- ======================================================================= IA opcional (análise textual separada do score)
+-- A análise NUNCA altera o score. Gravação e limite diário passam por estas funções (a tabela não aceita escrita direta).
+create function public.lead_ai_usage(p_org uuid) returns integer
+language sql stable security definer set search_path = '' as $$
+  select count(*)::int from public.ai_analyses a where a.organization_id = p_org and private.is_member(p_org) and a.created_at >= now() - interval '24 hours';
+$$;
+
+create function public.lead_ai_save(p_lead uuid, p_provider text, p_model text, p_analysis jsonb, p_status text, p_error text, p_tokens_in integer, p_tokens_out integer) returns uuid
+language plpgsql security definer set search_path = '' as $$
+declare l public.leads%rowtype; cfg public.integration_configs%rowtype; lim integer; used integer; nid uuid;
+begin
+  select * into l from public.leads where id = p_lead;
+  if not found then raise exception 'lead não encontrado' using errcode = 'P0002'; end if;
+  if not private.lead_can_write(l.organization_id, l.assigned_to) or not private.mfa_ok() then raise exception 'sem permissão' using errcode = '42501'; end if;
+  if l.anonymized_at is not null then raise exception 'lead anonimizado' using errcode = '23514'; end if;
+  select * into cfg from public.integration_configs where organization_id = l.organization_id and provider = 'ai';
+  if not found or not cfg.enabled then raise exception 'a análise por IA não está habilitada' using errcode = '23514'; end if;
+  lim := case when (cfg.config_json ->> 'daily_limit') ~ '^\d{1,3}$' then (cfg.config_json ->> 'daily_limit')::int else 20 end;
+  perform pg_advisory_xact_lock(hashtextextended('lead_ai:' || l.organization_id::text, 0));
+  select count(*) into used from public.ai_analyses where organization_id = l.organization_id and created_at >= now() - interval '24 hours';
+  if used >= lim then raise exception 'limite diário de análises atingido' using errcode = '23514'; end if;
+  if p_status not in ('ok', 'failed') then raise exception 'status inválido' using errcode = '22023'; end if;
+  insert into public.ai_analyses (organization_id, lead_id, provider, model, analysis_json, status, error_message, tokens_in, tokens_out)
+  values (l.organization_id, l.id, left(p_provider, 40), left(p_model, 80), coalesce(p_analysis, '{}'::jsonb), p_status, left(p_error, 300), p_tokens_in, p_tokens_out) returning id into nid;
+  return nid;
+end $$;
+
+-- Existe outro lead com este contato? Só devolve verdadeiro/falso (vendedor também precisa saber, mesmo sem ver o lead do colega).
+create function public.lead_find_duplicate(p_org uuid, p_email text, p_phone text, p_except uuid default null) returns boolean
+language sql stable security definer set search_path = '' as $$
+  select exists (
+    select 1 from public.leads l
+    where l.organization_id = p_org and private.is_member(p_org) and l.archived_at is null and l.anonymized_at is null and l.id is distinct from p_except
+      and ((private.lead_norm_email(p_email) is not null and l.email = private.lead_norm_email(p_email)) or (private.lead_norm_phone(p_phone) is not null and l.phone = private.lead_norm_phone(p_phone))));
+$$;
+
 -- ======================================================================= privilégios de execução
 do $$
 declare f text;
@@ -537,7 +573,8 @@ begin
     'public.lead_form_create(uuid, text, text, jsonb, jsonb, jsonb)', 'public.lead_form_save_draft(uuid, jsonb)', 'public.lead_form_publish(uuid)',
     'public.lead_form_archive(uuid, boolean)', 'public.lead_form_duplicate(uuid, text, text)',
     'public.lead_create(uuid, jsonb)', 'public.lead_import(uuid, jsonb, boolean)', 'public.lead_change_status(uuid, public.lead_status, text)',
-    'public.lead_anonymize(uuid)', 'public.lead_apply_retention(uuid)'
+    'public.lead_anonymize(uuid)', 'public.lead_apply_retention(uuid)',
+    'public.lead_find_duplicate(uuid, text, text, uuid)', 'public.lead_ai_usage(uuid)', 'public.lead_ai_save(uuid, text, text, jsonb, text, text, integer, integer)'
   ] loop
     execute format('revoke all on function %s from public, anon', f);
     execute format('grant execute on function %s to authenticated', f);

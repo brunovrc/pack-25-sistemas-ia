@@ -246,10 +246,20 @@ begin
   union all select 'needs_review', (select count(*) from public.leads l where l.organization_id = p_org and l.archived_at is null and l.needs_review);
 end $$;
 
+-- Nomes exibidos nos responsáveis e rankings. Expõe só o nome (ou parte local do e-mail) a membros da própria organização.
+create function public.lead_user_labels(p_org uuid) returns table (user_id uuid, label text)
+language sql stable security definer set search_path = '' as $$
+  select m.user_id, coalesce(nullif(p.full_name, ''), nullif(split_part(p.email, '@', 1), ''), 'Usuário')
+  from public.organization_members m
+  left join public.profiles p on p.id = m.user_id
+  where m.organization_id = p_org and private.is_member(p_org);
+$$;
+
 do $$
 declare f text;
 begin
   foreach f in array array[
+    'public.lead_user_labels(uuid)',
     'public.lead_kpis(uuid, date, date, uuid, uuid, text, uuid, text)', 'public.lead_series(uuid, date, date, uuid, uuid, text, uuid, text)',
     'public.lead_score_distribution(uuid, date, date, uuid, uuid, text, uuid, text)', 'public.lead_class_distribution(uuid, date, date, uuid, uuid, text, uuid, text)',
     'public.lead_by_source(uuid, date, date, uuid, uuid, text, uuid, text)', 'public.lead_by_campaign(uuid, date, date, uuid, uuid, text, uuid, text)',

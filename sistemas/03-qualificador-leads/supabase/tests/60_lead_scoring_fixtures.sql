@@ -1,4 +1,4 @@
--- GERADO por scripts/gen-scoring-sql.mjs a partir de tests/fixtures/scoring-cases.json. NÃO edite à mão.
+-- GERADO por scripts/gen-fixtures-sql.mjs a partir de tests/fixtures/scoring-cases.json. NÃO edite à mão.
 -- Motor de score (lead_score_compute): resultados esperados calculados à mão; o TypeScript usa as mesmas fixtures.
 
 do $$

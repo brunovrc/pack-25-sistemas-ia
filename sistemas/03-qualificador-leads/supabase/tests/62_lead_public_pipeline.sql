@@ -225,11 +225,11 @@ end $$;
 do $$
 declare i int; r jsonb; blocked int := 0; ok int := 0; k text := 'visitante-limite-1';
 begin
-  for i in 1..8 loop
+  for i in 1..20 loop
     r := public.lead_public_submit('qualificacao-b2b', '{"nome":"L","email":"limite@x.com","orcamento":1,"prazo":"ate_30"}'::jsonb, '{}'::jsonb, true, gen_random_uuid(), k);
     if r ->> 'error' = 'rate_limited' then blocked := blocked + 1; else ok := ok + 1; end if;
   end loop;
-  assert ok = 5 and blocked = 3, format('5 por visitante em 10 min: ok=%s bloqueados=%s', ok, blocked);
+  assert ok = 15 and blocked = 5, format('15 por visitante em 10 min: ok=%s bloqueados=%s', ok, blocked);
   r := public.lead_public_submit('qualificacao-b2b', '{"nome":"L","email":"limite@x.com","orcamento":1,"prazo":"ate_30"}'::jsonb, '{}'::jsonb, true, gen_random_uuid(), 'outro-visitante-2');
   assert (r ->> 'ok')::boolean, 'outro visitante não é afetado';
   raise notice 'PASS: limite de taxa por visitante';
@@ -423,6 +423,9 @@ begin
   assert test.throws(format($q$select public.lead_create(%L, '{"name":"Sem contato"}'::jsonb)$q$, org)), 'sem e-mail nem telefone';
   assert test.throws(format($q$select public.lead_create(%L, '{"name":"Ruim","email":"ruim"}'::jsonb)$q$, org)), 'e-mail inválido';
   assert test.throws(format($q$select public.lead_import(%L, '[]'::jsonb, false)$q$, org)), 'vendedor não importa em lote';
+  assert public.lead_find_duplicate(org, ' MARIA@empresa.com ', null, null), 'detecta duplicado por e-mail normalizado (mesmo de lead que não é dele)';
+  assert public.lead_find_duplicate(org, null, '(11) 91234-5678', null), 'detecta duplicado por telefone normalizado';
+  assert not public.lead_find_duplicate(org, 'ninguem@x.com', null, null), 'sem duplicado';
 end $$;
 reset role;
 :as_m
