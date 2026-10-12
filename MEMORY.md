@@ -21,7 +21,7 @@ Next 16.4.0 + React 19.3.0 + TypeScript 6.0.3 + Tailwind 4 + Supabase (ADR-009).
 
 ## Pendências e riscos
 - DECIDIDO: sem convite por e-mail no MVP (fora do escopo; "se previsto" no prompt). Adicionar pessoas = convite do painel Supabase + SQL documentado e testado em `docs/MEMBROS.md`.
-- ALTA: decisões do titular — `LICENSE.md` (rascunho), e-mail de segurança, repositórios espelho e token (modelo de venda definido: plataforma de cursos + links por e-mail, ver `docs/DISTRIBUTION.md`; falta decidir por sistema público x ZIP) (ver `docs/DISTRIBUTION.md`).
+- DECIDIDO (2026-10-12): repositórios públicos por sistema; LICENSE.md final sem dados pessoais; sem e-mail de contato nem canal de suporte nos repositórios (suporte via plataforma do curso). Falta só o `MIRROR_PUSH_TOKEN` para publicar pelo workflow (ou push manual).
 - ALTA: **produção exige configuração do Supabase** diferente do padrão (TOTP, senha 12, confirmação de e-mail) — ver `docs/CORE_WEB.md`.
 - MÉDIA: limitador de taxa do app é por instância; sem upload de logo (Storage).
 - MÉDIA: gitleaks/`pnpm audit` no CI; SBOM; teste de restauração de backup.
@@ -39,7 +39,7 @@ Next 16.4.0 + React 19.3.0 + TypeScript 6.0.3 + Tailwind 4 + Supabase (ADR-009).
 - Ambiente de deploy: não configurado
 
 ## Próxima tarefa recomendada
-1. Decisões do titular (LICENSE, contato de segurança, repositórios espelho/token) e publicar `crm-completo`.
+1. Publicar `crm-completo` (token de espelho ou push manual).
 2. Fase D: sistema 02 (Gerador de Propostas), começando pelo PLANO_IMPLEMENTACAO.
 3. Guia de personalização: `guias/personalizacao.md`.
 

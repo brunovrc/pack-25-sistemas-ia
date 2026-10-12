@@ -71,4 +71,4 @@ Os sistemas são MVPs. Não incluem: emissão fiscal, contabilidade, assinatura 
 
 ## Licença e suporte
 
-[LICENSE.md](LICENSE.md) (rascunho em revisão) · [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) · Canal de suporte: a definir pelo titular antes do lançamento.
+[LICENSE.md](LICENSE.md) · [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) · O suporte é feito pela plataforma em que você adquiriu o curso.

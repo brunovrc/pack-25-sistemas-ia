@@ -49,10 +49,9 @@ Fluxo do aluno (definido pelo titular em 2026-10-12): aula na área de membros �
 Consequências:
 - **Repositório público = qualquer pessoa com o link acessa**, comprando ou não. O que protege o produto passa a ser a licença (`LICENSE.md`), não o acesso técnico. O titular aceitou esse modelo (hub público desde 2026-10-12).
 - **Repositório privado não funciona só com link**: o comprador precisaria de convite individual no GitHub. Isso exigiria pedir o usuário do GitHub na compra e automatizar o convite (webhook da plataforma → API do GitHub), com atrito e fila de suporte.
-- **Alternativa que mantém o controle sem GitHub:** hospedar o pacote ZIP gerado por `export-system.mjs` (com `CHECKSUMS.sha256`) na área de membros da plataforma. O código não fica público, e o comprador baixa por login.
 
 Regras de engenharia que valem em qualquer escolha:
-1. Nunca publicar em repositório público um sistema que o titular queira restringir; a decisão é por sistema e tomada antes de ele ficar `VALIDADO`.
+1. **Decisão do titular (2026-10-12):** todo sistema `VALIDADO` vira repositório público próprio; não há ZIP. O aluno copia o link e pede ao Claude Code ou Codex para clonar.
 2. Links nas aulas devem apontar para **tags/releases** (versão fixa), não para `main`, para que uma correção de segurança não quebre quem está no meio da aula. Atualizações são avisadas por e-mail.
 3. Sem segredos nem dados reais em nenhum repositório, público ou privado (verificado por `check-no-secrets` e pelo secret scanning do GitHub).
 
@@ -60,6 +59,6 @@ Regras de engenharia que valem em qualquer escolha:
 
 1. Criar a organização/conta GitHub e os repositórios `<slug>` (ex.: `crm-completo`) (privados) e `pack-25-sistemas-ia`.
 2. Gerar um token **fine-grained** com `Contents: write` restrito aos repositórios espelho e guardá-lo como secret `MIRROR_PUSH_TOKEN` no ambiente protegido `mirror-publish` do hub.
-3. Modelo de acesso do comprador: **definido** como entrega por plataforma de cursos (seção acima). Falta escolher, por sistema, entre repositório público (controle só pela licença) e ZIP na área de membros.
+3. Modelo de acesso do comprador: **definido** (plataforma de cursos + repositório público por sistema).
 4. Ativar secret scanning, push protection, Dependabot alerts e proteção de branch nos repositórios.
-5. Definir canal de suporte e e-mail de segurança (ver `SECURITY.md`).
+5. Sem e-mail, nome ou canal de suporte nos repositórios: o suporte é da plataforma de cursos.

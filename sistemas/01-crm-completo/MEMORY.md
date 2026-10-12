@@ -26,7 +26,7 @@ Todas as funcionalidades de `docs/FEATURES.md` (24 testes da seção 13, exceto 
 - Última verificação local: 2026-10-12, tudo verde (ver acima). Deploy: não configurado (responsabilidade de quem implanta).
 
 ## Próxima tarefa recomendada
-1. Publicar o repositório `crm-completo` (publish-mirrors) quando o titular decidir; versão/tag v0.2.0.
+1. Publicar o repositório `crm-completo` (publish-mirrors) versão/tag v0.2.0.
 
 ## Referências
 - docs/PLANO_IMPLEMENTACAO.md; docs/FEATURES.md; docs/METRICS.md; docs/DATA_MODEL.md; docs/DEPLOYMENT.md
