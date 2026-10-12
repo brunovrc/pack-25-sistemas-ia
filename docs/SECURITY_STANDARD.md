@@ -8,7 +8,7 @@ Negar por padrão · menor privilégio · defesa em profundidade · segurança n
 ## 2. Autenticação e sessão
 - Supabase Auth; cookies de sessão via `@supabase/ssr`, `HttpOnly`, `Secure`, `SameSite=Lax` ou mais estrito.
 - Senha mínima de 12 caracteres e checagem de vazamento quando disponível; recuperação com token de uso único e expiração curta.
-- **MFA (TOTP) obrigatório para `owner` e `admin`** a partir do Core web.
+- **MFA (TOTP) obrigatório para `owner` e `admin`**, exigido no app **e no banco** (políticas RESTRICTIVE por `aal2`, ADR-010). Configuração de produção em `docs/CORE_WEB.md`.
 - Mensagens de login/recuperação sem enumeração de usuário; rate limit por IP e por conta.
 - Convite de membros por token único e expirável; revogação imediata ao remover membro.
 

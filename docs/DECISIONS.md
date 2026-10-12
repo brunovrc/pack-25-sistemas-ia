@@ -37,5 +37,19 @@ Formato: contexto → decisão → consequência. Decisões novas entram no fim;
 ## ADR-008 — Skills externas só após leitura e fixação
 - **Decisão:** ver `docs/REFERENCE_AUDIT.md` §3. Preferência por skills internas originais em `.claude/skills/`.
 
-## ADR-009 — Versões do stack
-- **Decisão:** versões estáveis consultadas em 2026-10-11 estão em `REFERENCE_AUDIT.md` §4. A fixação final (inclusive TypeScript 7 vs. anterior) ocorre no Core web, com lockfile versionado e teste de compatibilidade.
+## ADR-009 — Versões do stack (decidido em 2026-10-12)
+- **Decisão:** Next 16.4.0, React 19.3.0, **TypeScript 6.0.3**, Tailwind 4.3.3, Zod 4.6.5, Supabase JS 2.117.3 / SSR 0.12.7, Vitest 5.0.3, Playwright 1.64.0, ESLint 9.39.5, tudo fixado por versão exata e lockfile.
+- **Por que não TypeScript 7:** o `typescript-eslint` mais recente (8.71.1) declara suporte a `typescript >=4.8.4 <6.1.0`.
+- **Por que Zod 4.6.5 e não 4.6.6:** a 4.6.6 tinha menos de um dia; o pnpm criou sozinho uma exceção na quarentena de versões novas, que foi removida. Regra: nunca abrir exceção em `minimumReleaseAgeExclude`; fixar a versão madura anterior.
+- **Por que ESLint 9 e não 10:** o `eslint-config-next` 16.4.0 declara peer `eslint >=9`, mas os plugins ainda não foram validados com a 10.
+
+## ADR-010 — MFA obrigatório também no banco
+- **Contexto:** exigir MFA só no app deixa a API REST do Supabase como porta lateral para quem tem a senha de um administrador.
+- **Decisão:** políticas RESTRICTIVE exigindo `aal2` para escrita de quem é owner/admin em qualquer organização e para leitura de auditoria e solicitações LGPD. A leitura da própria associação segue liberada em AAL1 para o app saber redirecionar ao cadastro de MFA.
+- **Consequência:** testes em `30_mfa_enforcement.sql` e no E2E. Políticas restritivas só reduzem acesso.
+
+## ADR-011 — Minimização de e-mails (tabela `profiles`)
+- **Decisão:** o e-mail de um usuário só é visível a ele mesmo e a owner/admin de uma organização da qual ele participa. Não-admins veem apenas o próprio perfil. Convites por e-mail ficam para o próximo marco.
+
+## ADR-012 — Supabase CLI instalado por release com checksum, não por `npx`
+- **Decisão:** baixar o binário do release oficial e conferir o SHA-256 (`checksums.txt`). O pnpm bloqueia scripts de instalação, que o pacote npm do CLI usa para baixar o binário. Versão fixada em 2.120.0 (local e CI).

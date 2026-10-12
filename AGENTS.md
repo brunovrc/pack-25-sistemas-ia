@@ -18,7 +18,7 @@ Seguir `docs/SECURITY_STANDARD.md` (ASVS L2) e `docs/LGPD_GUIDE.md`. Toda tabela
 - Concluir: atualizar `MEMORY.md` com fatos comprovados, testes e próxima ação. Histórico longo vai para `docs/CHANGELOG_INTERNAL.md`.
 
 ## Comandos
-`node scripts/validate-catalog.mjs` · `node scripts/generate-systems.mjs` · `node scripts/check-no-secrets.mjs` · `node scripts/test-core-db.mjs` (requer Docker) · `node scripts/export-system.mjs <slug>`
+`node scripts/validate-catalog.mjs` · `node scripts/generate-systems.mjs` · `node scripts/check-no-secrets.mjs` · `node scripts/test-core-db.mjs` (requer Docker) · `node scripts/export-system.mjs <slug>` · Core web (em `core/web`): `pnpm lint` · `pnpm typecheck` · `pnpm test` · `pnpm build` · `pnpm test:e2e` (ver `docs/CORE_WEB.md`)
 
 ## Skills internas (`.claude/skills/`), carregar só quando a tarefa pedir
 product-scope · ui-polish · supabase-security · domain-workflow · release-standalone · memory-handoff · token-efficiency. Skills externas: só após ler integralmente e fixar commit.

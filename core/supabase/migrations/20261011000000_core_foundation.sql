@@ -168,6 +168,9 @@ begin
   end if;
   return coalesce(new, old);
 end $$;
+revoke all on function private.protect_last_owner() from public;
+revoke all on function private.block_audit_mutation() from public;
+revoke all on function private.set_updated_at() from public;
 create trigger members_protect_last_owner before update or delete on public.organization_members
   for each row execute function private.protect_last_owner();
 

@@ -15,8 +15,13 @@ create function auth.uid() returns uuid language sql stable as $$
   )::uuid
 $$;
 
+create function auth.jwt() returns jsonb language sql stable as $$
+  select coalesce(nullif(current_setting('request.jwt.claims', true), ''), '{}')::jsonb
+$$;
+
 grant usage on schema auth to anon, authenticated;
 grant execute on function auth.uid() to anon, authenticated;
+grant execute on function auth.jwt() to anon, authenticated;
 grant usage on schema public to anon, authenticated;
 
 -- Supabase concede privilégios amplos por padrão em public; reproduzimos para provar que a migração os revoga.

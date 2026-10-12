@@ -5,7 +5,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { basename, dirname, extname, join, relative, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
-const SKIP_DIRS = new Set(['node_modules', '.git', '.next', 'dist', 'coverage', '_export']);
+const SKIP_DIRS = new Set(['node_modules', '.git', '.next', 'dist', 'coverage', '_export', 'test-results', 'playwright-report', '.temp']);
 const SKIP_EXT = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.ico', '.pdf', '.woff', '.woff2']);
 const SELF = basename(fileURLToPath(import.meta.url));
 

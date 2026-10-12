@@ -2,11 +2,11 @@
 -- Cada falha lança exceção (ON_ERROR_STOP). Cada bloco emite "PASS:" ao concluir.
 -- Usuários: A (owner org A), B (owner org B), C viewer, D admin, E manager, F extra (todos na org A).
 
-\set as_a 'select set_config(''request.jwt.claims'', ''{"sub":"aaaaaaaa-0000-4000-8000-00000000000a"}'', true); set local role authenticated;'
-\set as_b 'select set_config(''request.jwt.claims'', ''{"sub":"aaaaaaaa-0000-4000-8000-00000000000b"}'', true); set local role authenticated;'
-\set as_c 'select set_config(''request.jwt.claims'', ''{"sub":"aaaaaaaa-0000-4000-8000-00000000000c"}'', true); set local role authenticated;'
-\set as_d 'select set_config(''request.jwt.claims'', ''{"sub":"aaaaaaaa-0000-4000-8000-00000000000d"}'', true); set local role authenticated;'
-\set as_e 'select set_config(''request.jwt.claims'', ''{"sub":"aaaaaaaa-0000-4000-8000-00000000000e"}'', true); set local role authenticated;'
+\set as_a 'select set_config(''request.jwt.claims'', ''{"sub":"aaaaaaaa-0000-4000-8000-00000000000a","aal":"aal2"}'', true); set local role authenticated;'
+\set as_b 'select set_config(''request.jwt.claims'', ''{"sub":"aaaaaaaa-0000-4000-8000-00000000000b","aal":"aal2"}'', true); set local role authenticated;'
+\set as_c 'select set_config(''request.jwt.claims'', ''{"sub":"aaaaaaaa-0000-4000-8000-00000000000c","aal":"aal2"}'', true); set local role authenticated;'
+\set as_d 'select set_config(''request.jwt.claims'', ''{"sub":"aaaaaaaa-0000-4000-8000-00000000000d","aal":"aal2"}'', true); set local role authenticated;'
+\set as_e 'select set_config(''request.jwt.claims'', ''{"sub":"aaaaaaaa-0000-4000-8000-00000000000e","aal":"aal2"}'', true); set local role authenticated;'
 \set as_anon 'select set_config(''request.jwt.claims'', ''{}'', true); set local role anon;'
 \set as_nouid 'select set_config(''request.jwt.claims'', ''{}'', true); set local role authenticated;'
 

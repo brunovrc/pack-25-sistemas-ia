@@ -7,7 +7,8 @@ pack-25-sistemas-ia/
   README.md LICENSE.md THIRD_PARTY_NOTICES.md SECURITY.md
   AGENTS.md CLAUDE.md MEMORY.md
   catalogo/sistemas.json            # catálogo congelado (25), fonte do status real
-  core/supabase/                    # Core de banco: migrações + testes RLS (fonte da verdade)
+  core/supabase/                    # Core de banco: migrações + testes RLS + config do Supabase local
+  core/web/                         # Core web (Next.js): auth, MFA, organização, auditoria, LGPD
   sistemas/NN-slug/                 # 25 pastas autossuficientes (cada uma com AGENTS/CLAUDE/MEMORY)
   scripts/                          # ferramentas de engenharia (Node ESM, sem dependências)
   guias/                            # guias para o comprador
@@ -40,4 +41,4 @@ core/ ──sync-core (a criar)──▶ sistemas/NN-slug ──export-system─
 | Provedor de IA / terceiros | Não | Allowlist de hosts, dados mascarados, saída tratada como não confiável |
 
 ## Estado
-Core de **banco** implementado e verificado (ver `MEMORY.md`). Core **web** (Next.js, Supabase SSR, UX base) é o próximo marco.
+Core de **banco** (3 migrações) e Core **web** (`core/web`) implementados e verificados; ver `docs/CORE_WEB.md` e `MEMORY.md`. Próximo marco: convite de membros, depois o CRM piloto (Etapa C).
