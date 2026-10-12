@@ -250,3 +250,21 @@ export async function loadAiConfig(ctx: Context): Promise<{ enabled: boolean; da
   const cfg = (data?.config_json ?? {}) as { daily_limit?: number };
   return { enabled: Boolean(data?.enabled), daily_limit: Number.isInteger(cfg.daily_limit) && (cfg.daily_limit as number) > 0 ? (cfg.daily_limit as number) : 20 };
 }
+
+/** Perguntas dos formulários (para as regras de score) e definições (para o simulador): a versão mais recente de cada formulário não arquivado. */
+export async function loadQuestions(ctx: Context): Promise<{ questions: Array<{ key: string; label: string; form: string }>; forms: Array<{ id: string; name: string; schema: FormSchema; logic: LogicRule[] }> }> {
+  const forms = (await listForms(ctx)).filter((f) => f.status !== 'archived');
+  if (forms.length === 0) return { questions: [], forms: [] };
+  const { data } = await ctx.supabase.from('lead_form_versions').select('form_id, version_number, schema_json, conditional_logic_json').in('form_id', forms.map((f) => f.id)).order('version_number', { ascending: false });
+  const latest = new Map<string, { schema_json: FormSchema; conditional_logic_json: LogicRule[] }>();
+  for (const v of (data ?? []) as Array<{ form_id: string; schema_json: FormSchema; conditional_logic_json: LogicRule[] }>) if (!latest.has(v.form_id)) latest.set(v.form_id, v);
+  const questions = new Map<string, { key: string; label: string; form: string }>();
+  const defs: Array<{ id: string; name: string; schema: FormSchema; logic: LogicRule[] }> = [];
+  for (const f of forms) {
+    const v = latest.get(f.id);
+    if (!v) continue;
+    defs.push({ id: f.id, name: f.name, schema: v.schema_json, logic: v.conditional_logic_json });
+    for (const q of v.schema_json.fields) if (q.type !== 'consent' && !questions.has(q.key)) questions.set(q.key, { key: q.key, label: q.label, form: f.name });
+  }
+  return { questions: [...questions.values()], forms: defs };
+}

@@ -8,7 +8,7 @@ import { Modal } from '@/components/app/modal';
 import { archiveForm, duplicateForm, publishForm, saveFormDraft } from '@/lib/leads/actions';
 import { FIELD_TYPE_LABELS, FIELD_TYPES, validateDefinition, type FieldType, type FormField } from '@/lib/leads/formlogic';
 import { formatDateTime } from '@/lib/leads/format';
-import { canonical, moveItem, newField, removeField, removeStep, renameKey, setRule, type Draft } from './builder-state';
+import { canonical, moveItem, newField, removeField, renameKey, setRule, type Draft } from './builder-state';
 import { QuestionEditor, QuestionList, StepsEditor } from './builder-parts';
 import { FormRenderer } from './form-renderer';
 
@@ -145,7 +145,7 @@ export function FormBuilder({ formId, slug, status, versions, initial, origin, t
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card title="Etapas"><StepsEditor draft={draft} onChange={(steps) => update((d) => ({ ...d, schema: { ...d.schema, steps } }))} /></Card>
+        <Card title="Etapas"><StepsEditor draft={draft} onChange={(steps) => update((d) => ({ ...d, schema: { steps, fields: d.schema.fields.map((f) => (f.step && !steps.some((s) => s.id === f.step) ? { ...f, step: undefined } : f)) } }))} /></Card>
         <Card title="Mensagens e consentimento (LGPD)">
           <div className="space-y-4">
             <Field label="Nome do formulário" name="m-name"><Input id="m-name" value={draft.meta.name} maxLength={120} onChange={(e) => update((d) => ({ ...d, meta: { ...d.meta, name: e.target.value } }))} /></Field>

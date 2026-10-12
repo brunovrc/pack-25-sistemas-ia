@@ -157,7 +157,7 @@ export function FormRenderer({
   );
 }
 
-function FieldControl({ field, value, error, onChange }: { field: FormField; value: unknown; error?: string; onChange: (v: unknown) => void }) {
+export function FieldControl({ field, value, error, onChange }: { field: FormField; value: unknown; error?: string; onChange: (v: unknown) => void }) {
   const id = useId();
   const errs = error ? [error] : undefined;
   const label = `${field.label}${field.required ? ' *' : ''}`;

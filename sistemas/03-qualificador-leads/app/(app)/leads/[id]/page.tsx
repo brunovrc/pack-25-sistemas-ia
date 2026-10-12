@@ -8,6 +8,7 @@ import { LeadHeaderActions } from '@/components/leads/lead-actions';
 import { ActivityList, AnswersList, ScoreExplanation, ScoreHistory, StatusTimeline } from '@/components/leads/lead-detail-bits';
 import { readAiEnv } from '@/lib/leads/ai';
 import { requireContext } from '@/lib/auth/session';
+import { nowIso } from '@/lib/time';
 import { canWriteLeads, isLeadAdmin, isManager } from '@/lib/leads/access';
 import { labelMap, listDisqualificationReasons, loadAiConfig, loadLead, loadPeople, loadSettings, personOptions } from '@/lib/leads/data';
 import { formatDateTime, formatPhone, sourceLabel } from '@/lib/leads/format';
@@ -28,7 +29,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
   const canWrite = canWriteLeads(role) && !lead.archived_at && !lead.anonymized_at;
   const keyLabel = (k: string) => detail.schema?.fields.find((f) => f.key === k)?.label ?? k;
   const aiReady = aiCfg.enabled && readAiEnv() !== null;
-  const now = Date.now();
+  const now = Date.parse(nowIso());
   const tz = settings.timezone;
 
   return (

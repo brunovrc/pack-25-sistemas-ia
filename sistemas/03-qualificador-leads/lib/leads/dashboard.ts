@@ -3,7 +3,7 @@ import type { Context } from '@/lib/auth/session';
 import { addDays, daysBetween, rpcArgs, type LeadFilters, type LeadStatus } from './filters';
 
 export type * from './dashboard-types';
-import type { AlertCount, CampaignStatRow, ClassRow, ContactBucket, DashboardData, FunnelRow, Kpis, ScoreBucket, SellerRow, SeriesPoint, SourceRow, StatusCount } from './dashboard-types';
+import type { AlertCount, ClassRow, DashboardData, FunnelRow, Kpis } from './dashboard-types';
 
 const num = (v: unknown): number => Number(v ?? 0);
 const numOrNull = (v: unknown): number | null => (v === null || v === undefined ? null : Number(v));

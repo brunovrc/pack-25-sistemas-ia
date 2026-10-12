@@ -155,7 +155,6 @@ export function validateAnswers(schema: FormSchema, logic: LogicRule[], answers:
     switch (t) {
       case 'text': case 'textarea': case 'hidden': {
         if (typeof ans !== 'string') { errors[k] = 'Resposta inválida.'; break; }
-        // eslint-disable-next-line no-control-regex
         const txt = ans.trim().replace(/[\x00-\x08\x0B\x0C\x0E-\x1F]/g, '');
         const mx = Math.min(f.max_length ?? (t === 'textarea' ? 2000 : 200), 4000);
         if ([...txt].length > mx) { errors[k] = `Máximo de ${mx} caracteres.`; break; }

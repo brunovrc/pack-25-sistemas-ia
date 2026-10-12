@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useState } from 'react';
 import { submitPublicLead } from '@/app/f/[slug]/actions';
 import { FormRenderer, type SubmitResult } from '@/components/leads/form-renderer';
 import type { ConsentConfig, FormSchema, LogicRule } from '@/lib/leads/formlogic';
@@ -22,11 +22,10 @@ function readMeta() {
 export function PublicForm({ slug, schema, logic, consent, privacyUrl, thankYou, redirectUrl, prefill }: {
   slug: string; schema: FormSchema; logic: LogicRule[]; consent: ConsentConfig; privacyUrl: string | null; thankYou: string; redirectUrl: string | null; prefill: Record<string, string>;
 }) {
-  const startedAt = useRef<number>(0);
-  if (startedAt.current === 0) startedAt.current = Date.now();
+  const [startedAt] = useState(() => Date.now());
 
   async function onSubmit(input: { answers: Record<string, unknown>; consent: boolean; website: string; key: string }): Promise<SubmitResult> {
-    const res = await submitPublicLead({ slug, answers: input.answers, consent: input.consent, website: input.website, key: input.key, elapsedMs: Date.now() - startedAt.current, meta: readMeta() });
+    const res = await submitPublicLead({ slug, answers: input.answers, consent: input.consent, website: input.website, key: input.key, elapsedMs: Date.now() - startedAt, meta: readMeta() });
     return res.ok ? { ok: true } : { ok: false, message: res.message, errors: res.errors };
   }
 
