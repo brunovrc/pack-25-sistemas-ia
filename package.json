@@ -1,0 +1,16 @@
+{
+  "name": "pack-25-sistemas-ia-tooling",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Ferramentas de engenharia do repositório-fonte do Pack 25 Sistemas IA. Sem dependências de runtime.",
+  "type": "module",
+  "packageManager": "pnpm@12.6.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "catalog:check": "node scripts/validate-catalog.mjs",
+    "systems:generate": "node scripts/generate-systems.mjs",
+    "secrets:check": "node scripts/check-no-secrets.mjs",
+    "core:test": "node scripts/test-core-db.mjs",
+    "export:system": "node scripts/export-system.mjs"
+  }
+}

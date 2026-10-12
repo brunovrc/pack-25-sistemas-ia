@@ -1,0 +1,71 @@
+name: Publicar repositório espelho
+
+# Manual e protegido: exige aprovação do ambiente "mirror-publish" e o secret MIRROR_PUSH_TOKEN
+# (token fine-grained com Contents: write SOMENTE nos repositórios espelho). Ver docs/DISTRIBUTION.md.
+on:
+  workflow_dispatch:
+    inputs:
+      system:
+        description: "slug ou repo_name do sistema (ex.: crm-comercial). Precisa estar VALIDADO."
+        required: true
+        type: string
+      org:
+        description: "Organização/usuário GitHub dos espelhos"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: mirror-publish
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+
+      - name: Validar entradas e status VALIDADO
+        env:
+          SYSTEM: ${{ inputs.system }}
+          ORG: ${{ inputs.org }}
+        run: |
+          [[ "$SYSTEM" =~ ^[a-z0-9-]+$ ]] || { echo "system inválido"; exit 1; }
+          [[ "$ORG" =~ ^[A-Za-z0-9-]+$ ]] || { echo "org inválida"; exit 1; }
+          node -e '
+            const c=JSON.parse(require("fs").readFileSync("catalogo/sistemas.json","utf8"));
+            const s=c.systems.find(x=>[x.slug,x.repo_name,x.id+"-"+x.slug].includes(process.env.SYSTEM));
+            if(!s){console.error("sistema não encontrado");process.exit(1)}
+            if(s.status!=="VALIDADO"){console.error("RECUSADO: status "+s.status+" (só VALIDADO é publicável)");process.exit(1)}
+            require("fs").appendFileSync(process.env.GITHUB_ENV,"REPO="+s.repo_name+"\n");
+          '
+
+      - name: Exportar pacote do sistema
+        env:
+          SYSTEM: ${{ inputs.system }}
+        run: node scripts/export-system.mjs "$SYSTEM" --out "$RUNNER_TEMP/export"
+
+      - name: Enviar ao repositório espelho
+        env:
+          ORG: ${{ inputs.org }}
+          MIRROR_PUSH_TOKEN: ${{ secrets.MIRROR_PUSH_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "::add-mask::$MIRROR_PUSH_TOKEN"
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$MIRROR_PUSH_TOKEN" | base64 -w0)"
+          echo "::add-mask::$AUTH"
+          git -c http.extraheader="$AUTH" clone "https://github.com/$ORG/$REPO.git" "$RUNNER_TEMP/mirror"
+          cd "$RUNNER_TEMP/mirror"
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a "$RUNNER_TEMP/export/." .
+          git config user.name "pack25-publisher"
+          git config user.email "noreply@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then echo "Sem alterações"; exit 0; fi
+          git commit -m "sync: $REPO a partir do hub ($GITHUB_SHA)"
+          git -c http.extraheader="$AUTH" push origin HEAD

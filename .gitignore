@@ -1,0 +1,31 @@
+# Dependências e builds
+node_modules/
+.next/
+out/
+dist/
+coverage/
+playwright-report/
+test-results/
+*.tsbuildinfo
+
+# Segredos: NUNCA versionar. Somente .env.example (sem valores) é permitido.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+service-account*.json
+supabase/.temp/
+supabase/.branches/
+
+# Sistema operacional / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Saídas de exportação local
+/_export/
+*.log
