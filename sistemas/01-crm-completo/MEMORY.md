@@ -1,36 +1,32 @@
 # MEMORY — CRM COMPLETO
-Atualizado em: 2026-10-11 | Versão: 0.1.0 | Estado: PLANEJADO
+Atualizado em: 2026-10-12 | Versão: 0.2.0 | Estado: EM_DESENVOLVIMENTO (aguardando CI verde para VALIDADO)
 
 ## Missão do sistema
-Leads em planilhas e WhatsApp, sem funil nem histórico de relacionamento. Público: Equipes comerciais de pequenas e médias empresas B2B. Valor: Funil de vendas único com histórico, tarefas e indicadores calculados do banco.
+CRM B2B: do lead ao negócio fechado, com funil, metas, ranking e indicadores calculados do banco.
 
 ## Stack e caminhos-chave
-Next.js (App Router) + TypeScript strict + Tailwind + shadcn/ui + Supabase (Auth, Storage, RLS). Pastas: app/, components/, lib/, supabase/migrations/, tests/, docs/.
-Comandos do sistema: ainda não existem (app não criado).
-
-## Escopo contratado do MVP
-Leads; Contatos; Contas; Oportunidades em pipeline Kanban; Tarefas e lembretes; Histórico de interações; Relatórios e KPIs; Importação e exportação CSV; IA opcional para rascunho de textos.
-Fora do escopo: WhatsApp automatizado; Disparo em massa; Integração fiscal.
+Next.js 16 (App Router, proxy.ts, CSP com nonce) + TypeScript strict + Tailwind 4 + Supabase (Auth, RLS). Core em `app/(app)/{members,privacy,audit,settings}`, `lib/auth`, `supabase/migrations/2026*` (sincronizado do Core, não editar). CRM em `app/(app)/{dashboard,pipeline,leads,opportunities,companies,contacts,activities,goals,reports,crm-settings}`, `components/crm`, `lib/crm`, `supabase/migrations/20270101000000_crm_schema.sql`.
+Comandos: `pnpm lint | typecheck | test | build | test:db | test:e2e`.
 
 ## Implementado e verificado
-- Nada. Apenas a estrutura de pastas e a documentação inicial existem.
-
-## Em implementação
-- Nenhuma tarefa iniciada.
+Todas as funcionalidades de `docs/FEATURES.md` (24 testes da seção 13, exceto o 24). Evidências: unitários 114 ok; testes de banco (RLS, regras, indicadores) ok; E2E 33 ok, inclusive rodando a partir da cópia exportada (local, 2026-10-12); lint e typecheck ok; revisão visual desktop/mobile/escuro feita.
 
 ## Pendências e riscos
-- Risco LGPD: médio (dados: nome, e-mail, telefone, cargo, histórico de contato).
-- Aguardar o Core web (auth, organização, UX base) antes de iniciar este sistema.
+- Instalação isolada: `export-system.mjs` → install, lint, typecheck, 114 unit, build, `test:db` e 33 E2E ok (2026-10-12). No Windows, use caminho curto: o caminho longo quebra o Vitest/Vite.
+- CI do CRM criado, ainda sem execução verde registrada.
+- Risco LGPD: médio.
 
 ## Decisões relevantes
-- 2026-10-11 — Estrutura criada por scripts/generate-systems.mjs a partir do catálogo.
+- Dinheiro somado em centavos; indicadores em funções SQL `security invoker` (fonte única).
+- Vendedor só vê o que é dele (RLS); gerente vê tudo e define metas; configurações só owner/admin com MFA.
+- Gráficos só no cliente (CSP estrita); tema via `/theme.css` do mesmo domínio.
+- Card «Metas»: soma das individuais; sem individuais, as de equipe.
 
 ## Testes e deploy
-- Último lint/typecheck/unit/e2e/build: NÃO EXECUTADO
-- Ambiente de deploy: não configurado
+- Última verificação local: 2026-10-12, tudo verde (ver acima). Deploy: não configurado (responsabilidade de quem implanta).
 
 ## Próxima tarefa recomendada
-1. Fazer a avaliação de referências deste sistema em docs/REFERENCES.md antes de qualquer código.
+1. Conferir o CI no GitHub; estando verde, marcar VALIDADO no catálogo e regenerar o README do hub.
 
 ## Referências
-- docs/FEATURES.md; docs/DATA_MODEL.md; docs/DEPLOYMENT.md
+- docs/PLANO_IMPLEMENTACAO.md; docs/FEATURES.md; docs/METRICS.md; docs/DATA_MODEL.md; docs/DEPLOYMENT.md

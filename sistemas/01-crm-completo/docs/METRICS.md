@@ -16,7 +16,7 @@ Regras gerais
 | 3 | **Taxa de conversão** | `ganhos / (ganhos + perdidos) × 100` | `closed_at` no período | `null` se `ganhos + perdidos = 0` |
 | 4 | **Leads ativos** | Contagem de leads não arquivados com status `new`, `contacted` ou `qualified` | **Instantâneo atual** | Convertidos e desqualificados não contam |
 | 5 | **Ticket médio** | `Σ valor ganho / nº de negócios ganhos` | `closed_at` no período | `null` se não houve ganhos |
-| 6 | **Metas** | Para cada meta cujo período intersecta o filtro: `meta`, `realizado` = Σ valor ganho do responsável (ou da equipe) **dentro do período da própria meta**, `% = realizado / meta × 100` | período da meta | `null` se meta = 0 |
+| 6 | **Metas** | Considera as metas cujo período intersecta o filtro. Se existirem metas **individuais**, usa só elas; senão, as de **equipe**. Card = `Σ realizado / Σ meta × 100`, onde `realizado` = Σ valor ganho do responsável (ou da equipe) **dentro do período da própria meta**. | período da meta | `null` se não há metas ou Σ meta = 0; somas em centavos |
 
 ## Gráficos
 

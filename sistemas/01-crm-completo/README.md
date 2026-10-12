@@ -1,35 +1,37 @@
 # CRM Completo
 
-> **Status: PLANEJADO.** Este sistema ainda NÃO está implementado nem disponível para uso.
+CRM comercial para equipes B2B pequenas e médias: do lead ao negócio fechado, com funil Kanban, metas, ranking e indicadores calculados do banco. Next.js + Supabase, com RLS em todas as tabelas.
 
-**Público:** Equipes comerciais de pequenas e médias empresas B2B
-**Problema:** Leads em planilhas e WhatsApp, sem funil nem histórico de relacionamento
-**Proposta:** Funil de vendas único com histórico, tarefas e indicadores calculados do banco
+**Público:** equipes comerciais de pequenas e médias empresas B2B.
+**Problema:** leads em planilhas e WhatsApp, sem funil nem histórico.
 
-## Escopo do MVP
-- Leads
-- Contatos
-- Contas
-- Oportunidades em pipeline Kanban
-- Tarefas e lembretes
-- Histórico de interações
-- Relatórios e KPIs
-- Importação e exportação CSV
-- IA opcional para rascunho de textos
+## O que tem
+- **Leads:** criar, editar, arquivar, classificar (frio/morno/quente), origem, responsável, bloqueio de duplicados, conversão em oportunidade e **importação CSV** (modo «apenas validar»).
+- **Empresas e contatos** com campos extensíveis (`custom`).
+- **Pipeline Kanban** (arrastar, teclado ou seletor «Mover para…») com etapas configuráveis e histórico; ganho e perdido (motivo obrigatório).
+- **Atividades:** tarefas, ligações, reuniões e follow-ups com prazo, prioridade e destaque de atraso.
+- **Metas e ranking** por vendedor e por equipe.
+- **Painel:** 6 indicadores, 6 gráficos, filtros (período, vendedor, equipe, origem) e alertas (follow-up atrasado, oportunidade parada, fechamento próximo, meta abaixo do ritmo). Fórmulas em [docs/METRICS.md](docs/METRICS.md).
+- **Relatórios** com exportação CSV (neutraliza injeção de fórmula).
+- **Configurações:** etapas, origens, motivos de perda, equipes e identidade visual (nome, logo, cores).
+- Do Core: login, organização, papéis (proprietário, administrador, gerente, vendedor, leitor), verificação em duas etapas, auditoria, privacidade (LGPD) e equipe.
 
 ## Fora do escopo
-- WhatsApp automatizado
-- Disparo em massa
-- Integração fiscal
+WhatsApp e e-mail automatizados · disparo em massa · integração fiscal/contábil · assinatura de proposta · PDF · SSO · app nativo.
 
-## Indicadores
-- Taxa de conversão por etapa
-- Valor do pipeline aberto
-- Tempo médio de ciclo
-- Tarefas vencidas
+## Começar
+```bash
+pnpm install --frozen-lockfile
+cp .env.example .env.local      # preencha com o SEU projeto Supabase
+supabase start && supabase db reset   # banco local com dados fictícios
+pnpm dev
+```
+Passo a passo de produção, backup e rollback: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md). Modelo de dados e permissões: [docs/DATA_MODEL.md](docs/DATA_MODEL.md). Evidência dos testes: [docs/FEATURES.md](docs/FEATURES.md). Para adaptar a um cliente, abra a pasta no Claude Code ou Codex e peça: «leia o AGENTS.md e o MEMORY.md».
+
+## Qualidade
+`pnpm lint` · `pnpm typecheck` · `pnpm test` · `pnpm build` · `pnpm test:db` (RLS e indicadores no banco) · `pnpm test:e2e` (navegador, com Supabase real).
 
 ## Privacidade (LGPD)
-Risco estimado: **médio**. Dados pessoais tratados: nome, e-mail, telefone, cargo, histórico de contato.
-Quem implanta o sistema é o controlador dos dados; este software não substitui assessoria jurídica.
+Risco: **médio**. Dados pessoais: nome, e-mail, telefone, cargo e histórico de contato. Quem implanta é o controlador dos dados; este software não substitui assessoria jurídica. Os dados de demonstração são fictícios.
 
-> Valor de implantação ilustrativo e sem promessa de resultado: veja catalogo/sistemas.json.
+> Valor de implantação ilustrativo e sem promessa de resultado: veja `catalogo/sistemas.json` no repositório do Pack.
