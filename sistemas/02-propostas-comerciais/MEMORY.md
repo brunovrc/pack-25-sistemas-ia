@@ -1,5 +1,5 @@
 # MEMORY — GESTÃO DE PROPOSTAS COMERCIAIS
-Atualizado em: 2026-10-12 | Versão: 0.2.0 | Estado: EM_DESENVOLVIMENTO (aguardando CI verde para VALIDADO)
+Atualizado em: 2026-10-12 | Versão: 0.2.0 | Estado: VALIDADO (CI verde em 2026-10-12)
 
 ## Missão
 Propostas profissionais: clientes, catálogo, construtor com cálculo no banco, versões imutáveis, PDF, link seguro de aceite/recusa e indicadores reais. Prompt de origem: «Sistema 02 v2.0».
@@ -12,7 +12,7 @@ Comandos: `pnpm lint | typecheck | test | build | test:db | test:e2e`.
 Tudo de `docs/FEATURES.md`. Unitários 115; banco (cálculo, RLS, fluxo, público, indicadores) passando, 14 mutações detectadas; E2E: fluxo, ciclo de vida, segurança, painel/relatórios/mobile; PDF lido de volta (pdf.js).
 
 ## Pendências e riscos
-- CI do sistema 02 e instalação isolada: ver Testes e deploy.
+- CI do sistema 02 verde; instalação isolada validada (install, lint, tipos, 115 unit, build, test:db, 37 E2E).
 - Envio de e-mail real: NÃO TESTADO (sem credenciais).
 - Fontes padrão do PDF (sem alfabeto não latino).
 - Risco LGPD: médio.
@@ -24,7 +24,7 @@ Tudo de `docs/FEATURES.md`. Unitários 115; banco (cálculo, RLS, fluxo, públic
 - Último ciclo local: tudo verde (ver Implementado). Deploy: não configurado (responsabilidade de quem implanta).
 
 ## Próxima tarefa recomendada
-1. Conferir o CI; estando verde, marcar VALIDADO no catálogo e publicar `propostas-comerciais`.
+1. Manter; novas funções entram com teste e documentação.
 2. Sistema 03.
 
 ## Referências

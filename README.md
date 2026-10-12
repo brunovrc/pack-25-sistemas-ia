@@ -3,14 +3,14 @@
 25 sistemas MVP para pequenas e médias empresas, prontos para você personalizar com **Claude Code** ou **Codex**, conectar a um banco Supabase seu e publicar.
 
 > ## Estado real (2026-10-11)
-> **1 dos 25 sistemas está validado: o CRM Completo.** Os outros 24 estão planejados e ainda não estão disponíveis para uso. O repositório traz o catálogo, os padrões de segurança e privacidade, o núcleo (organizações, papéis, RLS e auditoria) e o CRM, com testes executados e CI verde. O status de cada sistema abaixo é lido de [catalogo/sistemas.json](catalogo/sistemas.json) e só muda após os gates de qualidade. Nada aqui promete renda ou vendas: o pack reduz tempo de desenvolvimento; implantar e vender depende de adequação, testes, hospedagem, suporte e prospecção.
+> **2 dos 25 sistemas estão validados: CRM Completo e Gestão de Propostas Comerciais.** Os outros 23 estão planejados e ainda não estão disponíveis para uso. O repositório traz o catálogo, os padrões de segurança e privacidade, o núcleo (organizações, papéis, RLS e auditoria) e o CRM, com testes executados e CI verde. O status de cada sistema abaixo é lido de [catalogo/sistemas.json](catalogo/sistemas.json) e só muda após os gates de qualidade. Nada aqui promete renda ou vendas: o pack reduz tempo de desenvolvimento; implantar e vender depende de adequação, testes, hospedagem, suporte e prospecção.
 
 ## Catálogo
 
 | # | Sistema | Categoria | Repositório | Status |
 |---|---|---|---|---|
 | 01 | **CRM Completo** — Funil de vendas único com histórico, tarefas e indicadores calculados do banco | Comercial | `crm-completo` | VALIDADO |
-| 02 | **Gestão de Propostas Comerciais** — Propostas profissionais com catálogo, preços, versões imutáveis, PDF, link seguro de aceite e indicadores comerciais | Comercial | `propostas-comerciais` | EM_DESENVOLVIMENTO |
+| 02 | **Gestão de Propostas Comerciais** — Propostas profissionais com catálogo, preços, versões imutáveis, PDF, link seguro de aceite e indicadores comerciais | Comercial | `propostas-comerciais` | VALIDADO |
 | 03 | **Qualificação de Leads** — Formulário público com pontuação por regras e distribuição automática ao responsável | Comercial | `qualificacao-de-leads` | PLANEJADO |
 | 04 | **Pós-venda e Recompra** — Alertas de recompra e segmentação simples para contato ativo da equipe | Comercial | `pos-venda-e-recompra` | PLANEJADO |
 | 05 | **Portal do Cliente B2B** — Portal onde o cliente abre solicitações, acessa documentos e comenta, isolado por empresa | Comercial | `portal-do-cliente` | PLANEJADO |
