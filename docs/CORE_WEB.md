@@ -27,7 +27,7 @@ Os padrões do Supabase **não** atendem este padrão de segurança. Verifique n
 1. **MFA → TOTP:** habilitar *enroll* e *verify* (vem desligado por padrão no `config.toml` gerado).
 2. **Senha:** comprimento mínimo **12** (o padrão local é 6) e **proteção contra senhas vazadas** quando disponível.
 3. **E-mail:** **confirmação de e-mail ligada** (o ambiente local a desliga só para testes) e *Secure password change* ligado.
-4. **URLs:** `Site URL` e `Redirect URLs` apenas com o domínio real. Modelos de e-mail devem apontar para `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup|recovery`.
+4. **URLs e modelos de e-mail:** `Site URL` e `Redirect URLs` apenas com o domínio real. Em *Authentication → Email Templates*, cole os modelos de `core/supabase/templates/` (confirmação, recuperação e convite): os links usam `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=…`, que é o que o app espera. **Sem isso o link do e-mail não conclui o fluxo.** Testado de ponta a ponta com o servidor de e-mail local (`email-flows.spec.ts`).
 5. **SMTP próprio** para produção; **região do projeto no Brasil (São Paulo)**; backups automáticos e teste de restauração.
 6. **Rate limits** de autenticação do Supabase mantidos ligados. O limitador do app é por instância e é só defesa em profundidade.
 7. Variáveis do app: somente `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (chave publishable) e `NEXT_PUBLIC_APP_URL` (https). Nunca `service_role`.

@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
   if (tokenHash && type.success) {
     const supabase = await createSupabaseServer();
     const { error } = await supabase.auth.verifyOtp({ type: type.data, token_hash: tokenHash });
-    if (!error) redirect(type.data === 'recovery' ? '/reset-password' : next);
+    if (!error) redirect(type.data === 'recovery' || type.data === 'invite' ? '/reset-password' : next);
   }
   redirect('/login?error=link_invalido');
 }

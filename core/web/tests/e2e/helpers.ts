@@ -5,6 +5,7 @@ import { expect } from '@playwright/test';
 export const SUPABASE_URL = process.env.E2E_SUPABASE_URL ?? 'http://127.0.0.1:54321';
 export const ANON_KEY = process.env.E2E_SUPABASE_ANON_KEY ?? '';
 export const BASE_URL = process.env.E2E_BASE_URL ?? 'http://localhost:3000';
+export const MAILPIT_URL = process.env.E2E_MAILPIT_URL ?? 'http://127.0.0.1:58324';
 export const PASSWORD = 'uma frase longa e segura 2026';
 
 export function uniqueEmail(tag: string): string {
@@ -34,7 +35,25 @@ export function totp(secret: string, atMs = Date.now()): string {
   return code;
 }
 
-/** Cria um usuário direto no GoTrue (confirmação de e-mail desligada no ambiente local). */
+/** Espera o e-mail chegar no Mailpit (servidor de e-mail local) e devolve o link de confirmação do app. */
+export async function waitForAuthLink(to: string, type: 'signup' | 'recovery' | 'invite', timeoutMs = 15_000): Promise<string> {
+  const deadline = Date.now() + timeoutMs;
+  while (Date.now() < deadline) {
+    const res = await fetch(`${MAILPIT_URL}/api/v1/search?query=${encodeURIComponent(`to:"${to}"`)}`);
+    const list = (await res.json()) as { messages?: Array<{ ID: string }> };
+    for (const m of list.messages ?? []) {
+      const msg = (await (await fetch(`${MAILPIT_URL}/api/v1/message/${m.ID}`)).json()) as { HTML?: string; Text?: string };
+      const body = [msg.HTML ?? '', msg.Text ?? ''].join('\n');
+      const urls = body.match(/https?:\/\/[^\s"'<>]*\/auth\/confirm\?[^\s"'<>]*/g) ?? [];
+      const match = urls.map((u) => u.replaceAll('&amp;', '&')).find((u) => u.includes(`type=${type}`));
+      if (match) return match;
+    }
+    await new Promise((r) => setTimeout(r, 500));
+  }
+  throw new Error(`e-mail ${type} para ${to} não chegou`);
+}
+
+/** Cria um usuário direto no GoTrue e confirma o e-mail pelo link recebido (confirmação ligada, como em produção). */
 export async function apiSignUp(email: string, password = PASSWORD): Promise<{ id: string }> {
   const res = await fetch(`${SUPABASE_URL}/auth/v1/signup`, {
     method: 'POST',
@@ -43,6 +62,9 @@ export async function apiSignUp(email: string, password = PASSWORD): Promise<{ i
   });
   if (!res.ok) throw new Error(`signup falhou: ${res.status}`);
   const body = (await res.json()) as { user?: { id: string }; id?: string };
+  const link = await waitForAuthLink(email, 'signup');
+  // O link aponta para o app (APP_URL); consome o token por GET direto no GoTrue equivalente via app.
+  await fetch(link, { redirect: 'manual' });
   return { id: (body.user?.id ?? body.id) as string };
 }
 

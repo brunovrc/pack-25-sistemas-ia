@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { PASSWORD, loginWithMfa, onboardAndEnrollMfa, uniqueEmail } from './helpers';
+import { PASSWORD, loginWithMfa, onboardAndEnrollMfa, uniqueEmail, waitForAuthLink } from './helpers';
 
 test.describe.configure({ mode: 'serial' });
 
@@ -19,6 +19,9 @@ test('cadastro pela interface: resposta neutra e senha fraca rejeitada', async (
   await page.getByLabel('Confirmar senha').fill(PASSWORD);
   await page.getByRole('button', { name: 'Criar conta' }).click();
   await expect(page.getByText(/Se o cadastro for possível/)).toBeVisible();
+
+  // A conta só vale depois de confirmar o e-mail (como em produção).
+  await fetch(await waitForAuthLink(email, 'signup'), { redirect: 'manual' });
 });
 
 test('login, organização, MFA obrigatório para o proprietário e painel com dados reais', async ({ page }) => {
