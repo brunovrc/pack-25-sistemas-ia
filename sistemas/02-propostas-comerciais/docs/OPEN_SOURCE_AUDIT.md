@@ -25,6 +25,7 @@ Consulta feita em 2026-10-12 (metadados pela API do GitHub e `npm view`). «Inco
 | react-hook-form, @hookform/resolvers | 7.89.0, 5.9.1 | MIT | formulários |
 | @tanstack/react-table | 8.21.3 | MIT | tabelas |
 | papaparse | 5.7.0 | MIT | importação de CSV de clientes |
+| pdfjs-dist (somente testes) | 6.4.299 | Apache-2.0 | ler o PDF de volta nos testes (texto, páginas, rodapé) |
 
 Não adotados: `date-fns` (o `Intl` do Node e do navegador cobre o necessário) e `lucide-react` (ícones são SVG inline, sem dependência).
 
