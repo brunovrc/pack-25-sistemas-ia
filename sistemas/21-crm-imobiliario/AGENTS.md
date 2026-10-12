@@ -1,6 +1,6 @@
 # AGENTS — CRM Imobiliário
 
-Sistema 21 do Pack 25 Sistemas IA (pack25-21-crm-imobiliario). O status real vive em MEMORY.md.
+Sistema 21 do Pack 25 Sistemas IA (crm-imobiliario). O status real vive em MEMORY.md.
 
 ## Regras perenes
 - Esta pasta é autossuficiente: nada importa de fora dela, sem workspace:*, sem citar outros sistemas.

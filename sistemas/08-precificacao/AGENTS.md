@@ -1,6 +1,6 @@
 # AGENTS — Precificação
 
-Sistema 08 do Pack 25 Sistemas IA (pack25-08-precificacao). O status real vive em MEMORY.md.
+Sistema 08 do Pack 25 Sistemas IA (precificacao). O status real vive em MEMORY.md.
 
 ## Regras perenes
 - Esta pasta é autossuficiente: nada importa de fora dela, sem workspace:*, sem citar outros sistemas.

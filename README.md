@@ -7,38 +7,38 @@
 
 ## Catálogo
 
-| # | Sistema | Categoria | Repositório individual | Status |
+| # | Sistema | Categoria | Repositório | Status |
 |---|---|---|---|---|
-| 01 | CRM Comercial | Comercial | `pack25-01-crm-comercial` | PLANEJADO |
-| 02 | Propostas Comerciais | Comercial | `pack25-02-propostas-comerciais` | PLANEJADO |
-| 03 | Qualificador de Leads | Comercial | `pack25-03-qualificador-leads` | PLANEJADO |
-| 04 | Pós-venda e Recompra | Comercial | `pack25-04-pos-venda` | PLANEJADO |
-| 05 | Portal do Cliente B2B | Comercial | `pack25-05-portal-b2b` | PLANEJADO |
-| 06 | Financeiro | Gestão | `pack25-06-financeiro` | PLANEJADO |
-| 07 | Estoque | Gestão | `pack25-07-estoque` | PLANEJADO |
-| 08 | Precificação | Gestão | `pack25-08-precificacao` | PLANEJADO |
-| 09 | Dashboard Executivo | Gestão | `pack25-09-dashboard-executivo` | PLANEJADO |
-| 10 | Comissões | Gestão | `pack25-10-comissoes` | PLANEJADO |
-| 11 | Agendamentos | Operações | `pack25-11-agendamentos` | PLANEJADO |
-| 12 | Chamados e Suporte | Operações | `pack25-12-chamados` | PLANEJADO |
-| 13 | Ordens de Serviço | Operações | `pack25-13-ordens-servico` | PLANEJADO |
-| 14 | Gestão de Projetos | Operações | `pack25-14-projetos` | PLANEJADO |
-| 15 | Gestão de Contratos | Operações | `pack25-15-contratos` | PLANEJADO |
-| 16 | Dashboard de Marketing | Marketing | `pack25-16-dashboard-marketing` | PLANEJADO |
-| 17 | NPS e Satisfação | Marketing | `pack25-17-nps` | PLANEJADO |
-| 18 | Programa de Fidelidade | Marketing | `pack25-18-fidelidade` | PLANEJADO |
-| 19 | Conteúdo com IA | Marketing | `pack25-19-conteudo-ia` | PLANEJADO |
-| 20 | Afiliados e Parceiros | Marketing | `pack25-20-afiliados` | PLANEJADO |
-| 21 | CRM Imobiliário | Verticais | `pack25-21-crm-imobiliario` | PLANEJADO |
-| 22 | Cardápio Digital e Pedidos | Verticais | `pack25-22-cardapio` | PLANEJADO |
-| 23 | Gestão de Academias | Verticais | `pack25-23-academias` | PLANEJADO |
-| 24 | Gestão Escolar | Verticais | `pack25-24-escolas` | PLANEJADO |
-| 25 | Eventos e Credenciamento | Verticais | `pack25-25-eventos` | PLANEJADO |
+| 01 | **CRM Completo** — Funil de vendas único com histórico, tarefas e indicadores calculados do banco | Comercial | `crm-completo` | PLANEJADO |
+| 02 | **Gerador de Propostas** — Propostas padronizadas, versionadas e em PDF, com catálogo e aprovação de desconto | Comercial | `gerador-de-propostas` | PLANEJADO |
+| 03 | **Qualificação de Leads** — Formulário público com pontuação por regras e distribuição automática ao responsável | Comercial | `qualificacao-de-leads` | PLANEJADO |
+| 04 | **Pós-venda e Recompra** — Alertas de recompra e segmentação simples para contato ativo da equipe | Comercial | `pos-venda-e-recompra` | PLANEJADO |
+| 05 | **Portal do Cliente B2B** — Portal onde o cliente abre solicitações, acessa documentos e comenta, isolado por empresa | Comercial | `portal-do-cliente` | PLANEJADO |
+| 06 | **Financeiro Completo** — Controle de contas, categorias e fluxo de caixa com lançamentos auditáveis | Gestão | `financeiro-completo` | PLANEJADO |
+| 07 | **Controle de Estoque** — Saldo confiável por depósito com movimentação auditável e alerta de mínimo | Gestão | `controle-de-estoque` | PLANEJADO |
+| 08 | **Precificação** — Cálculo transparente de preço, margem e markup com cenários comparáveis | Gestão | `precificacao` | PLANEJADO |
+| 09 | **Dashboard Executivo** — Importação de CSV com mapeamento de colunas e KPIs comparativos por período | Gestão | `dashboard-executivo` | PLANEJADO |
+| 10 | **Gestão de Comissões** — Planos de comissão por faixa com estornos e fechamentos rastreáveis | Gestão | `gestao-de-comissoes` | PLANEJADO |
+| 11 | **Agendamento Online** — Reserva pública com disponibilidade real, bloqueios e reagendamento | Operações | `agendamento-online` | PLANEJADO |
+| 12 | **Central de Chamados** — Tickets com SLA, responsáveis, notas e métricas | Operações | `central-de-chamados` | PLANEJADO |
+| 13 | **Ordens de Serviço** — Ciclo completo da OS com checklist, peças, fotos e aceite simples | Operações | `ordens-de-servico` | PLANEJADO |
+| 14 | **Gestão de Projetos** — Quadro Kanban por projeto com prazos, responsáveis e comentários | Operações | `gestao-de-projetos` | PLANEJADO |
+| 15 | **Gestão de Contratos** — Cadastro de contratos com arquivos, vencimentos e lembretes | Operações | `gestao-de-contratos` | PLANEJADO |
+| 16 | **Dashboard de Marketing** — Visão consolidada de custo, conversão, ROAS e CPL por importação CSV | Marketing | `dashboard-de-marketing` | PLANEJADO |
+| 17 | **Pesquisa NPS e Satisfação** — Pesquisa pública NPS/CSAT com alertas para detratores e relatório | Marketing | `pesquisa-nps` | PLANEJADO |
+| 18 | **Programa de Fidelidade** — Pontos, recompensas e resgates com extrato imutável | Marketing | `programa-de-fidelidade` | PLANEJADO |
+| 19 | **Conteúdo com IA** — Marcas, briefings, calendário e aprovação, com sugestões de IA por ação explícita | Marketing | `conteudo-com-ia` | PLANEJADO |
+| 20 | **Programa de Afiliados** — Links rastreáveis, leads atribuídos e comissão com aprovação | Marketing | `programa-de-afiliados` | PLANEJADO |
+| 21 | **CRM Imobiliário** — Funil de negociação com imóveis, visitas e ficha pública do interessado | Verticais | `crm-imobiliario` | PLANEJADO |
+| 22 | **Cardápio Digital e Pedidos** — Cardápio público com carrinho, pedidos e painel de cozinha | Verticais | `cardapio-digital` | PLANEJADO |
+| 23 | **Gestão de Academias** — Alunos, planos, agenda, treinos montados pelo profissional e mensalidades administrativas | Verticais | `gestao-de-academias` | PLANEJADO |
+| 24 | **Gestão Escolar** — Matrículas, turmas, aulas, presença, parcelas e certificados administrativos | Verticais | `gestao-escolar` | PLANEJADO |
+| 25 | **Gestão de Eventos** — Inscrições com lotes, ingressos QR assinados, check-in único e controle de presença | Verticais | `gestao-de-eventos` | PLANEJADO |
 
 ## Como usar um sistema (o caminho simples)
 
 1. Na área de membros, abra a aula e clique no link do repositório.
-2. Escolha o sistema na lista acima e entre no repositório dele (`pack25-NN-…`).
+2. Escolha o sistema na lista acima e entre no repositório dele (o nome é o da coluna "Repositório").
 3. Clique em **Code** e copie o link de clone.
 4. No VS Code, abra a pasta do seu projeto, cole o link num `git clone` e abra a pasta com **Claude Code** ou **Codex**.
 5. Peça ao agente para ler o `AGENTS.md` e o `MEMORY.md` e adapte para a empresa do seu cliente.

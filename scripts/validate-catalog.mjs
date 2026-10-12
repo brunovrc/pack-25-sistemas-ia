@@ -29,7 +29,7 @@ systems.forEach((s, i) => {
   if (s.id !== expectedId) err(`${tag} id deveria ser ${expectedId}`);
   if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(s.slug ?? '')) err(`${tag} slug inválido`);
   if (s.directory !== `sistemas/${s.id}-${s.slug}`) err(`${tag} directory inconsistente`);
-  if (s.repo_name !== `pack25-${s.id}-${s.slug}`) err(`${tag} repo_name inconsistente`);
+  if (s.repo_name !== s.slug) err(`${tag} repo_name deve ser igual ao slug (nome generalista, sem prefixo)`);
   for (const [set, key] of [[seen.id, 'id'], [seen.slug, 'slug'], [seen.repo, 'repo_name']]) {
     if (set.has(s[key])) err(`${tag} ${key} duplicado: ${s[key]}`);
     set.add(s[key]);

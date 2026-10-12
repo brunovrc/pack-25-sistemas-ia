@@ -20,7 +20,7 @@ pack-25-sistemas-ia/
 ## Fluxo de entrega
 
 ```text
-core/ ──sync-core (a criar)──▶ sistemas/NN-slug ──export-system──▶ pacote ──publish-mirrors──▶ pack25-NN-slug
+core/ ──sync-core (a criar)──▶ sistemas/NN-slug ──export-system──▶ pacote ──publish-mirrors──▶ <slug>
           ▲                          │ gates (seção 11)                     │ checksums + manifesto
           └── correção de segurança propaga para as 25 pastas ──────────────┘
 ```

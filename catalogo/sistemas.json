@@ -1,335 +1,1019 @@
 {
   "schema_version": 1,
   "product": "Pack 25 Sistemas IA",
-  "catalog_version": "0.1.0",
+  "catalog_version": "0.2.0",
   "updated_at": "2026-10-11",
   "disclaimer": "Valores de implantação são ILUSTRATIVOS e não constituem promessa de renda, venda ou resultado. Status reflete apenas o que foi verificado pelos gates do prompt mestre (seção 11). Nenhum sistema é 'ready' sem checklist completo.",
-  "status_values": ["PLANEJADO", "EM_DESENVOLVIMENTO", "VALIDADO", "BLOQUEADO"],
+  "status_values": [
+    "PLANEJADO",
+    "EM_DESENVOLVIMENTO",
+    "VALIDADO",
+    "BLOQUEADO"
+  ],
   "systems": [
     {
-      "id": "01", "slug": "crm-comercial", "directory": "sistemas/01-crm-comercial", "repo_name": "pack25-01-crm-comercial",
-      "name": "CRM Comercial", "category": "Comercial",
+      "id": "01",
+      "slug": "crm-completo",
+      "directory": "sistemas/01-crm-completo",
+      "repo_name": "crm-completo",
+      "name": "CRM Completo",
+      "category": "Comercial",
       "audience": "Equipes comerciais de pequenas e médias empresas B2B",
       "pain": "Leads em planilhas e WhatsApp, sem funil nem histórico de relacionamento",
       "value_proposition": "Funil de vendas único com histórico, tarefas e indicadores calculados do banco",
-      "mvp_features": ["Leads", "Contatos", "Contas", "Oportunidades em pipeline Kanban", "Tarefas e lembretes", "Histórico de interações", "Relatórios e KPIs", "Importação e exportação CSV", "IA opcional para rascunho de textos"],
-      "exclusions": ["WhatsApp automatizado", "Disparo em massa", "Integração fiscal"],
-      "kpis": ["Taxa de conversão por etapa", "Valor do pipeline aberto", "Tempo médio de ciclo", "Tarefas vencidas"],
-      "complexity": "média", "implementation_price_brl_illustrative": {"min": 1500, "max": 3500},
-      "lgpd_risk": "médio", "personal_data": ["nome", "e-mail", "telefone", "cargo", "histórico de contato"],
+      "mvp_features": [
+        "Leads",
+        "Contatos",
+        "Contas",
+        "Oportunidades em pipeline Kanban",
+        "Tarefas e lembretes",
+        "Histórico de interações",
+        "Relatórios e KPIs",
+        "Importação e exportação CSV",
+        "IA opcional para rascunho de textos"
+      ],
+      "exclusions": [
+        "WhatsApp automatizado",
+        "Disparo em massa",
+        "Integração fiscal"
+      ],
+      "kpis": [
+        "Taxa de conversão por etapa",
+        "Valor do pipeline aberto",
+        "Tempo médio de ciclo",
+        "Tarefas vencidas"
+      ],
+      "complexity": "média",
+      "implementation_price_brl_illustrative": {
+        "min": 1500,
+        "max": 3500
+      },
+      "lgpd_risk": "médio",
+      "personal_data": [
+        "nome",
+        "e-mail",
+        "telefone",
+        "cargo",
+        "histórico de contato"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "02", "slug": "propostas-comerciais", "directory": "sistemas/02-propostas-comerciais", "repo_name": "pack25-02-propostas-comerciais",
-      "name": "Propostas Comerciais", "category": "Comercial",
+      "id": "02",
+      "slug": "gerador-de-propostas",
+      "directory": "sistemas/02-gerador-de-propostas",
+      "repo_name": "gerador-de-propostas",
+      "name": "Gerador de Propostas",
+      "category": "Comercial",
       "audience": "Vendedores e prestadores de serviço que enviam orçamentos",
       "pain": "Propostas montadas à mão, sem versões, sem controle de descontos e sem status",
       "value_proposition": "Propostas padronizadas, versionadas e em PDF, com catálogo e aprovação de desconto",
-      "mvp_features": ["Catálogo de produtos e serviços", "Preços", "Clientes", "Versões da proposta", "Descontos com limite por perfil", "Geração de PDF", "Status da proposta"],
-      "exclusions": ["Assinatura eletrônica certificada", "Integração fiscal"],
-      "kpis": ["Propostas enviadas", "Taxa de aceite", "Desconto médio concedido", "Valor em aberto"],
-      "complexity": "média", "implementation_price_brl_illustrative": {"min": 1500, "max": 3500},
-      "lgpd_risk": "médio", "personal_data": ["nome", "e-mail", "telefone", "endereço comercial"],
+      "mvp_features": [
+        "Catálogo de produtos e serviços",
+        "Preços",
+        "Clientes",
+        "Versões da proposta",
+        "Descontos com limite por perfil",
+        "Geração de PDF",
+        "Status da proposta"
+      ],
+      "exclusions": [
+        "Assinatura eletrônica certificada",
+        "Integração fiscal"
+      ],
+      "kpis": [
+        "Propostas enviadas",
+        "Taxa de aceite",
+        "Desconto médio concedido",
+        "Valor em aberto"
+      ],
+      "complexity": "média",
+      "implementation_price_brl_illustrative": {
+        "min": 1500,
+        "max": 3500
+      },
+      "lgpd_risk": "médio",
+      "personal_data": [
+        "nome",
+        "e-mail",
+        "telefone",
+        "endereço comercial"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "03", "slug": "qualificador-leads", "directory": "sistemas/03-qualificador-leads", "repo_name": "pack25-03-qualificador-leads",
-      "name": "Qualificador de Leads", "category": "Comercial",
+      "id": "03",
+      "slug": "qualificacao-de-leads",
+      "directory": "sistemas/03-qualificacao-de-leads",
+      "repo_name": "qualificacao-de-leads",
+      "name": "Qualificação de Leads",
+      "category": "Comercial",
       "audience": "Times de marketing e vendas que recebem leads de formulários",
       "pain": "Leads sem priorização chegam ao vendedor errado e esfriam",
       "value_proposition": "Formulário público com pontuação por regras e distribuição automática ao responsável",
-      "mvp_features": ["Formulários públicos", "Regras de scoring configuráveis", "Distribuição por regra", "Status do lead", "Relatório", "Análise por IA opcional"],
-      "exclusions": ["Disparo em massa", "Enriquecimento de dados por terceiros"],
-      "kpis": ["Leads por origem", "Score médio", "Tempo até primeiro contato", "Conversão por faixa de score"],
-      "complexity": "baixa", "implementation_price_brl_illustrative": {"min": 900, "max": 1800},
-      "lgpd_risk": "médio", "personal_data": ["nome", "e-mail", "telefone", "respostas do formulário"],
+      "mvp_features": [
+        "Formulários públicos",
+        "Regras de scoring configuráveis",
+        "Distribuição por regra",
+        "Status do lead",
+        "Relatório",
+        "Análise por IA opcional"
+      ],
+      "exclusions": [
+        "Disparo em massa",
+        "Enriquecimento de dados por terceiros"
+      ],
+      "kpis": [
+        "Leads por origem",
+        "Score médio",
+        "Tempo até primeiro contato",
+        "Conversão por faixa de score"
+      ],
+      "complexity": "baixa",
+      "implementation_price_brl_illustrative": {
+        "min": 900,
+        "max": 1800
+      },
+      "lgpd_risk": "médio",
+      "personal_data": [
+        "nome",
+        "e-mail",
+        "telefone",
+        "respostas do formulário"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "04", "slug": "pos-venda", "directory": "sistemas/04-pos-venda", "repo_name": "pack25-04-pos-venda",
-      "name": "Pós-venda e Recompra", "category": "Comercial",
+      "id": "04",
+      "slug": "pos-venda-e-recompra",
+      "directory": "sistemas/04-pos-venda-e-recompra",
+      "repo_name": "pos-venda-e-recompra",
+      "name": "Pós-venda e Recompra",
+      "category": "Comercial",
       "audience": "Lojas e empresas com base de clientes recorrentes",
       "pain": "Cliente compra uma vez e não é reativado",
       "value_proposition": "Alertas de recompra e segmentação simples para contato ativo da equipe",
-      "mvp_features": ["Cadastro de compras", "Cálculo de ciclo de recompra", "Segmentação simples", "Alertas de contato", "Registro de contatos"],
-      "exclusions": ["Disparo em massa", "Automação de WhatsApp"],
-      "kpis": ["Taxa de recompra", "Clientes inativos", "Intervalo médio entre compras", "Contatos realizados"],
-      "complexity": "baixa", "implementation_price_brl_illustrative": {"min": 900, "max": 1800},
-      "lgpd_risk": "médio", "personal_data": ["nome", "telefone", "e-mail", "histórico de compras"],
+      "mvp_features": [
+        "Cadastro de compras",
+        "Cálculo de ciclo de recompra",
+        "Segmentação simples",
+        "Alertas de contato",
+        "Registro de contatos"
+      ],
+      "exclusions": [
+        "Disparo em massa",
+        "Automação de WhatsApp"
+      ],
+      "kpis": [
+        "Taxa de recompra",
+        "Clientes inativos",
+        "Intervalo médio entre compras",
+        "Contatos realizados"
+      ],
+      "complexity": "baixa",
+      "implementation_price_brl_illustrative": {
+        "min": 900,
+        "max": 1800
+      },
+      "lgpd_risk": "médio",
+      "personal_data": [
+        "nome",
+        "telefone",
+        "e-mail",
+        "histórico de compras"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "05", "slug": "portal-b2b", "directory": "sistemas/05-portal-b2b", "repo_name": "pack25-05-portal-b2b",
-      "name": "Portal do Cliente B2B", "category": "Comercial",
+      "id": "05",
+      "slug": "portal-do-cliente",
+      "directory": "sistemas/05-portal-do-cliente",
+      "repo_name": "portal-do-cliente",
+      "name": "Portal do Cliente B2B",
+      "category": "Comercial",
       "audience": "Empresas que atendem clientes corporativos recorrentes",
       "pain": "Solicitações e documentos espalhados por e-mail",
       "value_proposition": "Portal onde o cliente abre solicitações, acessa documentos e comenta, isolado por empresa",
-      "mvp_features": ["Usuários clientes com acesso isolado", "Solicitações", "Documentos privados", "Comentários", "Notificações simples"],
-      "exclusions": ["Cobrança integrada", "Assinatura certificada"],
-      "kpis": ["Solicitações abertas", "Tempo de resposta", "Documentos compartilhados"],
-      "complexity": "média", "implementation_price_brl_illustrative": {"min": 1500, "max": 3500},
-      "lgpd_risk": "médio", "personal_data": ["nome", "e-mail", "documentos do cliente"],
+      "mvp_features": [
+        "Usuários clientes com acesso isolado",
+        "Solicitações",
+        "Documentos privados",
+        "Comentários",
+        "Notificações simples"
+      ],
+      "exclusions": [
+        "Cobrança integrada",
+        "Assinatura certificada"
+      ],
+      "kpis": [
+        "Solicitações abertas",
+        "Tempo de resposta",
+        "Documentos compartilhados"
+      ],
+      "complexity": "média",
+      "implementation_price_brl_illustrative": {
+        "min": 1500,
+        "max": 3500
+      },
+      "lgpd_risk": "médio",
+      "personal_data": [
+        "nome",
+        "e-mail",
+        "documentos do cliente"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "06", "slug": "financeiro", "directory": "sistemas/06-financeiro", "repo_name": "pack25-06-financeiro",
-      "name": "Financeiro", "category": "Gestão",
+      "id": "06",
+      "slug": "financeiro-completo",
+      "directory": "sistemas/06-financeiro-completo",
+      "repo_name": "financeiro-completo",
+      "name": "Financeiro Completo",
+      "category": "Gestão",
       "audience": "Pequenas empresas sem ERP",
       "pain": "Contas a pagar e receber em planilhas, sem visão de caixa",
       "value_proposition": "Controle de contas, categorias e fluxo de caixa com lançamentos auditáveis",
-      "mvp_features": ["Contas a pagar", "Contas a receber", "Lançamentos imutáveis com estorno", "Categorias", "Fluxo de caixa", "Relatórios", "Exportação CSV"],
-      "exclusions": ["Contabilidade", "Emissão fiscal", "Conciliação bancária automática"],
-      "kpis": ["Saldo projetado", "Inadimplência", "Despesa por categoria", "Prazo médio de recebimento"],
-      "complexity": "alta", "implementation_price_brl_illustrative": {"min": 3000, "max": 6000},
-      "lgpd_risk": "alto", "personal_data": ["nome", "CPF/CNPJ", "dados financeiros"],
+      "mvp_features": [
+        "Contas a pagar",
+        "Contas a receber",
+        "Lançamentos imutáveis com estorno",
+        "Categorias",
+        "Fluxo de caixa",
+        "Relatórios",
+        "Exportação CSV"
+      ],
+      "exclusions": [
+        "Contabilidade",
+        "Emissão fiscal",
+        "Conciliação bancária automática"
+      ],
+      "kpis": [
+        "Saldo projetado",
+        "Inadimplência",
+        "Despesa por categoria",
+        "Prazo médio de recebimento"
+      ],
+      "complexity": "alta",
+      "implementation_price_brl_illustrative": {
+        "min": 3000,
+        "max": 6000
+      },
+      "lgpd_risk": "alto",
+      "personal_data": [
+        "nome",
+        "CPF/CNPJ",
+        "dados financeiros"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "07", "slug": "estoque", "directory": "sistemas/07-estoque", "repo_name": "pack25-07-estoque",
-      "name": "Estoque", "category": "Gestão",
+      "id": "07",
+      "slug": "controle-de-estoque",
+      "directory": "sistemas/07-controle-de-estoque",
+      "repo_name": "controle-de-estoque",
+      "name": "Controle de Estoque",
+      "category": "Gestão",
       "audience": "Comércio e distribuidores pequenos",
       "pain": "Saldo divergente e falta de rastreio das movimentações",
       "value_proposition": "Saldo confiável por depósito com movimentação auditável e alerta de mínimo",
-      "mvp_features": ["Produtos", "Fornecedores", "Depósitos", "Entradas, saídas e ajustes transacionais", "Estoque mínimo", "Histórico de movimentação imutável"],
-      "exclusions": ["Emissão de NF-e", "Integração com marketplaces"],
-      "kpis": ["Itens abaixo do mínimo", "Giro de estoque", "Valor em estoque", "Ajustes por período"],
-      "complexity": "alta", "implementation_price_brl_illustrative": {"min": 3000, "max": 6000},
-      "lgpd_risk": "baixo", "personal_data": ["contato de fornecedores"],
+      "mvp_features": [
+        "Produtos",
+        "Fornecedores",
+        "Depósitos",
+        "Entradas, saídas e ajustes transacionais",
+        "Estoque mínimo",
+        "Histórico de movimentação imutável"
+      ],
+      "exclusions": [
+        "Emissão de NF-e",
+        "Integração com marketplaces"
+      ],
+      "kpis": [
+        "Itens abaixo do mínimo",
+        "Giro de estoque",
+        "Valor em estoque",
+        "Ajustes por período"
+      ],
+      "complexity": "alta",
+      "implementation_price_brl_illustrative": {
+        "min": 3000,
+        "max": 6000
+      },
+      "lgpd_risk": "baixo",
+      "personal_data": [
+        "contato de fornecedores"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "08", "slug": "precificacao", "directory": "sistemas/08-precificacao", "repo_name": "pack25-08-precificacao",
-      "name": "Precificação", "category": "Gestão",
+      "id": "08",
+      "slug": "precificacao",
+      "directory": "sistemas/08-precificacao",
+      "repo_name": "precificacao",
+      "name": "Precificação",
+      "category": "Gestão",
       "audience": "Indústrias, lojas e prestadores que definem preço de venda",
       "pain": "Preço no feeling, sem considerar custos, taxas e margem",
       "value_proposition": "Cálculo transparente de preço, margem e markup com cenários comparáveis",
-      "mvp_features": ["Custos", "Taxas e comissões", "Margens", "Cenários", "Markup", "Comparativo de cenários"],
-      "exclusions": ["Apuração tributária oficial"],
-      "kpis": ["Margem por produto", "Preço mínimo viável", "Impacto de taxa na margem"],
-      "complexity": "média", "implementation_price_brl_illustrative": {"min": 1500, "max": 3500},
-      "lgpd_risk": "baixo", "personal_data": [],
+      "mvp_features": [
+        "Custos",
+        "Taxas e comissões",
+        "Margens",
+        "Cenários",
+        "Markup",
+        "Comparativo de cenários"
+      ],
+      "exclusions": [
+        "Apuração tributária oficial"
+      ],
+      "kpis": [
+        "Margem por produto",
+        "Preço mínimo viável",
+        "Impacto de taxa na margem"
+      ],
+      "complexity": "média",
+      "implementation_price_brl_illustrative": {
+        "min": 1500,
+        "max": 3500
+      },
+      "lgpd_risk": "baixo",
+      "personal_data": [],
       "status": "PLANEJADO"
     },
     {
-      "id": "09", "slug": "dashboard-executivo", "directory": "sistemas/09-dashboard-executivo", "repo_name": "pack25-09-dashboard-executivo",
-      "name": "Dashboard Executivo", "category": "Gestão",
+      "id": "09",
+      "slug": "dashboard-executivo",
+      "directory": "sistemas/09-dashboard-executivo",
+      "repo_name": "dashboard-executivo",
+      "name": "Dashboard Executivo",
+      "category": "Gestão",
       "audience": "Gestores que consolidam indicadores de várias planilhas",
       "pain": "Relatórios montados manualmente todo mês",
       "value_proposition": "Importação de CSV com mapeamento de colunas e KPIs comparativos por período",
-      "mvp_features": ["Importação CSV", "Mapeamento de colunas", "KPIs configuráveis", "Comparativos de período", "Exportação"],
-      "exclusions": ["Conectores universais", "Streaming em tempo real"],
-      "kpis": ["Variação vs. período anterior", "Meta vs. realizado"],
-      "complexity": "média", "implementation_price_brl_illustrative": {"min": 1500, "max": 3500},
-      "lgpd_risk": "médio", "personal_data": ["depende do CSV importado"],
+      "mvp_features": [
+        "Importação CSV",
+        "Mapeamento de colunas",
+        "KPIs configuráveis",
+        "Comparativos de período",
+        "Exportação"
+      ],
+      "exclusions": [
+        "Conectores universais",
+        "Streaming em tempo real"
+      ],
+      "kpis": [
+        "Variação vs. período anterior",
+        "Meta vs. realizado"
+      ],
+      "complexity": "média",
+      "implementation_price_brl_illustrative": {
+        "min": 1500,
+        "max": 3500
+      },
+      "lgpd_risk": "médio",
+      "personal_data": [
+        "depende do CSV importado"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "10", "slug": "comissoes", "directory": "sistemas/10-comissoes", "repo_name": "pack25-10-comissoes",
-      "name": "Comissões", "category": "Gestão",
+      "id": "10",
+      "slug": "gestao-de-comissoes",
+      "directory": "sistemas/10-gestao-de-comissoes",
+      "repo_name": "gestao-de-comissoes",
+      "name": "Gestão de Comissões",
+      "category": "Gestão",
       "audience": "Empresas com vendedores comissionados",
       "pain": "Cálculo manual de comissão gera erro e disputa",
       "value_proposition": "Planos de comissão por faixa com estornos e fechamentos rastreáveis",
-      "mvp_features": ["Planos de comissão", "Vendedores", "Vendas", "Faixas", "Estornos", "Fechamento de período"],
-      "exclusions": ["Folha de pagamento", "Pagamento automático"],
-      "kpis": ["Comissão por vendedor", "Estornos", "Custo de comissão sobre receita"],
-      "complexity": "média", "implementation_price_brl_illustrative": {"min": 1500, "max": 3500},
-      "lgpd_risk": "médio", "personal_data": ["nome do vendedor", "remuneração variável"],
+      "mvp_features": [
+        "Planos de comissão",
+        "Vendedores",
+        "Vendas",
+        "Faixas",
+        "Estornos",
+        "Fechamento de período"
+      ],
+      "exclusions": [
+        "Folha de pagamento",
+        "Pagamento automático"
+      ],
+      "kpis": [
+        "Comissão por vendedor",
+        "Estornos",
+        "Custo de comissão sobre receita"
+      ],
+      "complexity": "média",
+      "implementation_price_brl_illustrative": {
+        "min": 1500,
+        "max": 3500
+      },
+      "lgpd_risk": "médio",
+      "personal_data": [
+        "nome do vendedor",
+        "remuneração variável"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "11", "slug": "agendamentos", "directory": "sistemas/11-agendamentos", "repo_name": "pack25-11-agendamentos",
-      "name": "Agendamentos", "category": "Operações",
+      "id": "11",
+      "slug": "agendamento-online",
+      "directory": "sistemas/11-agendamento-online",
+      "repo_name": "agendamento-online",
+      "name": "Agendamento Online",
+      "category": "Operações",
       "audience": "Clínicas, salões e prestadores com agenda",
       "pain": "Agenda no papel ou chat, com conflitos e faltas",
       "value_proposition": "Reserva pública com disponibilidade real, bloqueios e reagendamento",
-      "mvp_features": ["Profissionais", "Serviços", "Disponibilidade", "Reserva pública", "Bloqueios", "Reagendamento e cancelamento"],
-      "exclusions": ["Gateway de pagamento", "Videochamada"],
-      "kpis": ["Taxa de ocupação", "Taxa de falta", "Reservas por serviço"],
-      "complexity": "alta", "implementation_price_brl_illustrative": {"min": 3000, "max": 6000},
-      "lgpd_risk": "médio", "personal_data": ["nome", "telefone", "e-mail", "horários de atendimento"],
+      "mvp_features": [
+        "Profissionais",
+        "Serviços",
+        "Disponibilidade",
+        "Reserva pública",
+        "Bloqueios",
+        "Reagendamento e cancelamento"
+      ],
+      "exclusions": [
+        "Gateway de pagamento",
+        "Videochamada"
+      ],
+      "kpis": [
+        "Taxa de ocupação",
+        "Taxa de falta",
+        "Reservas por serviço"
+      ],
+      "complexity": "alta",
+      "implementation_price_brl_illustrative": {
+        "min": 3000,
+        "max": 6000
+      },
+      "lgpd_risk": "médio",
+      "personal_data": [
+        "nome",
+        "telefone",
+        "e-mail",
+        "horários de atendimento"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "12", "slug": "chamados", "directory": "sistemas/12-chamados", "repo_name": "pack25-12-chamados",
-      "name": "Chamados e Suporte", "category": "Operações",
+      "id": "12",
+      "slug": "central-de-chamados",
+      "directory": "sistemas/12-central-de-chamados",
+      "repo_name": "central-de-chamados",
+      "name": "Central de Chamados",
+      "category": "Operações",
       "audience": "Equipes de suporte interno ou externo",
       "pain": "Pedidos de suporte perdidos e sem prazo",
       "value_proposition": "Tickets com SLA, responsáveis, notas e métricas",
-      "mvp_features": ["Tickets", "Status", "SLA", "Equipe", "Notas internas", "Anexos", "Métricas"],
-      "exclusions": ["Telefonia integrada", "Chat em tempo real"],
-      "kpis": ["Tempo de primeira resposta", "Tempo de resolução", "SLA cumprido", "Backlog"],
-      "complexity": "média", "implementation_price_brl_illustrative": {"min": 1500, "max": 3500},
-      "lgpd_risk": "médio", "personal_data": ["nome", "e-mail", "conteúdo do chamado", "anexos"],
+      "mvp_features": [
+        "Tickets",
+        "Status",
+        "SLA",
+        "Equipe",
+        "Notas internas",
+        "Anexos",
+        "Métricas"
+      ],
+      "exclusions": [
+        "Telefonia integrada",
+        "Chat em tempo real"
+      ],
+      "kpis": [
+        "Tempo de primeira resposta",
+        "Tempo de resolução",
+        "SLA cumprido",
+        "Backlog"
+      ],
+      "complexity": "média",
+      "implementation_price_brl_illustrative": {
+        "min": 1500,
+        "max": 3500
+      },
+      "lgpd_risk": "médio",
+      "personal_data": [
+        "nome",
+        "e-mail",
+        "conteúdo do chamado",
+        "anexos"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "13", "slug": "ordens-servico", "directory": "sistemas/13-ordens-servico", "repo_name": "pack25-13-ordens-servico",
-      "name": "Ordens de Serviço", "category": "Operações",
+      "id": "13",
+      "slug": "ordens-de-servico",
+      "directory": "sistemas/13-ordens-de-servico",
+      "repo_name": "ordens-de-servico",
+      "name": "Ordens de Serviço",
+      "category": "Operações",
       "audience": "Assistências técnicas e empresas de manutenção",
       "pain": "Serviço sem registro, sem foto e sem aceite do cliente",
       "value_proposition": "Ciclo completo da OS com checklist, peças, fotos e aceite simples",
-      "mvp_features": ["Abertura de OS", "Clientes", "Técnicos", "Checklists", "Peças", "Fotos", "Status", "Aceite simples"],
-      "exclusions": ["Roteirização", "Emissão fiscal"],
-      "kpis": ["OS por status", "Tempo médio de atendimento", "Retrabalho"],
-      "complexity": "alta", "implementation_price_brl_illustrative": {"min": 3000, "max": 6000},
-      "lgpd_risk": "médio", "personal_data": ["nome", "telefone", "endereço", "fotos"],
+      "mvp_features": [
+        "Abertura de OS",
+        "Clientes",
+        "Técnicos",
+        "Checklists",
+        "Peças",
+        "Fotos",
+        "Status",
+        "Aceite simples"
+      ],
+      "exclusions": [
+        "Roteirização",
+        "Emissão fiscal"
+      ],
+      "kpis": [
+        "OS por status",
+        "Tempo médio de atendimento",
+        "Retrabalho"
+      ],
+      "complexity": "alta",
+      "implementation_price_brl_illustrative": {
+        "min": 3000,
+        "max": 6000
+      },
+      "lgpd_risk": "médio",
+      "personal_data": [
+        "nome",
+        "telefone",
+        "endereço",
+        "fotos"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "14", "slug": "projetos", "directory": "sistemas/14-projetos", "repo_name": "pack25-14-projetos",
-      "name": "Gestão de Projetos", "category": "Operações",
+      "id": "14",
+      "slug": "gestao-de-projetos",
+      "directory": "sistemas/14-gestao-de-projetos",
+      "repo_name": "gestao-de-projetos",
+      "name": "Gestão de Projetos",
+      "category": "Operações",
       "audience": "Agências e equipes de serviço por projeto",
       "pain": "Tarefas e prazos sem dono nem visibilidade",
       "value_proposition": "Quadro Kanban por projeto com prazos, responsáveis e comentários",
-      "mvp_features": ["Projetos", "Tarefas", "Quadro Kanban", "Prazos", "Responsáveis", "Comentários"],
-      "exclusions": ["Gantt complexo", "Controle de horas faturáveis"],
-      "kpis": ["Tarefas atrasadas", "Progresso por projeto", "Carga por responsável"],
-      "complexity": "média", "implementation_price_brl_illustrative": {"min": 1500, "max": 3500},
-      "lgpd_risk": "baixo", "personal_data": ["nome e e-mail dos membros"],
+      "mvp_features": [
+        "Projetos",
+        "Tarefas",
+        "Quadro Kanban",
+        "Prazos",
+        "Responsáveis",
+        "Comentários"
+      ],
+      "exclusions": [
+        "Gantt complexo",
+        "Controle de horas faturáveis"
+      ],
+      "kpis": [
+        "Tarefas atrasadas",
+        "Progresso por projeto",
+        "Carga por responsável"
+      ],
+      "complexity": "média",
+      "implementation_price_brl_illustrative": {
+        "min": 1500,
+        "max": 3500
+      },
+      "lgpd_risk": "baixo",
+      "personal_data": [
+        "nome e e-mail dos membros"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "15", "slug": "contratos", "directory": "sistemas/15-contratos", "repo_name": "pack25-15-contratos",
-      "name": "Gestão de Contratos", "category": "Operações",
+      "id": "15",
+      "slug": "gestao-de-contratos",
+      "directory": "sistemas/15-gestao-de-contratos",
+      "repo_name": "gestao-de-contratos",
+      "name": "Gestão de Contratos",
+      "category": "Operações",
       "audience": "Empresas com contratos de clientes e fornecedores",
       "pain": "Renovações e reajustes esquecidos",
       "value_proposition": "Cadastro de contratos com arquivos, vencimentos e lembretes",
-      "mvp_features": ["Contratos", "Partes", "Arquivos privados", "Vencimentos", "Lembretes", "Reajuste configurável"],
-      "exclusions": ["Parecer jurídico", "Assinatura certificada"],
-      "kpis": ["Contratos a vencer em 30/60/90 dias", "Valor sob contrato", "Renovações"],
-      "complexity": "média", "implementation_price_brl_illustrative": {"min": 1500, "max": 3500},
-      "lgpd_risk": "alto", "personal_data": ["nome", "CPF/CNPJ", "endereço", "documentos contratuais"],
+      "mvp_features": [
+        "Contratos",
+        "Partes",
+        "Arquivos privados",
+        "Vencimentos",
+        "Lembretes",
+        "Reajuste configurável"
+      ],
+      "exclusions": [
+        "Parecer jurídico",
+        "Assinatura certificada"
+      ],
+      "kpis": [
+        "Contratos a vencer em 30/60/90 dias",
+        "Valor sob contrato",
+        "Renovações"
+      ],
+      "complexity": "média",
+      "implementation_price_brl_illustrative": {
+        "min": 1500,
+        "max": 3500
+      },
+      "lgpd_risk": "alto",
+      "personal_data": [
+        "nome",
+        "CPF/CNPJ",
+        "endereço",
+        "documentos contratuais"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "16", "slug": "dashboard-marketing", "directory": "sistemas/16-dashboard-marketing", "repo_name": "pack25-16-dashboard-marketing",
-      "name": "Dashboard de Marketing", "category": "Marketing",
+      "id": "16",
+      "slug": "dashboard-de-marketing",
+      "directory": "sistemas/16-dashboard-de-marketing",
+      "repo_name": "dashboard-de-marketing",
+      "name": "Dashboard de Marketing",
+      "category": "Marketing",
       "audience": "Gestores de tráfego e marketing",
       "pain": "Resultados de campanhas dispersos em várias plataformas",
       "value_proposition": "Visão consolidada de custo, conversão, ROAS e CPL por importação CSV",
-      "mvp_features": ["Campanhas", "Mídia", "Custo", "Conversões", "ROAS e CPL", "Importação CSV"],
-      "exclusions": ["APIs nativas obrigatórias das plataformas de mídia"],
-      "kpis": ["ROAS", "CPL", "CAC", "Conversão por canal"],
-      "complexity": "média", "implementation_price_brl_illustrative": {"min": 1500, "max": 3500},
-      "lgpd_risk": "baixo", "personal_data": [],
+      "mvp_features": [
+        "Campanhas",
+        "Mídia",
+        "Custo",
+        "Conversões",
+        "ROAS e CPL",
+        "Importação CSV"
+      ],
+      "exclusions": [
+        "APIs nativas obrigatórias das plataformas de mídia"
+      ],
+      "kpis": [
+        "ROAS",
+        "CPL",
+        "CAC",
+        "Conversão por canal"
+      ],
+      "complexity": "média",
+      "implementation_price_brl_illustrative": {
+        "min": 1500,
+        "max": 3500
+      },
+      "lgpd_risk": "baixo",
+      "personal_data": [],
       "status": "PLANEJADO"
     },
     {
-      "id": "17", "slug": "nps", "directory": "sistemas/17-nps", "repo_name": "pack25-17-nps",
-      "name": "NPS e Satisfação", "category": "Marketing",
+      "id": "17",
+      "slug": "pesquisa-nps",
+      "directory": "sistemas/17-pesquisa-nps",
+      "repo_name": "pesquisa-nps",
+      "name": "Pesquisa NPS e Satisfação",
+      "category": "Marketing",
       "audience": "Empresas que querem medir satisfação de clientes",
       "pain": "Sem medição contínua de satisfação",
       "value_proposition": "Pesquisa pública NPS/CSAT com alertas para detratores e relatório",
-      "mvp_features": ["Pesquisa pública", "NPS e CSAT", "Respostas", "Alertas de detratores", "Relatório"],
-      "exclusions": ["Envio em massa"],
-      "kpis": ["NPS", "CSAT", "Taxa de resposta", "Detratores em aberto"],
-      "complexity": "baixa", "implementation_price_brl_illustrative": {"min": 900, "max": 1800},
-      "lgpd_risk": "médio", "personal_data": ["e-mail opcional", "comentários livres"],
+      "mvp_features": [
+        "Pesquisa pública",
+        "NPS e CSAT",
+        "Respostas",
+        "Alertas de detratores",
+        "Relatório"
+      ],
+      "exclusions": [
+        "Envio em massa"
+      ],
+      "kpis": [
+        "NPS",
+        "CSAT",
+        "Taxa de resposta",
+        "Detratores em aberto"
+      ],
+      "complexity": "baixa",
+      "implementation_price_brl_illustrative": {
+        "min": 900,
+        "max": 1800
+      },
+      "lgpd_risk": "médio",
+      "personal_data": [
+        "e-mail opcional",
+        "comentários livres"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "18", "slug": "fidelidade", "directory": "sistemas/18-fidelidade", "repo_name": "pack25-18-fidelidade",
-      "name": "Programa de Fidelidade", "category": "Marketing",
+      "id": "18",
+      "slug": "programa-de-fidelidade",
+      "directory": "sistemas/18-programa-de-fidelidade",
+      "repo_name": "programa-de-fidelidade",
+      "name": "Programa de Fidelidade",
+      "category": "Marketing",
       "audience": "Comércio e serviços com clientes recorrentes",
       "pain": "Cartão de pontos em papel, sem controle",
       "value_proposition": "Pontos, recompensas e resgates com extrato imutável",
-      "mvp_features": ["Cadastro de clientes", "Saldo e pontos", "Recompensas", "Resgates", "Extrato"],
-      "exclusions": ["Carteira financeira", "Cashback em dinheiro"],
-      "kpis": ["Pontos emitidos e resgatados", "Clientes ativos", "Taxa de resgate"],
-      "complexity": "média", "implementation_price_brl_illustrative": {"min": 1500, "max": 3500},
-      "lgpd_risk": "médio", "personal_data": ["nome", "telefone", "e-mail", "histórico de consumo"],
+      "mvp_features": [
+        "Cadastro de clientes",
+        "Saldo e pontos",
+        "Recompensas",
+        "Resgates",
+        "Extrato"
+      ],
+      "exclusions": [
+        "Carteira financeira",
+        "Cashback em dinheiro"
+      ],
+      "kpis": [
+        "Pontos emitidos e resgatados",
+        "Clientes ativos",
+        "Taxa de resgate"
+      ],
+      "complexity": "média",
+      "implementation_price_brl_illustrative": {
+        "min": 1500,
+        "max": 3500
+      },
+      "lgpd_risk": "médio",
+      "personal_data": [
+        "nome",
+        "telefone",
+        "e-mail",
+        "histórico de consumo"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "19", "slug": "conteudo-ia", "directory": "sistemas/19-conteudo-ia", "repo_name": "pack25-19-conteudo-ia",
-      "name": "Conteúdo com IA", "category": "Marketing",
+      "id": "19",
+      "slug": "conteudo-com-ia",
+      "directory": "sistemas/19-conteudo-com-ia",
+      "repo_name": "conteudo-com-ia",
+      "name": "Conteúdo com IA",
+      "category": "Marketing",
       "audience": "Social media e agências",
       "pain": "Planejar e aprovar conteúdo consome tempo e fica sem rastro",
       "value_proposition": "Marcas, briefings, calendário e aprovação, com sugestões de IA por ação explícita",
-      "mvp_features": ["Marcas", "Briefing", "Calendário editorial", "Sugestões por IA", "Fluxo de aprovação", "Chave de provedor configurável"],
-      "exclusions": ["Postagem automática em redes sociais"],
-      "kpis": ["Peças por status", "Tempo de aprovação", "Custo de IA por período"],
-      "complexity": "média", "implementation_price_brl_illustrative": {"min": 1500, "max": 3500},
-      "lgpd_risk": "baixo", "personal_data": ["nome dos membros"],
+      "mvp_features": [
+        "Marcas",
+        "Briefing",
+        "Calendário editorial",
+        "Sugestões por IA",
+        "Fluxo de aprovação",
+        "Chave de provedor configurável"
+      ],
+      "exclusions": [
+        "Postagem automática em redes sociais"
+      ],
+      "kpis": [
+        "Peças por status",
+        "Tempo de aprovação",
+        "Custo de IA por período"
+      ],
+      "complexity": "média",
+      "implementation_price_brl_illustrative": {
+        "min": 1500,
+        "max": 3500
+      },
+      "lgpd_risk": "baixo",
+      "personal_data": [
+        "nome dos membros"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "20", "slug": "afiliados", "directory": "sistemas/20-afiliados", "repo_name": "pack25-20-afiliados",
-      "name": "Afiliados e Parceiros", "category": "Marketing",
+      "id": "20",
+      "slug": "programa-de-afiliados",
+      "directory": "sistemas/20-programa-de-afiliados",
+      "repo_name": "programa-de-afiliados",
+      "name": "Programa de Afiliados",
+      "category": "Marketing",
       "audience": "Empresas com programa de indicação ou afiliados",
       "pain": "Indicações sem rastreio nem comissão clara",
       "value_proposition": "Links rastreáveis, leads atribuídos e comissão com aprovação",
-      "mvp_features": ["Parceiros", "Links rastreáveis", "Leads atribuídos", "Aprovação", "Cálculo de comissão"],
-      "exclusions": ["Pagamento automático"],
-      "kpis": ["Leads por parceiro", "Conversão por parceiro", "Comissão a pagar"],
-      "complexity": "média", "implementation_price_brl_illustrative": {"min": 1500, "max": 3500},
-      "lgpd_risk": "médio", "personal_data": ["nome", "e-mail", "dados bancários opcionais para repasse manual"],
+      "mvp_features": [
+        "Parceiros",
+        "Links rastreáveis",
+        "Leads atribuídos",
+        "Aprovação",
+        "Cálculo de comissão"
+      ],
+      "exclusions": [
+        "Pagamento automático"
+      ],
+      "kpis": [
+        "Leads por parceiro",
+        "Conversão por parceiro",
+        "Comissão a pagar"
+      ],
+      "complexity": "média",
+      "implementation_price_brl_illustrative": {
+        "min": 1500,
+        "max": 3500
+      },
+      "lgpd_risk": "médio",
+      "personal_data": [
+        "nome",
+        "e-mail",
+        "dados bancários opcionais para repasse manual"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "21", "slug": "crm-imobiliario", "directory": "sistemas/21-crm-imobiliario", "repo_name": "pack25-21-crm-imobiliario",
-      "name": "CRM Imobiliário", "category": "Verticais",
+      "id": "21",
+      "slug": "crm-imobiliario",
+      "directory": "sistemas/21-crm-imobiliario",
+      "repo_name": "crm-imobiliario",
+      "name": "CRM Imobiliário",
+      "category": "Verticais",
       "audience": "Imobiliárias e corretores autônomos",
       "pain": "Interessados, imóveis e visitas controlados em planilhas e chats",
       "value_proposition": "Funil de negociação com imóveis, visitas e ficha pública do interessado",
-      "mvp_features": ["Imóveis", "Corretores", "Interessados", "Visitas", "Negociações", "Ficha pública"],
-      "exclusions": ["Integração com portais imobiliários", "Contrato com assinatura certificada"],
-      "kpis": ["Visitas por negócio", "Conversão por corretor", "Tempo até fechamento"],
-      "complexity": "alta", "implementation_price_brl_illustrative": {"min": 3000, "max": 6000},
-      "lgpd_risk": "alto", "personal_data": ["nome", "CPF", "telefone", "renda declarada", "endereço"],
+      "mvp_features": [
+        "Imóveis",
+        "Corretores",
+        "Interessados",
+        "Visitas",
+        "Negociações",
+        "Ficha pública"
+      ],
+      "exclusions": [
+        "Integração com portais imobiliários",
+        "Contrato com assinatura certificada"
+      ],
+      "kpis": [
+        "Visitas por negócio",
+        "Conversão por corretor",
+        "Tempo até fechamento"
+      ],
+      "complexity": "alta",
+      "implementation_price_brl_illustrative": {
+        "min": 3000,
+        "max": 6000
+      },
+      "lgpd_risk": "alto",
+      "personal_data": [
+        "nome",
+        "CPF",
+        "telefone",
+        "renda declarada",
+        "endereço"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "22", "slug": "cardapio", "directory": "sistemas/22-cardapio", "repo_name": "pack25-22-cardapio",
-      "name": "Cardápio Digital e Pedidos", "category": "Verticais",
+      "id": "22",
+      "slug": "cardapio-digital",
+      "directory": "sistemas/22-cardapio-digital",
+      "repo_name": "cardapio-digital",
+      "name": "Cardápio Digital e Pedidos",
+      "category": "Verticais",
       "audience": "Restaurantes, lanchonetes e delivery próprio",
       "pain": "Pedidos por chat com erro de anotação",
       "value_proposition": "Cardápio público com carrinho, pedidos e painel de cozinha",
-      "mvp_features": ["Cardápio público", "Adicionais", "Carrinho", "Pedidos", "Painel de cozinha"],
-      "exclusions": ["PDV fiscal", "Pagamento online"],
-      "kpis": ["Pedidos por período", "Ticket médio", "Tempo de preparo"],
-      "complexity": "alta", "implementation_price_brl_illustrative": {"min": 3000, "max": 6000},
-      "lgpd_risk": "médio", "personal_data": ["nome", "telefone", "endereço de entrega"],
+      "mvp_features": [
+        "Cardápio público",
+        "Adicionais",
+        "Carrinho",
+        "Pedidos",
+        "Painel de cozinha"
+      ],
+      "exclusions": [
+        "PDV fiscal",
+        "Pagamento online"
+      ],
+      "kpis": [
+        "Pedidos por período",
+        "Ticket médio",
+        "Tempo de preparo"
+      ],
+      "complexity": "alta",
+      "implementation_price_brl_illustrative": {
+        "min": 3000,
+        "max": 6000
+      },
+      "lgpd_risk": "médio",
+      "personal_data": [
+        "nome",
+        "telefone",
+        "endereço de entrega"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "23", "slug": "academias", "directory": "sistemas/23-academias", "repo_name": "pack25-23-academias",
-      "name": "Gestão de Academias", "category": "Verticais",
+      "id": "23",
+      "slug": "gestao-de-academias",
+      "directory": "sistemas/23-gestao-de-academias",
+      "repo_name": "gestao-de-academias",
+      "name": "Gestão de Academias",
+      "category": "Verticais",
       "audience": "Academias e estúdios",
       "pain": "Alunos, planos e mensalidades controlados à mão",
       "value_proposition": "Alunos, planos, agenda, treinos montados pelo profissional e mensalidades administrativas",
-      "mvp_features": ["Alunos", "Planos", "Agenda", "Exercícios criados pelo profissional", "Mensalidades administrativas"],
-      "exclusions": ["Prescrição clínica automática", "Cobrança integrada"],
-      "kpis": ["Alunos ativos", "Evasão", "Inadimplência", "Frequência"],
-      "complexity": "alta", "implementation_price_brl_illustrative": {"min": 3000, "max": 6000},
-      "lgpd_risk": "alto", "personal_data": ["nome", "CPF", "dados de saúde (sensíveis)", "medidas corporais"],
+      "mvp_features": [
+        "Alunos",
+        "Planos",
+        "Agenda",
+        "Exercícios criados pelo profissional",
+        "Mensalidades administrativas"
+      ],
+      "exclusions": [
+        "Prescrição clínica automática",
+        "Cobrança integrada"
+      ],
+      "kpis": [
+        "Alunos ativos",
+        "Evasão",
+        "Inadimplência",
+        "Frequência"
+      ],
+      "complexity": "alta",
+      "implementation_price_brl_illustrative": {
+        "min": 3000,
+        "max": 6000
+      },
+      "lgpd_risk": "alto",
+      "personal_data": [
+        "nome",
+        "CPF",
+        "dados de saúde (sensíveis)",
+        "medidas corporais"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "24", "slug": "escolas", "directory": "sistemas/24-escolas", "repo_name": "pack25-24-escolas",
-      "name": "Gestão Escolar", "category": "Verticais",
+      "id": "24",
+      "slug": "gestao-escolar",
+      "directory": "sistemas/24-gestao-escolar",
+      "repo_name": "gestao-escolar",
+      "name": "Gestão Escolar",
+      "category": "Verticais",
       "audience": "Escolas livres, cursos e reforço escolar",
       "pain": "Matrículas, presença e parcelas em papel",
       "value_proposition": "Matrículas, turmas, aulas, presença, parcelas e certificados administrativos",
-      "mvp_features": ["Matrículas", "Turmas", "Aulas", "Presença", "Parcelas", "Certificados administrativos"],
-      "exclusions": ["Integração educacional governamental", "Diploma com validade oficial"],
-      "kpis": ["Presença média", "Inadimplência", "Ocupação das turmas"],
-      "complexity": "alta", "implementation_price_brl_illustrative": {"min": 3000, "max": 6000},
-      "lgpd_risk": "alto", "personal_data": ["nome", "CPF", "dados de menores (art. 14 LGPD)", "responsáveis", "frequência"],
+      "mvp_features": [
+        "Matrículas",
+        "Turmas",
+        "Aulas",
+        "Presença",
+        "Parcelas",
+        "Certificados administrativos"
+      ],
+      "exclusions": [
+        "Integração educacional governamental",
+        "Diploma com validade oficial"
+      ],
+      "kpis": [
+        "Presença média",
+        "Inadimplência",
+        "Ocupação das turmas"
+      ],
+      "complexity": "alta",
+      "implementation_price_brl_illustrative": {
+        "min": 3000,
+        "max": 6000
+      },
+      "lgpd_risk": "alto",
+      "personal_data": [
+        "nome",
+        "CPF",
+        "dados de menores (art. 14 LGPD)",
+        "responsáveis",
+        "frequência"
+      ],
       "status": "PLANEJADO"
     },
     {
-      "id": "25", "slug": "eventos", "directory": "sistemas/25-eventos", "repo_name": "pack25-25-eventos",
-      "name": "Eventos e Credenciamento", "category": "Verticais",
+      "id": "25",
+      "slug": "gestao-de-eventos",
+      "directory": "sistemas/25-gestao-de-eventos",
+      "repo_name": "gestao-de-eventos",
+      "name": "Gestão de Eventos",
+      "category": "Verticais",
       "audience": "Organizadores de eventos, workshops e congressos",
       "pain": "Inscrição e check-in manuais, sem controle de capacidade",
       "value_proposition": "Inscrições com lotes, ingressos QR assinados, check-in único e controle de presença",
-      "mvp_features": ["Inscrições", "Lotes sem pagamento", "Ingressos com QR assinado", "Check-in único", "Capacidade", "Presença"],
-      "exclusions": ["Cobrança de ingressos", "Streaming"],
-      "kpis": ["Inscritos vs. capacidade", "Taxa de comparecimento", "Check-ins por hora"],
-      "complexity": "média", "implementation_price_brl_illustrative": {"min": 1500, "max": 3500},
-      "lgpd_risk": "médio", "personal_data": ["nome", "e-mail", "documento opcional"],
+      "mvp_features": [
+        "Inscrições",
+        "Lotes sem pagamento",
+        "Ingressos com QR assinado",
+        "Check-in único",
+        "Capacidade",
+        "Presença"
+      ],
+      "exclusions": [
+        "Cobrança de ingressos",
+        "Streaming"
+      ],
+      "kpis": [
+        "Inscritos vs. capacidade",
+        "Taxa de comparecimento",
+        "Check-ins por hora"
+      ],
+      "complexity": "média",
+      "implementation_price_brl_illustrative": {
+        "min": 1500,
+        "max": 3500
+      },
+      "lgpd_risk": "médio",
+      "personal_data": [
+        "nome",
+        "e-mail",
+        "documento opcional"
+      ],
       "status": "PLANEJADO"
     }
-  ]
+  ],
+  "naming_rule": "repo_name = slug generalista (sem prefixo). O repositório recebe o tópico \"pack25\" para agrupamento; descrição e tópicos saem deste catálogo."
 }

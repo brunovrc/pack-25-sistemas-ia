@@ -4,20 +4,20 @@
 
 ```text
 pack-25-sistemas-ia            (hub: catálogo, guias, 25 pastas — fonte da verdade)
- ├─ sistemas/01-crm-comercial  ──export──▶  pack25-01-crm-comercial   (repositório espelho)
- ├─ sistemas/02-propostas-...  ──export──▶  pack25-02-propostas-comerciais
+ ├─ sistemas/01-crm-comercial  ──export──▶  crm-completo   (repositório espelho)
+ ├─ sistemas/02-propostas-...  ──export──▶  gerador-de-propostas
  └─ ... (25)
 ```
 
 - **Hub:** onde se desenvolve. O comprador pode obter só uma pasta com sparse checkout.
-- **Espelho:** repositório com nome próprio (`pack25-NN-slug`, campo `repo_name` do catálogo), gerado a partir da pasta. O comprador faz `git clone` normal e recebe só aquele sistema.
+- **Espelho:** repositório com nome próprio (`<slug>` (ex.: `crm-completo`), campo `repo_name` do catálogo), gerado a partir da pasta. O comprador faz `git clone` normal e recebe só aquele sistema.
 - Alterações **nunca** nascem no espelho; ele é sobrescrito pelo hub.
 
 ## Opção A — clonar o repositório do sistema (recomendada)
 
 ```bash
-git clone https://github.com/<ORG>/pack25-01-crm-comercial.git
-cd pack25-01-crm-comercial
+git clone https://github.com/<ORG>/crm-completo.git
+cd crm-completo
 ```
 
 ## Opção B — só a pasta, a partir do hub (sparse checkout)
@@ -44,7 +44,7 @@ Um sistema só é exportável quando `status` ≠ `PLANEJADO`; só é **publicá
 
 Definido pelo titular em 2026-10-12: o comprador adquire o **curso** na plataforma e recebe por e-mail as aulas com os **links dos repositórios**. A plataforma entrega o e-mail; ela **não** cria acesso ao GitHub.
 
-Fluxo do aluno (definido pelo titular em 2026-10-12): aula na área de membros → link do repositório → escolhe o sistema → copia o link de clone → cola no VS Code com Claude/Codex → clona na pasta do projeto → adapta para a empresa do cliente. Por isso **cada sistema tem o próprio repositório com link de clone próprio** (`pack25-NN-slug`) e README/AGENTS/MEMORY que funcionam sozinhos.
+Fluxo do aluno (definido pelo titular em 2026-10-12): aula na área de membros → link do repositório → escolhe o sistema → copia o link de clone → cola no VS Code com Claude/Codex → clona na pasta do projeto → adapta para a empresa do cliente. Por isso **cada sistema tem o próprio repositório com link de clone próprio** (`<slug>` (ex.: `crm-completo`)) e README/AGENTS/MEMORY que funcionam sozinhos.
 
 Consequências:
 - **Repositório público = qualquer pessoa com o link acessa**, comprando ou não. O que protege o produto passa a ser a licença (`LICENSE.md`), não o acesso técnico. O titular aceitou esse modelo (hub público desde 2026-10-12).
@@ -58,7 +58,7 @@ Regras de engenharia que valem em qualquer escolha:
 
 ## Bloqueios que dependem do titular (não resolvidos pelo agente)
 
-1. Criar a organização/conta GitHub e os repositórios `pack25-NN-slug` (privados) e `pack-25-sistemas-ia`.
+1. Criar a organização/conta GitHub e os repositórios `<slug>` (ex.: `crm-completo`) (privados) e `pack-25-sistemas-ia`.
 2. Gerar um token **fine-grained** com `Contents: write` restrito aos repositórios espelho e guardá-lo como secret `MIRROR_PUSH_TOKEN` no ambiente protegido `mirror-publish` do hub.
 3. Modelo de acesso do comprador: **definido** como entrega por plataforma de cursos (seção acima). Falta escolher, por sistema, entre repositório público (controle só pela licença) e ZIP na área de membros.
 4. Ativar secret scanning, push protection, Dependabot alerts e proteção de branch nos repositórios.

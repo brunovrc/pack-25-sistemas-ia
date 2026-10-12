@@ -9,7 +9,7 @@ Formato: contexto → decisão → consequência. Decisões novas entram no fim;
 
 ## ADR-002 — Distribuição em dois níveis: hub único + espelho por sistema
 - **Contexto:** o produto é UM repositório com 25 pastas (prompt mestre) e o comprador deve poder baixar/clonar só o sistema que quer, com repositório de nome próprio. O GitHub não clona subpasta.
-- **Decisão:** (1) `pack-25-sistemas-ia` é a fonte e o catálogo; (2) cada sistema validado é publicado automaticamente como repositório espelho `pack25-NN-slug` por `scripts/export-system.mjs` + workflow `publish-mirrors`; (3) sparse checkout do hub segue documentado como alternativa.
+- **Decisão:** (1) `pack-25-sistemas-ia` é a fonte e o catálogo; (2) cada sistema validado é publicado automaticamente como repositório espelho `<slug>` (ex.: `crm-completo`) por `scripts/export-system.mjs` + workflow `publish-mirrors`; (3) sparse checkout do hub segue documentado como alternativa.
 - **Consequência:** o espelho é somente-leitura (alterações nascem no hub). A exportação recusa sistemas `PLANEJADO` e reprova pacote com dependência cruzada ou segredo. Detalhes em `docs/DISTRIBUTION.md`.
 
 ## ADR-003 — Core construído do zero, reutilizando padrões permissivos

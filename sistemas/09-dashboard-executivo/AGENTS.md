@@ -1,6 +1,6 @@
 # AGENTS — Dashboard Executivo
 
-Sistema 09 do Pack 25 Sistemas IA (pack25-09-dashboard-executivo). O status real vive em MEMORY.md.
+Sistema 09 do Pack 25 Sistemas IA (dashboard-executivo). O status real vive em MEMORY.md.
 
 ## Regras perenes
 - Esta pasta é autossuficiente: nada importa de fora dela, sem workspace:*, sem citar outros sistemas.

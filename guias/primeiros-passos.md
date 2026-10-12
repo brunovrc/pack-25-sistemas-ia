@@ -4,7 +4,7 @@
 
 ## Em 5 passos
 
-1. **Escolha o sistema** que vai implantar na empresa do seu cliente e abra o repositório dele (ex.: `pack25-01-crm-comercial`).
+1. **Escolha o sistema** que vai implantar na empresa do seu cliente e abra o repositório dele (ex.: `crm-completo`).
 2. **Copie o link de clone:** no GitHub, botão verde **Code** → copie o endereço HTTPS.
 3. **Clone na pasta do seu projeto:** no VS Code, abra a pasta onde quer trabalhar, abra o terminal e rode:
    ```bash
