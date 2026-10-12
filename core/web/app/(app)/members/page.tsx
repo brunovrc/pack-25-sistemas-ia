@@ -27,7 +27,7 @@ export default async function MembersPage() {
       <PageHeader title="Equipe" description="Pessoas com acesso a esta organização e seus papéis." />
       {canEdit ? (
         <div className="mb-4">
-          <Alert tone="info">O convite de novas pessoas por e-mail chega no próximo marco. Por ora, é possível gerenciar quem já faz parte.</Alert>
+          <Alert tone="info">Para adicionar novas pessoas, convide-as pelo painel do Supabase e associe-as à organização (passo a passo em docs/MEMBROS.md). Aqui você gerencia papéis e remove quem já faz parte.</Alert>
         </div>
       ) : null}
       {members.length === 0 ? (

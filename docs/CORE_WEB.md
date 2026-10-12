@@ -4,7 +4,7 @@ App Next.js 16 (App Router) + TypeScript 6.0 strict + Tailwind 4 em `core/web`, 
 
 ## O que existe e foi verificado
 Cadastro, login, logout, recuperação e redefinição de senha · MFA (TOTP) obrigatório para owner/admin · criação de organização · troca de organização · equipe (papéis e remoção) · configurações white-label (nome e cor) · auditoria · solicitações de titulares (LGPD) · painel com números calculados do banco.
-**Ainda não existe:** convite de novas pessoas por e-mail (próximo marco), upload de logo (exige Storage), limitador de taxa distribuído.
+**Fora do escopo do MVP:** convite de pessoas por e-mail (como adicionar: `docs/MEMBROS.md`), upload de logo (exige Storage), limitador de taxa distribuído.
 
 ## Segurança implementada (e onde está o teste)
 | Controle | Onde | Teste |

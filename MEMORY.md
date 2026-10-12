@@ -19,7 +19,7 @@ Next 16.4.0 + React 19.3.0 + TypeScript 6.0.3 + Tailwind 4 + Supabase (ADR-009).
 - Nada em andamento.
 
 ## Pendências e riscos
-- ALTA: convite de membros por e-mail (token hasheado, expirável) ainda não existe; hoje só dá para gerenciar quem já é membro.
+- DECIDIDO: sem convite por e-mail no MVP (fora do escopo; "se previsto" no prompt). Adicionar pessoas = convite do painel Supabase + SQL documentado e testado em `docs/MEMBROS.md`.
 - ALTA: decisões do titular — `LICENSE.md` (rascunho), e-mail de segurança, repositórios espelho e token (modelo de venda definido: plataforma de cursos + links por e-mail, ver `docs/DISTRIBUTION.md`; falta decidir por sistema público x ZIP) (ver `docs/DISTRIBUTION.md`).
 - ALTA: **produção exige configuração do Supabase** diferente do padrão (TOTP, senha 12, confirmação de e-mail) — ver `docs/CORE_WEB.md`.
 - MÉDIA: `sync-core` (ADR-004) ainda não implementado; limitador de taxa do app é por instância; sem upload de logo (Storage).
@@ -38,7 +38,7 @@ Next 16.4.0 + React 19.3.0 + TypeScript 6.0.3 + Tailwind 4 + Supabase (ADR-009).
 - Ambiente de deploy: não configurado
 
 ## Próxima tarefa recomendada
-1. Convite de membros por e-mail (tabela de convites com token hasheado e expiração, aceite autenticado, testes RLS e E2E). Depois: `sync-core` e o CRM piloto (Etapa C).
+1. `sync-core` (ADR-004) e o CRM piloto (Etapa C): PRD enxuto e fluxos testáveis para aprovação antes de implementar.
 
 ## Referências
 - `docs/ARCHITECTURE.md`; `docs/DECISIONS.md`; `docs/SECURITY_STANDARD.md`; `docs/LGPD_GUIDE.md`; `docs/DISTRIBUTION.md`
