@@ -5,7 +5,7 @@
 ```text
 pack-25-sistemas-ia            (hub: catálogo, guias, 25 pastas — fonte da verdade)
  ├─ sistemas/01-crm-comercial  ──export──▶  crm-completo   (repositório espelho)
- ├─ sistemas/02-propostas-...  ──export──▶  gerador-de-propostas
+ ├─ sistemas/02-propostas-...  ──export──▶  propostas-comerciais
  └─ ... (25)
 ```
 

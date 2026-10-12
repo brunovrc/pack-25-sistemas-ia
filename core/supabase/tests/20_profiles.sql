@@ -101,8 +101,11 @@ begin
   select string_agg(p.oid::regprocedure::text, ', ') into bad
   from pg_proc p join pg_namespace n on n.oid = p.pronamespace
   where n.nspname in ('public', 'private') and p.prosecdef
-    and has_function_privilege('anon', p.oid, 'execute');
-  assert bad is null, 'anon pode executar SECURITY DEFINER: ' || coalesce(bad, '');
+    and has_function_privilege('anon', p.oid, 'execute')
+    -- Exceção explícita e documentada: endpoints públicos (ex.: link de proposta, formulário público) levam o
+    -- comentário 'PUBLIC_ENDPOINT: ...' e têm testes próprios no sistema que os cria.
+    and coalesce(obj_description(p.oid, 'pg_proc'), '') not like 'PUBLIC_ENDPOINT:%';
+  assert bad is null, 'anon pode executar SECURITY DEFINER sem marca PUBLIC_ENDPOINT: ' || coalesce(bad, '');
 
   select string_agg(tablename, ', ') into bad from pg_tables where schemaname = 'public' and not rowsecurity;
   assert bad is null, 'tabelas sem RLS: ' || coalesce(bad, '');

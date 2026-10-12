@@ -60,32 +60,35 @@
     },
     {
       "id": "02",
-      "slug": "gerador-de-propostas",
-      "directory": "sistemas/02-gerador-de-propostas",
-      "repo_name": "gerador-de-propostas",
-      "name": "Gerador de Propostas",
+      "slug": "propostas-comerciais",
+      "directory": "sistemas/02-propostas-comerciais",
+      "repo_name": "propostas-comerciais",
+      "name": "Gestão de Propostas Comerciais",
       "category": "Comercial",
-      "audience": "Vendedores e prestadores de serviço que enviam orçamentos",
-      "pain": "Propostas montadas à mão, sem versões, sem controle de descontos e sem status",
-      "value_proposition": "Propostas padronizadas, versionadas e em PDF, com catálogo e aprovação de desconto",
+      "audience": "Agências, consultorias, prestadores de serviços e empresas B2B que enviam propostas",
+      "pain": "Propostas montadas à mão em Word ou Excel, sem versões, sem controle de descontos, sem status e sem histórico",
+      "value_proposition": "Propostas profissionais com catálogo, preços, versões imutáveis, PDF, link seguro de aceite e indicadores comerciais",
       "mvp_features": [
-        "Catálogo de produtos e serviços",
-        "Preços",
-        "Clientes",
-        "Versões da proposta",
-        "Descontos com limite por perfil",
-        "Geração de PDF",
-        "Status da proposta"
+        "Clientes e catálogo de produtos e serviços",
+        "Construtor de propostas com itens, descontos e encargos",
+        "Editor de escopo e 3 modelos visuais",
+        "Versões imutáveis e PDF",
+        "Link seguro com aceite ou recusa do cliente",
+        "Dashboard e relatórios comerciais"
       ],
       "exclusions": [
         "Assinatura eletrônica certificada",
-        "Integração fiscal"
+        "NF-e e NFS-e",
+        "Cobrança e processamento bancário",
+        "CRM completo",
+        "WhatsApp automatizado"
       ],
       "kpis": [
         "Propostas enviadas",
         "Taxa de aceite",
-        "Desconto médio concedido",
-        "Valor em aberto"
+        "Valor aceito",
+        "Valor em negociação",
+        "Tempo médio até decisão"
       ],
       "complexity": "média",
       "implementation_price_brl_illustrative": {
@@ -99,7 +102,7 @@
         "telefone",
         "endereço comercial"
       ],
-      "status": "PLANEJADO"
+      "status": "EM_DESENVOLVIMENTO"
     },
     {
       "id": "03",

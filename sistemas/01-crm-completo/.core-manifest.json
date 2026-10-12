@@ -1,5 +1,5 @@
 {
-  "coreVersion": "b00c4455dcea916033dc4894a80ca4e5d1d5d3dc7b089e60ca172f9ff7ca7251",
+  "coreVersion": "2a46a3e837c3dd88d5aa6d1f9ff0c7c3afbf6f236227b34d62b33246add91835",
   "files": {
     ".env.example": "73fc3fbb90f5e7a14c0e83998b100489f897d73cec094237e1edf6ca5e1991f1",
     ".gitignore": "36cdc886051ae218897d3a9ca1740b90502bd98208f407daf562b85631f16be2",
@@ -64,7 +64,7 @@
     "supabase/templates/recovery.html": "bee42582cb4d5cf093718be8a0854255f4c530eec394ea649de3b7f922b2ed8d",
     "supabase/tests/00_harness.sql": "e531d44f647966589593c91ddc3f6a51b01e0ed0f6054a24f88138122266452f",
     "supabase/tests/10_rls_isolation.sql": "3976f37ea2eb81f392c7781f932b6b7ca34668874040950b930794b12a36dd2e",
-    "supabase/tests/20_profiles.sql": "6a1c829ae4d8742c16289b3abcc8b756aa115575e2d3e90c27b21fe00984f064",
+    "supabase/tests/20_profiles.sql": "c0f5c89168d40c2441c22428ea16868da456ea5d622c6a7afa759048b7b17d22",
     "supabase/tests/30_mfa_enforcement.sql": "4a0e0ee8a6acc9c89c246f69dbfac60f66e3f569fa6cb05d1a459e23ece98aed",
     "supabase/tests/40_add_member_doc_sql.sql": "8d20c24ae161bfe0c9d9e0e52ad785d80d95db36fa77542c6a24d8ed3281b1d9",
     "tests/e2e/core-flow.spec.ts": "8eaf38ffe17408c9cc637c40458dd519742300e5fcfef05b6fbc7530035f9f19",
