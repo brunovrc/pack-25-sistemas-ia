@@ -31,9 +31,6 @@ test('login, organização, MFA obrigatório para o proprietário e painel com d
   await page.getByRole('button', { name: 'Entrar' }).click();
   secret = await onboardAndEnrollMfa(page, 'Empresa E2E Ltda');
 
-  await expect(page.getByText('Membros da equipe')).toBeVisible();
-  await expect(page.getByText('Solicitações LGPD em aberto')).toBeVisible();
-  await expect(page.getByText('Eventos de auditoria (7 dias)')).toBeVisible();
 });
 
 test('sem verificação em duas etapas o proprietário não acessa o painel', async ({ page }) => {

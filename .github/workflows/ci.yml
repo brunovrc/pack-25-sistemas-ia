@@ -26,6 +26,8 @@ jobs:
           node-version: 22
       - run: node scripts/validate-catalog.mjs
       - run: node scripts/check-no-secrets.mjs
+      - name: Sistemas em dia com o Core
+        run: node scripts/sync-core.mjs all --check
       - name: Estrutura gerada está em dia
         run: |
           node scripts/generate-systems.mjs

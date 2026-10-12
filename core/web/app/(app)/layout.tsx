@@ -1,10 +1,12 @@
 import { headers } from 'next/headers';
+import Image from 'next/image';
 import Link from 'next/link';
 import { signOut } from '@/app/(auth)/actions';
 import { switchOrganization } from '@/app/(app)/actions';
 import { NavLink } from '@/components/ui/client';
 import { Button, Select } from '@/components/ui/primitives';
 import { requireContext } from '@/lib/auth/session';
+import { systemConfig } from '@/lib/system.config';
 import { readableOn, safePrimary } from '@/lib/utils';
 import { isAdminRole, isPrivacyRole, ROLE_LABELS } from '@/lib/validation/org';
 
@@ -22,7 +24,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const displayName = (settings?.display_name as string | undefined) ?? ctx.membership.name;
 
   const nav = [
-    { href: '/dashboard', label: 'Painel', show: true },
+    ...systemConfig.primaryNav.map((i) => ({ ...i, show: !i.roles || i.roles.includes(role) })),
     { href: '/members', label: 'Equipe', show: true },
     { href: '/privacy', label: 'Privacidade (LGPD)', show: isPrivacyRole(role) },
     { href: '/audit', label: 'Auditoria', show: isAdminRole(role) },
@@ -48,8 +50,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       </a>
       <div className="min-h-dvh md:grid md:grid-cols-[16rem_1fr]">
         <aside className="hidden border-r border-border bg-card p-4 md:block">
-          <Link href="/dashboard" className="mb-6 block truncate px-3 text-base font-semibold">
-            {displayName}
+          <Link href="/dashboard" className="mb-6 flex items-center gap-2 px-3 text-base font-semibold">
+            {/* Logotipo trocável: substitua public/brand/logo.svg (ou ajuste lib/system.config.ts). */}
+            <Image src={systemConfig.logo} alt="" width={28} height={28} unoptimized className="size-7 shrink-0 rounded" />
+            <span className="truncate">{displayName}</span>
           </Link>
           {links}
         </aside>

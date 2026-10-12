@@ -41,7 +41,7 @@ cpSync(src, out, {
     const name = p.split(sep).pop();
     if (EXCLUDE_DIRS.has(name)) return false;
     if (/^\.env(\..+)?$/.test(name) && name !== '.env.example') return false;
-    return !name.endsWith('.log');
+    return !name.endsWith('.log') && !name.endsWith('.tsbuildinfo') && name !== 'next-env.d.ts';
   },
 });
 

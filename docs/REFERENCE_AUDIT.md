@@ -51,3 +51,18 @@ Legenda de decisão: **usar** (dependência ou cópia permitida, com aviso) · *
 ## 5. Ambiente local (diagnóstico)
 
 Node v24.15.0 · pnpm 12.6.0 · npm 11.12.1 · git 2.54.0 · gh 2.94.0 · Docker 28.0.4 (Docker Desktop precisou ser iniciado) · **Supabase CLI e ripgrep não instalados** (o CLI roda via `npx supabase`/`pnpm dlx` quando necessário). O diretório original não era repositório git.
+
+## 6. Referências do CRM Completo (verificadas em 2026-10-12)
+
+| Projeto | Licença | Observação (somente o que foi verificado) | Decisão |
+|---|---|---|---|
+| marmelab/atomic-crm `a8f521f20e` | MIT | Entidades observadas: companies, contacts, deals, notes, tasks, tags, sales. Migrações incluem importação, configuração do app e políticas de `sales`. Não vi organização/multiempresa, metas nem equipes. | **estudar** (modelo de entidades e importação) |
+| arhamkhnz/next-shadcn-admin-dashboard (Studio Admin) | MIT | Referência de layout de dashboard, citada no prompt v1.2. | **estudar** |
+| recharts/recharts 3.10.1 | MIT | Gráficos; peer React ^19 ok. | **usar** |
+| clauderic/dnd-kit (core 6.3.1, sortable 10.0.0) | MIT | Arrastar e soltar acessível; peer React >=16.8. Última publicação de 2024-12; sem alternativa mais ativa avaliada. | **usar** (risco de manutenção registrado) |
+| react-hook-form 7.89.0 / @hookform/resolvers 5.9.1 | MIT | 7.90.0 tinha 1 dia: fixada a anterior madura. | **usar** |
+| @tanstack/react-table 8.21.3 | MIT | A linha 9 saiu há poucos dias; fixada a 8 por maturidade. | **usar** |
+| mholt/PapaParse 5.7.0 | MIT | Leitura de CSV no servidor, com limites de tamanho. | **usar** |
+| Krayin, Frappe CRM, Corteza | MIT / AGPL-3.0 / Apache-2.0 | Já avaliados na seção 1 e 2. | **estudar**, sem copiar |
+
+Fontes Space Grotesk e Inter (SIL OFL) entram por `next/font`, que as hospeda no próprio build.

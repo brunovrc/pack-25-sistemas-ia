@@ -53,3 +53,13 @@ Formato: contexto → decisão → consequência. Decisões novas entram no fim;
 
 ## ADR-012 — Supabase CLI instalado por release com checksum, não por `npx`
 - **Decisão:** baixar o binário do release oficial e conferir o SHA-256 (`checksums.txt`). O pnpm bloqueia scripts de instalação, que o pacote npm do CLI usa para baixar o binário. Versão fixada em 2.120.0 (local e CI).
+
+## ADR-013 — Adoção do prompt mestre v1.2 (2026-10-12)
+- **O que a v1.2 acrescenta:** especificação detalhada do CRM (9 páginas, 6 indicadores, 6 gráficos, filtros, alertas, ranking, metas), dashboards e gráficos em todos os sistemas, `docs/PLANO_IMPLEMENTACAO.md` por sistema, `docs/METRICS.md`, `guias/personalizacao.md`, estrutura extensível para personalização futura.
+- **Mantido por decisão anterior do titular (prevalece sobre a v1.2):** nomes generalistas dos repositórios (`crm-completo`, sem prefixo) e um repositório por sistema com link de clone próprio (a v1.2 cita pastas `01-crm-comercial` e sparse checkout).
+- **Fases A e B** já estavam concluídas; a execução segue na Fase C (CRM).
+
+## ADR-014 — Extensão do Core por sistema: `system.config` e `.core-overrides`
+- **Contexto:** cada sistema precisa ser independente e editável pelo aluno, mas correções do Core devem poder se propagar (ADR-004).
+- **Decisão:** `scripts/sync-core.mjs` copia `core/web` e as migrações do Core para a pasta do sistema e grava `.core-manifest.json` (SHA-256 por arquivo). O sistema declara os arquivos que **sobrescreve** em `.core-overrides`; o sync nunca os toca. O ponto de extensão padrão é `lib/system.config.ts` (nome, navegação, rota inicial).
+- **Consequência:** o diff entre sistema e Core é auditável; `--check` no CI acusa divergência não declarada.

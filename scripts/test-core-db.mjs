@@ -3,12 +3,13 @@
 // Sem porta publicada (acesso só via docker exec) e com senha aleatória por execução.
 import { spawnSync } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
-import { readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const coreDir = join(root, 'core', 'supabase');
+// No repositório-fonte o banco do Core fica em core/supabase; dentro de um sistema isolado, em supabase/.
+const coreDir = existsSync(join(root, 'core', 'supabase')) ? join(root, 'core', 'supabase') : join(root, 'supabase');
 const name = `pack25-core-test-${randomBytes(4).toString('hex')}`;
 const IMAGE = process.env.PG_TEST_IMAGE ?? 'postgres:17-alpine';
 const docker = (a, o = {}) => spawnSync('docker', a, { encoding: 'utf8', ...o });
