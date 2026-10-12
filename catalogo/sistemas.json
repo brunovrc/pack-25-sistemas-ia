@@ -106,33 +106,38 @@
     },
     {
       "id": "03",
-      "slug": "qualificacao-de-leads",
-      "directory": "sistemas/03-qualificacao-de-leads",
-      "repo_name": "qualificacao-de-leads",
-      "name": "Qualificação de Leads",
+      "slug": "qualificador-leads",
+      "directory": "sistemas/03-qualificador-leads",
+      "repo_name": "qualificador-leads",
+      "name": "Qualificador de Leads Inteligente",
       "category": "Comercial",
-      "audience": "Times de marketing e vendas que recebem leads de formulários",
-      "pain": "Leads sem priorização chegam ao vendedor errado e esfriam",
-      "value_proposition": "Formulário público com pontuação por regras e distribuição automática ao responsável",
+      "audience": "Agências, consultorias, imobiliárias, escolas e empresas B2B com equipe de vendas que captam leads por formulários e anúncios",
+      "pain": "Leads chegam sem priorização, vão para o vendedor errado, esfriam e ninguém sabe quais campanhas trazem contatos qualificados",
+      "value_proposition": "Formulários públicos com perguntas condicionais, pontuação transparente de 0 a 100, distribuição para vendedores, pipeline de qualificação e indicadores por campanha",
       "mvp_features": [
-        "Formulários públicos",
-        "Regras de scoring configuráveis",
-        "Distribuição por regra",
-        "Status do lead",
-        "Relatório",
-        "Análise por IA opcional"
+        "Construtor de formulários com lógica condicional, etapas e versões",
+        "Captura pública com UTM, deduplicação e proteção contra abuso",
+        "Scoring determinístico e explicável com simulador",
+        "Distribuição manual, round-robin e por critérios",
+        "Pipeline Kanban, atividades e follow-ups",
+        "Dashboard, campanhas e relatórios",
+        "Análise textual por IA opcional, separada do score"
       ],
       "exclusions": [
+        "CRM completo",
         "Disparo em massa",
-        "Enriquecimento de dados por terceiros"
+        "Enriquecimento de dados por terceiros",
+        "Webhooks de saída",
+        "Plataforma de anúncios"
       ],
       "kpis": [
-        "Leads por origem",
+        "Leads capturados",
+        "Taxa de qualificação",
         "Score médio",
-        "Tempo até primeiro contato",
-        "Conversão por faixa de score"
+        "Taxa de conversão",
+        "Tempo até primeiro atendimento"
       ],
-      "complexity": "baixa",
+      "complexity": "média",
       "implementation_price_brl_illustrative": {
         "min": 900,
         "max": 1800
@@ -144,7 +149,7 @@
         "telefone",
         "respostas do formulário"
       ],
-      "status": "PLANEJADO"
+      "status": "EM_DESENVOLVIMENTO"
     },
     {
       "id": "04",

@@ -11,7 +11,7 @@
 |---|---|---|---|---|
 | 01 | **CRM Completo** — Funil de vendas único com histórico, tarefas e indicadores calculados do banco | Comercial | `crm-completo` | VALIDADO |
 | 02 | **Gestão de Propostas Comerciais** — Propostas profissionais com catálogo, preços, versões imutáveis, PDF, link seguro de aceite e indicadores comerciais | Comercial | `propostas-comerciais` | VALIDADO |
-| 03 | **Qualificação de Leads** — Formulário público com pontuação por regras e distribuição automática ao responsável | Comercial | `qualificacao-de-leads` | PLANEJADO |
+| 03 | **Qualificador de Leads Inteligente** — Formulários públicos com condicionais, score transparente de 0 a 100, distribuição e indicadores por campanha | Comercial | `qualificador-leads` | EM_DESENVOLVIMENTO |
 | 04 | **Pós-venda e Recompra** — Alertas de recompra e segmentação simples para contato ativo da equipe | Comercial | `pos-venda-e-recompra` | PLANEJADO |
 | 05 | **Portal do Cliente B2B** — Portal onde o cliente abre solicitações, acessa documentos e comenta, isolado por empresa | Comercial | `portal-do-cliente` | PLANEJADO |
 | 06 | **Financeiro Completo** — Controle de contas, categorias e fluxo de caixa com lançamentos auditáveis | Gestão | `financeiro-completo` | PLANEJADO |
