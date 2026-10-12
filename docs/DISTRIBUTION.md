@@ -40,10 +40,24 @@ Repositório privado exige autenticação (`gh auth login` ou token com permiss�
 
 Um sistema só é exportável quando `status` ≠ `PLANEJADO`; só é **publicável** quando `VALIDADO` (gates da seção 11 do prompt mestre).
 
+## Modelo de venda: plataforma de cursos (Kiwify, Hotmart etc.)
+
+Definido pelo titular em 2026-10-12: o comprador adquire o **curso** na plataforma e recebe por e-mail as aulas com os **links dos repositórios**. A plataforma entrega o e-mail; ela **não** cria acesso ao GitHub.
+
+Consequências:
+- **Repositório público = qualquer pessoa com o link acessa**, comprando ou não. O que protege o produto passa a ser a licença (`LICENSE.md`), não o acesso técnico. O titular aceitou esse modelo (hub público desde 2026-10-12).
+- **Repositório privado não funciona só com link**: o comprador precisaria de convite individual no GitHub. Isso exigiria pedir o usuário do GitHub na compra e automatizar o convite (webhook da plataforma → API do GitHub), com atrito e fila de suporte.
+- **Alternativa que mantém o controle sem GitHub:** hospedar o pacote ZIP gerado por `export-system.mjs` (com `CHECKSUMS.sha256`) na área de membros da plataforma. O código não fica público, e o comprador baixa por login.
+
+Regras de engenharia que valem em qualquer escolha:
+1. Nunca publicar em repositório público um sistema que o titular queira restringir; a decisão é por sistema e tomada antes de ele ficar `VALIDADO`.
+2. Links nas aulas devem apontar para **tags/releases** (versão fixa), não para `main`, para que uma correção de segurança não quebre quem está no meio da aula. Atualizações são avisadas por e-mail.
+3. Sem segredos nem dados reais em nenhum repositório, público ou privado (verificado por `check-no-secrets` e pelo secret scanning do GitHub).
+
 ## Bloqueios que dependem do titular (não resolvidos pelo agente)
 
 1. Criar a organização/conta GitHub e os repositórios `pack25-NN-slug` (privados) e `pack-25-sistemas-ia`.
 2. Gerar um token **fine-grained** com `Contents: write` restrito aos repositórios espelho e guardá-lo como secret `MIRROR_PUSH_TOKEN` no ambiente protegido `mirror-publish` do hub.
-3. Definir o modelo de acesso do comprador. Convidar cada comprador como colaborador de leitura é simples, mas escala mal (custo de assentos e 25 repositórios por comprador). Alternativas: *release assets* assinados com checksum, ou repositórios por compra. **Decisão comercial do titular.**
+3. Modelo de acesso do comprador: **definido** como entrega por plataforma de cursos (seção acima). Falta escolher, por sistema, entre repositório público (controle só pela licença) e ZIP na área de membros.
 4. Ativar secret scanning, push protection, Dependabot alerts e proteção de branch nos repositórios.
 5. Definir canal de suporte e e-mail de segurança (ver `SECURITY.md`).

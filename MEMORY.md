@@ -20,7 +20,7 @@ Next 16.4.0 + React 19.3.0 + TypeScript 6.0.3 + Tailwind 4 + Supabase (ADR-009).
 
 ## Pendências e riscos
 - ALTA: convite de membros por e-mail (token hasheado, expirável) ainda não existe; hoje só dá para gerenciar quem já é membro.
-- ALTA: decisões do titular — `LICENSE.md` (rascunho), e-mail de segurança, modelo de acesso do comprador, repositórios espelho e token (ver `docs/DISTRIBUTION.md`).
+- ALTA: decisões do titular — `LICENSE.md` (rascunho), e-mail de segurança, repositórios espelho e token (modelo de venda definido: plataforma de cursos + links por e-mail, ver `docs/DISTRIBUTION.md`; falta decidir por sistema público x ZIP) (ver `docs/DISTRIBUTION.md`).
 - ALTA: **produção exige configuração do Supabase** diferente do padrão (TOTP, senha 12, confirmação de e-mail) — ver `docs/CORE_WEB.md`.
 - MÉDIA: `sync-core` (ADR-004) ainda não implementado; limitador de taxa do app é por instância; sem upload de logo (Storage).
 - MÉDIA: gitleaks/`pnpm audit` no CI; SBOM; teste de restauração de backup.
