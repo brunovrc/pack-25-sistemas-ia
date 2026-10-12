@@ -7,3 +7,4 @@ app/(app)/dashboard/**
 # Arquivos do Core que o sistema 02 não quer.
 -tests/e2e/core-dashboard.spec.ts
 -tests/e2e/screens.spec.ts
+lib/security/public-prefixes.ts

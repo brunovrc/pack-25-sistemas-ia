@@ -1,13 +1,21 @@
-// Ponto de extensão de cada sistema. O Core traz este arquivo com o padrão; cada sistema o
-// sobrescreve (e o declara em .core-overrides) para definir nome, logotipo e navegação.
-// Para personalizar para um cliente: troque `name`, substitua public/brand/logo.svg e ajuste `primaryNav`.
+// Configuração da Gestão de Propostas Comerciais. Para personalizar para um cliente:
+//  1. troque `name`;  2. substitua public/brand/logo.svg;  3. ajuste a navegação em `primaryNav`.
+// Este arquivo é do sistema (listado em .core-overrides): o sync-core nunca o sobrescreve.
 import type { OrgRole } from '@/lib/validation/org';
 
 export type NavItem = { href: string; label: string; roles?: readonly OrgRole[] };
 
 export const systemConfig: { name: string; logo: string; primaryNav: NavItem[] } = {
-  name: 'Pack 25 Sistemas IA',
+  name: 'Gestão de Propostas',
   logo: '/brand/logo.svg',
-  // Itens do sistema, exibidos antes dos itens comuns do Core (Equipe, Privacidade, Auditoria, Configurações).
-  primaryNav: [{ href: '/dashboard', label: 'Painel' }],
+  primaryNav: [
+    { href: '/dashboard', label: 'Painel' },
+    { href: '/propostas', label: 'Propostas' },
+    { href: '/clientes', label: 'Clientes' },
+    { href: '/catalogo', label: 'Catálogo' },
+    { href: '/modelos', label: 'Modelos' },
+    { href: '/relatorios', label: 'Relatórios' },
+    { href: '/metas', label: 'Metas' },
+    { href: '/configuracoes', label: 'Configurações comerciais', roles: ['owner', 'admin'] },
+  ],
 };

@@ -1,5 +1,5 @@
 {
-  "coreVersion": "2a46a3e837c3dd88d5aa6d1f9ff0c7c3afbf6f236227b34d62b33246add91835",
+  "coreVersion": "b3de926070a377f06d937850b653d0382f6bdb6e79f0df682e87f298bc746930",
   "files": {
     ".env.example": "73fc3fbb90f5e7a14c0e83998b100489f897d73cec094237e1edf6ca5e1991f1",
     ".gitignore": "36cdc886051ae218897d3a9ca1740b90502bd98208f407daf562b85631f16be2",
@@ -39,7 +39,8 @@
     "lib/env.ts": "4ddf536e02fbb80bd88fbe4c1303220232a7ab69f1f3a87db42f435fd9a99f81",
     "lib/log.ts": "0d810bf5c0b175b8c2de83a69010458c71dd0ec1e5ef59910942c03d55bd2f6a",
     "lib/security/csp.ts": "ef0dc67b4c6a7f81c051c01386f872bf4b3dacd8ff575c2902ad7651a567193c",
-    "lib/security/paths.ts": "eebbe63f926d630f1525afd17c877a82ff887c1e57ac422bbe27f87c2238486c",
+    "lib/security/paths.ts": "d94802767b26441a597d015073be0348c2da59bfbd884e4eb249662ca39c34ac",
+    "lib/security/public-prefixes.ts": "2f5ce53a9ac621198a4b3a04ee967cc496957491ce280a9c013f8f2fd1129d11",
     "lib/security/rate-limit.ts": "25c9bf92d04c46dd3d2c2e870520b28f9b0b3ba62fbe55499ecbd4e67eb4e6a0",
     "lib/security/redirect.ts": "e7db1a2018407d7f5ebb477262789247feea1dfd159600cab37480768377dcd8",
     "lib/supabase/server.ts": "fd1f0fd96eaf0b7612103482f60eb143c16fa48064f60cbbfb12a47cbadfffd2",
