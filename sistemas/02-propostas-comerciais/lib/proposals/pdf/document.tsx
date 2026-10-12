@@ -24,7 +24,7 @@ const LINE = '#CBD5E1';
 
 function styles(primary: string, secondary: string) {
   return StyleSheet.create({
-    page: { paddingTop: 48, paddingBottom: 56, paddingHorizontal: 42, fontFamily: 'Helvetica', fontSize: 9.5, color: INK, lineHeight: 1.4 },
+    page: { paddingTop: 48, paddingBottom: 56, paddingHorizontal: 42, fontFamily: 'Helvetica', fontSize: 9.5, color: INK },
     h1: { fontSize: 22, fontFamily: 'Helvetica-Bold', color: primary, marginTop: 14, marginBottom: 10, lineHeight: 1.2 },
     h1Light: { fontSize: 22, fontFamily: 'Helvetica-Bold', color: '#FFFFFF', marginTop: 14, lineHeight: 1.2 },
     h2: { fontSize: 10.5, fontFamily: 'Helvetica-Bold', color: primary, marginTop: 14, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 },
@@ -119,8 +119,9 @@ function SectionPdf({ section, index, snap, s }: { section: Section; index: numb
 function Pricing({ snap, s }: { snap: Snapshot; s: S }) {
   const p = snap.pricing;
   const base = snap.template.base;
+  // tabela curta fica inteira na mesma página (não deixa o cabeçalho sozinho); tabela longa pode quebrar entre linhas
   return (
-    <View>
+    <View wrap={snap.items.length > 12}>
       <Text style={base === 'agency' ? s.h2Agency : s.h2} minPresenceAhead={80}>Investimento</Text>
       <View style={s.tableHead} wrap={false}>
         <Text style={[s.th, s.cName]}>Item</Text>
@@ -191,9 +192,12 @@ export function ProposalPdf({ snapshot, draft = false }: { snapshot: Snapshot; d
       <Text style={{ color: '#FFFFFF', fontSize: 9, marginTop: 4 }}>Preparada para {pdfText(client.name)}{revision.valid_until ? ` - válida até ${formatDate(revision.valid_until)}` : ''}</Text>
     </View>
   ) : base === 'technical' ? (
+    <View>
     <View style={[s.between, s.techHeader]}>
       <View style={[s.row, { alignItems: 'center', gap: 8 }]}>{logo}<View><Text style={{ fontFamily: 'Helvetica-Bold' }}>{pdfText(company.name)}</Text><Text style={[s.muted, { fontSize: 8 }]}>{pdfText([company.phone, company.email].filter(Boolean).join(' - '))}</Text></View></View>
       <View><Text style={{ fontFamily: 'Helvetica-Bold', fontSize: 14, color: company.primary_color, textAlign: 'right' }}>ORÇAMENTO {proposal.number}</Text><Text style={[s.muted, { fontSize: 8, textAlign: 'right' }]}>v{revision.version} - {formatDate(revision.issue_date)}{revision.valid_until ? ` - válido até ${formatDate(revision.valid_until)}` : ''}</Text></View>
+    </View>
+    <Text style={{ fontSize: 14, fontFamily: 'Helvetica-Bold', marginBottom: 8 }}>{pdfText(proposal.title)}</Text>
     </View>
   ) : (
     <View>
@@ -216,6 +220,8 @@ export function ProposalPdf({ snapshot, draft = false }: { snapshot: Snapshot; d
   return (
     <Document title={pdfText(`Proposta ${proposal.number} - ${proposal.title}`)} author={pdfText(company.name)} subject={pdfText(proposal.title)} creator="Gestão de Propostas Comerciais">
       <Page size="A4" style={s.page}>
+        {/* lineHeight fica num contêiner do CORPO, não na página: com lineHeight na página o react-pdf descarta o rodapé com número de página */}
+        <View style={{ lineHeight: 1.4 }}>
         {draft ? <Text style={{ color: '#B91C1C', fontFamily: 'Helvetica-Bold', fontSize: 9, marginBottom: 8 }}>RASCUNHO — esta não é uma proposta enviada ao cliente.</Text> : null}
         {header}
         <View style={s.parties}>
@@ -223,6 +229,7 @@ export function ProposalPdf({ snapshot, draft = false }: { snapshot: Snapshot; d
           <Party s={s} title="Fornecedor" lines={[company.name, company.legal_name && company.legal_name !== company.name ? company.legal_name : null, company.document_number ? formatDocument(company.document_number) : null, company.email, company.phone, company.address]} />
         </View>
         {body}
+        </View>
         <View style={s.footer} fixed>
           <Text>{pdfText([company.footer_text, company.legal_name ?? company.name].filter(Boolean).join(' - ').replace(/\s*\n\s*/g, ' - '))}</Text>
           <Text render={({ pageNumber, totalPages }) => `Proposta ${proposal.number} - v${revision.version} - página ${pageNumber} de ${totalPages}`} />

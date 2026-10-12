@@ -160,7 +160,8 @@ export function DocumentView({ snapshot, className }: { snapshot: Snapshot; clas
       <p className="mt-2 text-sm opacity-90">Preparada para {client.name}{revision.valid_until ? ` · válida até ${formatDate(revision.valid_until)}` : ''}</p>
     </header>
   ) : base === 'technical' ? (
-    <header className="mb-5 flex flex-wrap items-start justify-between gap-4 border-b-2 border-[var(--doc-primary)] pb-3">
+    <header className="mb-5 border-b-2 border-[var(--doc-primary)] pb-3">
+      <div className="flex flex-wrap items-start justify-between gap-4">
       <div className="flex items-center gap-3">
         {company.logo_data_url ? <img src={company.logo_data_url} alt={`Logotipo de ${company.name}`} className="h-10 max-w-32 object-contain" /> : null}
         <div>
@@ -172,6 +173,8 @@ export function DocumentView({ snapshot, className }: { snapshot: Snapshot; clas
         <p className="text-lg font-bold text-[var(--doc-primary)]">ORÇAMENTO {proposal.number}</p>
         <p className="text-xs text-[var(--doc-muted)]">v{revision.version} · {formatDate(revision.issue_date)}{revision.valid_until ? ` · válido até ${formatDate(revision.valid_until)}` : ''}</p>
       </div>
+      </div>
+      <h1 className="mt-3 text-xl font-bold">{proposal.title}</h1>
     </header>
   ) : (
     <header className="mb-8">
