@@ -44,3 +44,6 @@ A análise textual de IA é gravada e exibida **à parte** e **nunca altera** o 
 
 ## Modelo de demonstração (valores configuráveis, não universais)
 Orçamento superior a R$ 5.000 (+25) · contratar em até 30 dias (+25) · participa da decisão (+20) · mais de 10 funcionários (+15) · problema prioritário declarado (+15). Total máximo: 100.
+
+## Um modelo para vários formulários
+O modelo é da organização. Ao pontuar um lead, **regras sobre perguntas que o formulário não tem são ignoradas** (não pontuam e não aparecem como dado ausente). O simulador faz o mesmo quando você escolhe o formulário.

@@ -26,6 +26,7 @@ const M = [
   { name: 'envio: reenvio com a mesma chave duplica', file: 'leads_flow', find: "if p_submission_key is not null and exists (", replace: "if false and exists (" },
   { name: 'envio: sem limite de taxa', file: 'leads_flow', find: 'return h <= p_max;', replace: 'return true;' },
   { name: 'envio: duplicidade (link) ignorada', file: 'leads_flow', find: "if st.duplicate_policy = 'link' then", replace: 'if false then' },
+  { name: 'score: regra sobre pergunta fora do formulário não é ignorada', file: 'leads_flow', find: "and (p_schema is null or exists (select 1 from jsonb_array_elements(p_schema -> 'fields') f where f ->> 'key' = r.field_key));", replace: ';' },
   { name: 'envio: campanha não vem do UTM', file: 'leads_flow', find: "if u_campaign is not null then", replace: 'if false then' },
   { name: 'segurança: anônimo executa funções internas', file: 'leads_flow', find: "execute format('revoke all on function %s from public, anon', f);", replace: "execute format('revoke all on function %s from public', f);" },
   { name: 'segurança: vendedor lê leads de outros', file: 'leads_schema', find: "when 'member' then assignee is not distinct from (select auth.uid()) else false end, false);", replace: "when 'member' then true else false end, false);", nth: 1 },

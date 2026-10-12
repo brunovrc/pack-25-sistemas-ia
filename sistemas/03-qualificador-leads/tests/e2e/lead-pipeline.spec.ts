@@ -20,7 +20,7 @@ test('pipeline: mover entre colunas, transições válidas, motivo ao desqualifi
   const a = `Lead Um ${suffix()}`;
   const b = `Lead Dois ${suffix()}`;
   const c = `Lead Tres ${suffix()}`;
-  const [la, lb, lc] = await Promise.all([create(owner, a), create(owner, b), create(owner, c)]);
+  const [la, lb] = await Promise.all([create(owner, a), create(owner, b), create(owner, c)]);
 
   await page.goto('/pipeline');
   await expect(column(page, 'Novo').getByRole('link', { name: a })).toBeVisible();
