@@ -25,7 +25,7 @@ export default async function ReportsPage({ searchParams }: { searchParams: Sear
   return (
     <>
       <PageHeader title="Relatórios" description={`Período: ${formatDate(f.from)} a ${formatDate(f.to)}. Cada exportação em CSV fica registrada na auditoria (quem, qual relatório, quantas linhas).`} />
-      <FilterBar action="/relatorios" filters={f} clients={clients.map((c) => ({ value: c.id, label: c.name }))} assignees={personOptions(people, ['owner', 'admin', 'manager', 'member', 'viewer'])} categories={categories.map((c) => ({ value: c.id, label: c.name }))} />
+      <FilterBar action="/relatorios" filters={f} clients={clients.map((c) => ({ value: c.id, label: c.name }))} assignees={personOptions(people, ['staff'])} categories={categories.map((c) => ({ value: c.id, label: c.name }))} />
       <div className="grid gap-6">
         {reports.map(([k, r]) => (
           <Card key={k} title={REPORT_TITLES[k].title} description={`${REPORT_TITLES[k].description} ${r.rows.length.toLocaleString('pt-BR')} linha(s).`}>

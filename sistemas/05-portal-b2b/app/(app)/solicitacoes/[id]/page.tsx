@@ -59,7 +59,7 @@ export default async function RequestPage({ params }: { params: Promise<{ id: st
         {writer ? (
           <aside className="space-y-6" aria-label="Gestão da solicitação">
             <Card title="Situação"><StatusForm id={id} current={r.status as RequestStatus} who="staff" /></Card>
-            <Card title="Responsável"><AssignControl id={id} current={r.assigned_to} options={personOptions(people, ['owner', 'admin', 'manager', 'member']).filter((o) => o.value)} /></Card>
+            <Card title="Responsável"><AssignControl id={id} current={r.assigned_to} options={personOptions(people, ['staff']).filter((o) => o.value)} /></Card>
             {isManager(role) && !final ? <Card title="Prazo"><DueForm id={id} initialDate={due.date} initialTime={due.time} /></Card> : null}
             {!final ? <Card title="Editar"><EditRequestForm id={id} categories={categories.filter((c) => c.active || c.id === r.category_id).map((c) => ({ value: c.id, label: c.name }))} initial={{ title: r.title, description: r.description ?? '', category: r.category_id ?? '', priority: r.priority as 'low' | 'normal' | 'high' | 'urgent' }} /></Card> : null}
           </aside>

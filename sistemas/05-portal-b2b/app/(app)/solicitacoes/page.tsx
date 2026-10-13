@@ -49,7 +49,7 @@ export default async function RequestsPage({ searchParams }: { searchParams: Sea
           { name: 'client', label: 'Empresa', value: f.client, all: 'Todas', options: clients.map((c) => ({ value: c.id, label: c.name })) },
           { name: 'status', label: 'Situação', value: f.status, all: 'Todas', options: REQUEST_STATUSES.map((s) => ({ value: s, label: STATUS_LABELS[s] })) },
           { name: 'priority', label: 'Prioridade', value: f.priority, all: 'Todas', options: PRIORITIES.map((p) => ({ value: p, label: PRIORITY_LABELS[p] })) },
-          { name: 'assignee', label: 'Responsável', value: f.assignee, all: 'Todos', options: [{ value: 'none', label: 'Sem responsável' }, ...personOptions(people, ['owner', 'admin', 'manager', 'member', 'viewer'])] },
+          { name: 'assignee', label: 'Responsável', value: f.assignee, all: 'Todos', options: [{ value: 'none', label: 'Sem responsável' }, ...personOptions(people, ['staff'])] },
           { name: 'category', label: 'Categoria', value: f.category, all: 'Todas', options: categories.map((c) => ({ value: c.id, label: c.name })) },
         ]}
       />

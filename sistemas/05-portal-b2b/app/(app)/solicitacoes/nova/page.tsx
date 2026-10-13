@@ -20,7 +20,7 @@ export default async function NewRequestPage({ searchParams }: { searchParams: S
       <Card>
         <NewRequestForm
           portal={false} clientId={clients.some((c) => c.id === preset) ? preset : undefined} clients={clients.map((c) => ({ value: c.id, label: c.name }))}
-          categories={categories.map((c) => ({ value: c.id, label: c.name }))} assignees={personOptions(people, ['owner', 'admin', 'manager', 'member'])}
+          categories={categories.map((c) => ({ value: c.id, label: c.name }))} assignees={personOptions(people, ['staff'])}
         />
       </Card>
     </>

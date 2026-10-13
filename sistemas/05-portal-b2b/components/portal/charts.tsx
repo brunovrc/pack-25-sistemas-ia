@@ -46,8 +46,8 @@ export function FlowChart({ rows }: { rows: FlowRow[] }) {
         <BarChart data={rows} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
           <Grid /><XAxis dataKey="label" tick={TICK} /><YAxis tick={TICK} allowDecimals={false} width={36} />
           <Tooltip contentStyle={TOOLTIP} /><Legend />
-          <Bar dataKey="created" name="Criadas" fill="#64748b" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="completed" name="Concluídas" fill="#047857" radius={[4, 4, 0, 0]} />
+          <Bar isAnimationActive={false} dataKey="created" name="Criadas" fill="#64748b" radius={[4, 4, 0, 0]} />
+          <Bar isAnimationActive={false} dataKey="completed" name="Concluídas" fill="#047857" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </ChartFrame>
@@ -64,7 +64,7 @@ export function StatusChart({ rows, title = 'Solicitações por situação' }: {
         <BarChart data={rows} layout="vertical" margin={{ top: 4, right: 16, left: 8, bottom: 0 }}>
           <Grid /><XAxis type="number" tick={TICK} allowDecimals={false} /><YAxis type="category" dataKey="name" tick={TICK} width={132} />
           <Tooltip contentStyle={TOOLTIP} />
-          <Bar dataKey="value" name="Solicitações" radius={[0, 4, 4, 0]}>{rows.map((r) => <Cell key={r.key} fill={STATUS_COLOR[r.key] ?? '#64748b'} />)}</Bar>
+          <Bar isAnimationActive={false} dataKey="value" name="Solicitações" radius={[0, 4, 4, 0]}>{rows.map((r) => <Cell key={r.key} fill={STATUS_COLOR[r.key] ?? '#64748b'} />)}</Bar>
         </BarChart>
       </ResponsiveContainer>
     </ChartFrame>
@@ -79,7 +79,7 @@ export function PriorityChart({ rows }: { rows: StatusChartRow[] }) {
       table={<Table caption="Solicitações por prioridade" head={['Prioridade', 'Solicitações']}>{rows.map((r) => <tr key={r.key}><td className={TD}>{r.name}</td><td className={TD}>{r.value}</td></tr>)}</Table>}>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
-          <Pie data={rows.filter((r) => r.value > 0)} dataKey="value" nameKey="name" innerRadius={52} outerRadius={92} paddingAngle={2}>
+          <Pie data={rows.filter((r) => r.value > 0)} dataKey="value" nameKey="name" innerRadius={52} outerRadius={92} paddingAngle={2} isAnimationActive={false}>
             {rows.filter((r) => r.value > 0).map((r) => <Cell key={r.key} fill={PRIORITY_COLOR[r.key] ?? '#64748b'} />)}
           </Pie>
           <Tooltip contentStyle={TOOLTIP} /><Legend />
@@ -99,8 +99,8 @@ export function SlaChart({ rows }: { rows: SlaRow[] }) {
         <BarChart data={rows} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
           <Grid /><XAxis dataKey="label" tick={TICK} /><YAxis tick={TICK} allowDecimals={false} width={36} />
           <Tooltip contentStyle={TOOLTIP} /><Legend />
-          <Bar dataKey="on_time" name="No prazo" stackId="a" fill="#047857" />
-          <Bar dataKey="late" name="Fora do prazo" stackId="a" fill="#b91c1c" radius={[4, 4, 0, 0]} />
+          <Bar isAnimationActive={false} dataKey="on_time" name="No prazo" stackId="a" fill="#047857" />
+          <Bar isAnimationActive={false} dataKey="late" name="Fora do prazo" stackId="a" fill="#b91c1c" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </ChartFrame>
@@ -117,7 +117,7 @@ export function HoursChart({ rows }: { rows: HoursRow[] }) {
         <LineChart data={rows} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
           <Grid /><XAxis dataKey="label" tick={TICK} /><YAxis tick={TICK} width={48} unit=" h" />
           <Tooltip contentStyle={TOOLTIP} formatter={(v) => formatHours(Number(v))} />
-          <Line type="monotone" dataKey="hours" name="Tempo médio" stroke="#7c3aed" strokeWidth={2} dot={{ r: 3 }} connectNulls={false} />
+          <Line isAnimationActive={false} type="monotone" dataKey="hours" name="Tempo médio" stroke="#7c3aed" strokeWidth={2} dot={{ r: 3 }} connectNulls={false} />
         </LineChart>
       </ResponsiveContainer>
     </ChartFrame>
@@ -134,8 +134,8 @@ export function AssigneeChart({ rows }: { rows: AssigneeChartRow[] }) {
         <BarChart data={rows} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
           <Grid /><XAxis dataKey="name" tick={TICK} interval={0} /><YAxis tick={TICK} allowDecimals={false} width={36} />
           <Tooltip contentStyle={TOOLTIP} /><Legend />
-          <Bar dataKey="open" name="Em aberto" fill="#0891b2" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="completed" name="Concluídas" fill="#047857" radius={[4, 4, 0, 0]} />
+          <Bar isAnimationActive={false} dataKey="open" name="Em aberto" fill="#0891b2" radius={[4, 4, 0, 0]} />
+          <Bar isAnimationActive={false} dataKey="completed" name="Concluídas" fill="#047857" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </ChartFrame>
@@ -152,9 +152,9 @@ export function ClientChart({ rows }: { rows: ClientChartRow[] }) {
         <BarChart data={rows} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
           <Grid /><XAxis dataKey="name" tick={TICK} interval={0} /><YAxis tick={TICK} allowDecimals={false} width={36} />
           <Tooltip contentStyle={TOOLTIP} /><Legend />
-          <Bar dataKey="open" name="Em aberto" fill="#0891b2" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="overdue" name="Atrasadas" fill="#b91c1c" radius={[4, 4, 0, 0]} />
-          <Bar dataKey="completed" name="Concluídas" fill="#047857" radius={[4, 4, 0, 0]} />
+          <Bar isAnimationActive={false} dataKey="open" name="Em aberto" fill="#0891b2" radius={[4, 4, 0, 0]} />
+          <Bar isAnimationActive={false} dataKey="overdue" name="Atrasadas" fill="#b91c1c" radius={[4, 4, 0, 0]} />
+          <Bar isAnimationActive={false} dataKey="completed" name="Concluídas" fill="#047857" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </ChartFrame>
@@ -171,7 +171,7 @@ export function DeliveryChart({ rows }: { rows: DeliveryRow[] }) {
         <BarChart data={rows} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
           <Grid /><XAxis dataKey="label" tick={TICK} /><YAxis tick={TICK} allowDecimals={false} width={36} />
           <Tooltip contentStyle={TOOLTIP} />
-          <Bar dataKey="published" name="Publicadas" fill="#7c3aed" radius={[4, 4, 0, 0]} />
+          <Bar isAnimationActive={false} dataKey="published" name="Publicadas" fill="#7c3aed" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </ChartFrame>

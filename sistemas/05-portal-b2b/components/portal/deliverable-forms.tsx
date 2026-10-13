@@ -38,10 +38,11 @@ export function EditDeliverableForm({ id, initial }: { id: string; initial: { ti
   );
 }
 
+// Espelha private.pt_deliverable_ok: só se publica a partir de «Pronta para publicar».
 const NEXT: Record<string, DeliverableStatus[]> = {
-  draft: ['in_preparation', 'ready', 'published', 'cancelled'],
-  in_preparation: ['draft', 'ready', 'published', 'cancelled'],
-  ready: ['draft', 'in_preparation', 'published', 'cancelled'],
+  draft: ['in_preparation', 'ready', 'cancelled'],
+  in_preparation: ['draft', 'ready', 'cancelled'],
+  ready: ['in_preparation', 'published', 'cancelled'],
   published: ['cancelled'],
   acknowledged: [],
   cancelled: [],

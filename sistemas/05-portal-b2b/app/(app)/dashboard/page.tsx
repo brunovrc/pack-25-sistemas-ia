@@ -38,7 +38,7 @@ export default async function DashboardPage({ searchParams }: { searchParams: Se
         {isManager(ctx.membership.role) ? <Link className="inline-flex min-h-10 items-center rounded-md border border-border px-4 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5" href={`/relatorios?${query}`}>Relatórios</Link> : null}
       </PageHeader>
       <FilterBar
-        action="/dashboard" filters={filters} clients={clients.map((c) => ({ value: c.id, label: c.name }))} assignees={personOptions(people, ['owner', 'admin', 'manager', 'member', 'viewer'])}
+        action="/dashboard" filters={filters} clients={clients.map((c) => ({ value: c.id, label: c.name }))} assignees={personOptions(people, ['staff'])}
         categories={categories.map((c) => ({ value: c.id, label: c.name }))}
       />
       {ctx.membership.role === 'member' ? <div className="mb-4"><Alert tone="info">Você vê as empresas em que é gestor ou tem solicitações. Gestores e administradores veem todas.</Alert></div> : null}

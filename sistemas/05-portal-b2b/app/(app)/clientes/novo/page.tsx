@@ -13,7 +13,7 @@ export default async function NewClientPage() {
   return (
     <>
       <PageHeader title="Nova empresa cliente" description="Depois de cadastrar, convide os usuários da empresa na ficha dela." />
-      <Card><ClientAccountForm managers={personOptions(people, ['owner', 'admin', 'manager', 'member'])} /></Card>
+      <Card><ClientAccountForm managers={personOptions(people, ['staff'])} /></Card>
     </>
   );
 }

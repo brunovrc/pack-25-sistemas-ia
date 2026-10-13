@@ -36,7 +36,7 @@ export default async function ClientPage({ params }: { params: Promise<{ id: str
       </PageHeader>
 
       <div className="grid gap-6">
-        {manager ? <Card title="Dados da empresa"><ClientAccountForm id={id} managers={personOptions(people, ['owner', 'admin', 'manager', 'member'])} initial={{ name: client.name, legal_name: client.legal_name ?? '', document_number: client.document_number ?? '', email: client.email ?? '', phone: client.phone ?? '', status: client.status, assigned_manager_id: client.assigned_manager_id ?? '' }} /></Card> : null}
+        {manager ? <Card title="Dados da empresa"><ClientAccountForm id={id} managers={personOptions(people, ['staff'])} initial={{ name: client.name, legal_name: client.legal_name ?? '', document_number: client.document_number ?? '', email: client.email ?? '', phone: client.phone ?? '', status: client.status, assigned_manager_id: client.assigned_manager_id ?? '' }} /></Card> : null}
 
         <Card title="Usuários da empresa" description="Pessoas da empresa cliente com acesso ao portal. Elas só enxergam os dados desta empresa.">
           {members.length === 0 ? <p className="text-sm text-muted">Ainda não há usuários. Convide alguém abaixo.</p> : (

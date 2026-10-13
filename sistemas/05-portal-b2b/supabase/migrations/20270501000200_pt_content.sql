@@ -348,18 +348,18 @@ begin
     on conflict (id) do update set public = false, file_size_limit = excluded.file_size_limit, allowed_mime_types = excluded.allowed_mime_types;
 
     execute $p$create policy portal_docs_select on storage.objects for select to authenticated using (
-      bucket_id = 'portal-documents' and exists (select 1 from public.documents d where d.storage_path = name
+      bucket_id = 'portal-documents' and exists (select 1 from public.documents d where d.storage_path = objects.name
         and (private.pt_staff_sees_client(d.client_account_id) or (d.visibility = 'client' and d.archived_at is null and private.pt_client_role(d.client_account_id) is not null))))$p$;
+    -- ATENÇÃO: dentro das subconsultas, `name` sem qualificar seria client_accounts.name; por isso `objects.name` em todas as políticas.
     -- envio: o caminho TEM de ser <org>/<cliente>/<uuid> e quem envia precisa poder escrever naquela conta
     execute $p$create policy portal_docs_insert on storage.objects for insert to authenticated with check (
       bucket_id = 'portal-documents'
-      and case when name ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
-        then exists (select 1 from public.client_accounts ca where ca.id = split_part(name, '/', 2)::uuid and ca.organization_id = split_part(name, '/', 1)::uuid
-          and (private.pt_staff_writes_client(ca.id) or private.pt_client_role(ca.id) is not null))
-        else false end)$p$;
+      and objects.name ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+      and exists (select 1 from public.client_accounts ca where ca.id::text = split_part(objects.name, '/', 2) and ca.organization_id::text = split_part(objects.name, '/', 1)
+        and (private.pt_staff_writes_client(ca.id) or private.pt_client_role(ca.id) is not null)))$p$;
     -- limpeza de órfãos: quem enviou pode apagar o PRÓPRIO objeto enquanto ele ainda não foi registrado em documents (falha entre o envio e o registro)
     execute $p$create policy portal_docs_delete_orphan on storage.objects for delete to authenticated using (
-      bucket_id = 'portal-documents' and owner_id = (select auth.uid())::text and not exists (select 1 from public.documents d where d.storage_path = name))$p$;
+      bucket_id = 'portal-documents' and owner_id = (select auth.uid())::text and not exists (select 1 from public.documents d where d.storage_path = objects.name))$p$;
   end if;
 end
 $storage$;
