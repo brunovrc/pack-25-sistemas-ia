@@ -252,27 +252,27 @@ end $$;
 -- ======================================================================= convites
 create function public.pt_invite_create(p_org uuid, p_kind text, p_client uuid, p_email text, p_role text) returns jsonb
 language plpgsql security definer set search_path = '' as $$
-declare me uuid := (select auth.uid()); email text := lower(btrim(coalesce(p_email, ''))); token text; iid uuid := gen_random_uuid(); exp timestamptz := now() + interval '7 days'; ca public.client_accounts%rowtype;
+declare me uuid := (select auth.uid()); v_email text := lower(btrim(coalesce(p_email, ''))); token text; iid uuid := gen_random_uuid(); exp timestamptz := now() + interval '7 days'; ca public.client_accounts%rowtype;
 begin
   if me is null or not private.mfa_ok() then raise exception 'sem permissão' using errcode = '42501'; end if;
-  if email !~ '^[^@\s]+@[^@\s]+$' or char_length(email) > 254 then raise exception 'e-mail inválido' using errcode = '22023'; end if;
+  if v_email !~ '^[^@\s]+@[^@\s]+$' or char_length(v_email) > 254 then raise exception 'e-mail inválido' using errcode = '22023'; end if;
   if p_kind = 'client' then
     select * into ca from public.client_accounts where id = p_client and organization_id = p_org;
     if not found or ca.archived_at is not null or ca.status <> 'active' then raise exception 'conta de cliente inválida' using errcode = '22023'; end if;
     if p_role not in ('client_admin', 'client_user') then raise exception 'papel inválido' using errcode = '22023'; end if;
     if not (private.pt_staff_writes_client(p_client) and private.pt_is_manager(p_org)) and private.pt_client_role(p_client) is distinct from 'client_admin' then raise exception 'sem permissão' using errcode = '42501'; end if;
-    if exists (select 1 from public.client_members cm join auth.users u on u.id = cm.user_id where cm.client_account_id = p_client and cm.status = 'active' and lower(u.email) = email) then raise exception 'esta pessoa já tem acesso a esta conta' using errcode = '23505'; end if;
-    update public.invitation_tokens set revoked_at = now() where client_account_id = p_client and invited_email = email and accepted_at is null and revoked_at is null;
+    if exists (select 1 from public.client_members cm join auth.users u on u.id = cm.user_id where cm.client_account_id = p_client and cm.status = 'active' and lower(u.email) = v_email) then raise exception 'esta pessoa já tem acesso a esta conta' using errcode = '23505'; end if;
+    update public.invitation_tokens set revoked_at = now() where client_account_id = p_client and invited_email = v_email and accepted_at is null and revoked_at is null;
   elsif p_kind = 'staff' then
     if not private.pt_is_admin(p_org) then raise exception 'sem permissão' using errcode = '42501'; end if;
     if p_role not in ('admin', 'manager', 'member', 'viewer') then raise exception 'papel inválido' using errcode = '22023'; end if;
-    if exists (select 1 from public.organization_members m join auth.users u on u.id = m.user_id where m.organization_id = p_org and lower(u.email) = email) then raise exception 'esta pessoa já faz parte da equipe' using errcode = '23505'; end if;
-    update public.invitation_tokens set revoked_at = now() where organization_id = p_org and kind = 'staff' and invited_email = email and accepted_at is null and revoked_at is null;
+    if exists (select 1 from public.organization_members m join auth.users u on u.id = m.user_id where m.organization_id = p_org and lower(u.email) = v_email) then raise exception 'esta pessoa já faz parte da equipe' using errcode = '23505'; end if;
+    update public.invitation_tokens set revoked_at = now() where organization_id = p_org and kind = 'staff' and invited_email = v_email and accepted_at is null and revoked_at is null;
     p_client := null;
   else raise exception 'tipo de convite inválido' using errcode = '22023'; end if;
   token := replace(gen_random_uuid()::text || gen_random_uuid()::text, '-', '');
   insert into public.invitation_tokens (id, organization_id, client_account_id, kind, invited_email, invited_role, token_hash, expires_at, created_by)
-  values (iid, p_org, p_client, p_kind, email, p_role, encode(sha256(convert_to(token, 'UTF8')), 'hex'), exp, me);
+  values (iid, p_org, p_client, p_kind, v_email, p_role, encode(sha256(convert_to(token, 'UTF8')), 'hex'), exp, me);
   return jsonb_build_object('id', iid, 'token', token, 'expires_at', exp);
 end $$;
 

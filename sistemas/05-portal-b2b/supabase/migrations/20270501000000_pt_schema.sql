@@ -55,12 +55,17 @@ language sql stable security definer set search_path = '' as $$
 $$;
 create function private.pt_sees_client(client uuid) returns boolean
 language sql stable security definer set search_path = '' as $$ select private.pt_staff_sees_client(client) or private.pt_client_role(client) is not null; $$;
+-- Comunicado dirigido: o cliente é destinatário? (função definer: a tabela de destinatários é só da gestão)
+create function private.pt_ann_for_client(ann uuid) returns boolean
+language sql stable security definer set search_path = '' as $$
+  select exists (select 1 from public.announcement_recipients r where r.announcement_id = ann and private.pt_client_role(r.client_account_id) is not null);
+$$;
 
 do $$
 declare f text;
 begin
   foreach f in array array['private.pt_role(uuid)', 'private.pt_is_staff(uuid)', 'private.pt_is_manager(uuid)', 'private.pt_is_admin(uuid)', 'private.pt_client_role(uuid)', 'private.pt_client_in_org(uuid)',
-    'private.pt_staff_sees_client(uuid)', 'private.pt_staff_writes_client(uuid)', 'private.pt_sees_client(uuid)'] loop
+    'private.pt_staff_sees_client(uuid)', 'private.pt_staff_writes_client(uuid)', 'private.pt_sees_client(uuid)', 'private.pt_ann_for_client(uuid)'] loop
     execute format('revoke all on function %s from public', f);
     execute format('grant execute on function %s to authenticated', f);
   end loop;
@@ -533,7 +538,7 @@ create policy announcements_select on public.announcements for select to authent
     or (private.pt_is_staff(organization_id) and published_at is not null and archived_at is null)
     or (published_at is not null and published_at <= now() and archived_at is null and (expires_at is null or expires_at > now())
         and ((audience = 'all' and private.pt_client_in_org(organization_id))
-             or (audience = 'selected' and exists (select 1 from public.announcement_recipients r where r.announcement_id = id and private.pt_client_role(r.client_account_id) is not null)))));
+             or (audience = 'selected' and private.pt_ann_for_client(id)))));
 create policy announcements_insert on public.announcements for insert to authenticated with check (private.pt_is_manager(organization_id));
 create policy announcements_update on public.announcements for update to authenticated using (private.pt_is_manager(organization_id)) with check (private.pt_is_manager(organization_id));
 create policy recipients_select on public.announcement_recipients for select to authenticated using (private.pt_is_manager(organization_id));

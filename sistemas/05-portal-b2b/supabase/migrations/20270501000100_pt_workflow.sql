@@ -30,7 +30,7 @@ begin
   end loop;
   return t at time zone p_tz;
 end $$;
-revoke all on function public.pt_add_business_hours(timestamptz, numeric, text, integer[], time, time) from public;
+revoke all on function public.pt_add_business_hours(timestamptz, numeric, text, integer[], time, time) from public, anon;
 grant execute on function public.pt_add_business_hours(timestamptz, numeric, text, integer[], time, time) to authenticated;
 
 -- Prazo pela política ativa da prioridade (nulo se não houver política ativa).
