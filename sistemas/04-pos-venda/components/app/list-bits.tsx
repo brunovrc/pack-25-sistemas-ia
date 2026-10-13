@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button, Input, Select } from '@/components/ui/primitives';
-import { PAGE_SIZE } from '@/lib/leads/data';
+import { PAGE_SIZE } from '@/lib/pv/data';
 
 /** Busca e filtros via GET (URL compartilhável, funciona sem JavaScript). */
 export function ListFilters({

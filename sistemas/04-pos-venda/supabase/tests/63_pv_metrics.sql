@@ -40,14 +40,16 @@ begin
   insert into public.customers (id, organization_id, name, email, assigned_to) values
     ('00000000-0000-4000-8000-0000000000a1', org, 'X1', 'x1@x.com', s1), ('00000000-0000-4000-8000-0000000000a2', org, 'X2', 'x2@x.com', null),
     ('00000000-0000-4000-8000-0000000000a3', org, 'X3', 'x3@x.com', null), ('00000000-0000-4000-8000-0000000000a4', org, 'X4', 'x4@x.com', null),
-    ('00000000-0000-4000-8000-0000000000a5', org, 'X5', 'x5@x.com', null), ('00000000-0000-4000-8000-0000000000a6', org, 'X6', 'x6@x.com', null);
+    ('00000000-0000-4000-8000-0000000000a5', org, 'X5', 'x5@x.com', null), ('00000000-0000-4000-8000-0000000000a6', org, 'X6', 'x6@x.com', null),
+    ('00000000-0000-4000-8000-0000000000a7', org, 'X7', 'x7@x.com', null);
   insert into public.purchases (organization_id, customer_id, purchased_at, total_cents, refunded_cents, status, external_order_id) values
     (org, '00000000-0000-4000-8000-0000000000a1', pg_temp.d(40), 10000, 0, 'completed', 'x1-1'), (org, '00000000-0000-4000-8000-0000000000a1', pg_temp.d(3), 10000, 0, 'completed', 'x1-2'),
     (org, '00000000-0000-4000-8000-0000000000a2', pg_temp.d(20), 30000, 0, 'completed', 'x2-1'), (org, '00000000-0000-4000-8000-0000000000a2', pg_temp.d(10), 20000, 0, 'completed', 'x2-2'),
     (org, '00000000-0000-4000-8000-0000000000a3', pg_temp.d(5), 8000, 0, 'completed', 'x3-1'),
     (org, '00000000-0000-4000-8000-0000000000a4', pg_temp.d(8), 9000, 0, 'cancelled', 'x4-1'),
     (org, '00000000-0000-4000-8000-0000000000a5', pg_temp.d(6), 7000, 7000, 'completed', 'x5-1'),
-    (org, '00000000-0000-4000-8000-0000000000a6', pg_temp.d(100), 5000, 0, 'completed', 'x6-1');
+    (org, '00000000-0000-4000-8000-0000000000a6', pg_temp.d(100), 5000, 0, 'completed', 'x6-1'),
+    (org, '00000000-0000-4000-8000-0000000000a7', pg_temp.d(40), 6000, 0, 'completed', 'x7-1');
   insert into public.purchase_items (organization_id, purchase_id, product_name, category, quantity, unit_price_cents, total_cents)
     select org, id, 'Café', 'Bebidas', 1, 10000, 10000 from public.purchases where external_order_id = 'x1-2';
   -- reativação observada: X2 comprou em d(10), 25 dias após a oportunidade identificada em d(35) (dentro da janela de 30)
@@ -56,6 +58,9 @@ begin
   insert into public.reactivation_opportunities (id, organization_id, customer_id, reason, priority, status, identified_at) values
     ('00000000-0000-4000-8000-0000000000e2', org, '00000000-0000-4000-8000-0000000000a6', 'inactivity', 75, 'open', pg_temp.d(60)),
     ('00000000-0000-4000-8000-0000000000e3', org, '00000000-0000-4000-8000-0000000000a3', 'cycle', 50, 'open', pg_temp.d(5));
+  -- X7 recomprou 60 dias depois de identificada: fora da janela de 30 dias, NÃO conta como reativação observada
+  insert into public.reactivation_opportunities (id, organization_id, customer_id, reason, priority, status, identified_at, resolved_at, reactivated_purchase_id)
+    select '00000000-0000-4000-8000-0000000000e4', org, '00000000-0000-4000-8000-0000000000a7', 'inactivity', 60, 'reactivated', pg_temp.d(100), pg_temp.d(40), id from public.purchases where external_order_id = 'x7-1';
   insert into public.customer_lifecycle_events (organization_id, customer_id, event_type, event_key, metadata, occurred_at)
     select org, '00000000-0000-4000-8000-0000000000a2', 'reactivated', 'react:x2', jsonb_build_object('purchase_id', id), pg_temp.d(10) from public.purchases where external_order_id = 'x2-2';
   -- tarefa vencida (cliente X1) e tarefa em dia
@@ -92,9 +97,9 @@ begin
   assert k.reactivated = 1 and k.reactivation_revenue_cents = 20000, 'reativação observada';
   assert k.overdue_tasks = 1, 'tarefas vencidas';
   assert k.at_risk + k.inactive >= 0, 'estados presentes';
-  -- coorte da taxa de reativação: período amplo (120 dias): oportunidades e1 (reativou) e e2 (não) com janela de 30 dias encerrada; e3 (identificada há 5 dias) fica fora
+  -- coorte da taxa de reativação: período amplo (120 dias): e1 (reativou em 25 dias), e2 (não reativou) e e4 (reativou só após 60 dias) com janela de 30 dias encerrada; e3 (identificada há 5 dias) fica fora
   select * into k from public.pv_kpis(org, pg_temp.dd(120), pg_temp.dd(0));
-  assert k.reactivation_cohort = 2 and k.reactivation_cohort_done = 1 and k.reactivation_rate = 50.00, format('taxa de reativação observada %s/%s', k.reactivation_cohort_done, k.reactivation_cohort);
+  assert k.reactivation_cohort = 3 and k.reactivation_cohort_done = 1 and k.reactivation_rate = 33.33, format('taxa de reativação observada %s/%s', k.reactivation_cohort_done, k.reactivation_cohort);
   -- filtro de vendedor: só X1
   select * into k from public.pv_kpis(org, pg_temp.dd(29), pg_temp.dd(0), 'ffffffff-0000-4000-8000-000000000001');
   assert k.orders = 1 and k.revenue_cents = 10000, 'filtro por responsável';
@@ -126,13 +131,13 @@ end $$;
 do $$
 declare org uuid := current_setting('t.org')::uuid;
 begin
-  assert (select sum(customers) from public.pv_state_distribution(org, pg_temp.dd(0))) = 6, 'todos os clientes em algum estado';
+  assert (select sum(customers) from public.pv_state_distribution(org, pg_temp.dd(0))) = 7, 'todos os clientes em algum estado';
   assert (select customers from public.pv_state_distribution(org, pg_temp.dd(0)) where state = 'no_purchases') = 2, 'X4 (cancelada) e X5 (estorno total) não contam como compradores';
   assert (select customers from public.pv_frequency_bands(org, pg_temp.dd(29), pg_temp.dd(0)) where ord = 1) = 2, 'faixa 1 pedido (X1, X3)';
   assert (select customers from public.pv_frequency_bands(org, pg_temp.dd(29), pg_temp.dd(0)) where ord = 2) = 1, 'faixa 2 pedidos (X2)';
   assert (select customers from public.pv_frequency_bands(org, pg_temp.dd(29), pg_temp.dd(0)) where ord = 4) = 0, 'faixa 5+ vazia';
   perform public.pv_rfm_run(org);
-  assert (select sum(customers) from public.pv_rfm_distribution(org)) = 6, 'distribuição RFM cobre todos os clientes';
+  assert (select sum(customers) from public.pv_rfm_distribution(org)) = 7, 'distribuição RFM cobre todos os clientes';
   assert (select count(*) from public.pv_rfm_distribution(org) where segment_key = 'sem_compras') = 1, 'sem compras agrupado';
   assert (select customers from public.pv_rfm_distribution(org) where segment_key = 'sem_compras') = 2, 'dois sem compras';
 end $$;
