@@ -77,6 +77,13 @@ describe('suggestMapping / mappingProblems / buildRows', () => {
     expect(new Set(used).size).toBe(used.length);
   });
 
+  it('reconhece cabeçalhos escritos de forma natural, em português', () => {
+    const m = suggestMapping(['Número do pedido', 'Data da Venda', 'E-mail do cliente', 'CPF do cliente', 'Valor do pedido', 'Status do pedido', 'Nome do produto', 'Categoria do produto'], PURCHASE_FIELDS);
+    expect(m).toMatchObject({ date: 1, customer_email: 2, customer_document: 3, total: 4, status: 5, product: 6, category: 7, customer_name: null });
+    const c = suggestMapping(['Nome do cliente', 'E-mail do cliente', 'Código do cliente'], CUSTOMER_FIELDS);
+    expect(c).toMatchObject({ name: 0, email: 1, external_id: 2 });
+  });
+
   it('exige campos obrigatórios e identificação do cliente', () => {
     expect(mappingProblems({ date: 1, customer_email: 2, total: 3 }, PURCHASE_FIELDS, 'purchases')).toEqual([]);
     expect(mappingProblems({ date: null, customer_email: 2, total: 3 }, PURCHASE_FIELDS, 'purchases')[0]).toContain('Data da compra');

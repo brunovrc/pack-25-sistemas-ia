@@ -135,6 +135,31 @@ begin
   update public.pv_settings set rule_inactivity = true where organization_id = org;
 end $$;
 
+-- ================= reativação: o dia da identificação conta; compra de dia anterior (importada depois) não =================
+-- A compra guarda só o DIA (meio-dia). Quem foi identificado hoje NÃO tinha comprado hoje; logo, compra datada de hoje é posterior.
+reset role;
+do $$
+declare org uuid := current_setting('t.org')::uuid;
+begin
+  insert into public.customers (id, organization_id, name, email) values (pg_temp.cid(80), org, 'D1', 'd1@x.com'), (pg_temp.cid(81), org, 'D2', 'd2@x.com');
+  insert into public.purchases (organization_id, customer_id, purchased_at, total_cents, status, external_order_id) values
+    (org, pg_temp.cid(80), pg_temp.d(100), 5000, 'completed', 'd1-old'), (org, pg_temp.cid(81), pg_temp.d(100), 5000, 'completed', 'd2-old');
+end $$;
+:as_a
+do $$ begin perform public.pv_refresh(current_setting('t.org')::uuid); end $$;
+reset role;
+do $$
+declare org uuid := current_setting('t.org')::uuid;
+begin
+  assert (select count(*) from public.reactivation_opportunities where customer_id in (pg_temp.cid(80), pg_temp.cid(81)) and status = 'open') = 2, 'as duas oportunidades nasceram abertas';
+  insert into public.purchases (organization_id, customer_id, purchased_at, total_cents, status, external_order_id) values
+    (org, pg_temp.cid(80), pg_temp.at(0, time '00:30'), 7000, 'completed', 'd1-hoje'),   -- hoje cedo, ANTES do instante da identificação
+    (org, pg_temp.cid(81), pg_temp.d(1), 7000, 'completed', 'd2-ontem');                  -- ontem: anterior à identificação (histórico lançado depois)
+  perform private.pv_detect_reactivations(org);
+  assert (select status from public.reactivation_opportunities where customer_id = pg_temp.cid(80)) = 'reactivated', 'compra do dia da identificação (mesmo cedo) reconhece a reativação';
+  assert (select status from public.reactivation_opportunities where customer_id = pg_temp.cid(81)) = 'open', 'compra de dia anterior à identificação não reativa';
+end $$;
+
 -- ================= MFA: administrador sem segundo fator não escreve =================
 reset role;
 :as_a1

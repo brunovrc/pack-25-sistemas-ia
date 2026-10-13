@@ -2,11 +2,10 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/primitives';
 import type { ActivityRow, CampaignRow, ContactRow, ItemRow, LifecycleEvent, MembershipRow, OpportunityRow, PreferenceRow, PurchaseRow, SuppressionRow } from '@/lib/pv/data';
 import { CHANNEL_LABELS, PERMISSION_LABELS } from '@/lib/pv/filters';
-import { formatBRL, formatDateTime, formatDay } from '@/lib/pv/format';
+import { activityLabel, formatBRL, formatDateTime, formatDay, overdue } from '@/lib/pv/format';
 import { SEGMENT_LABELS, type SegmentKey } from '@/lib/pv/rfm';
 import { ActivityToggle, LiftSuppressionButton, PurchaseRowActions } from './customer-forms';
 import { CampaignStatusBadge, ContactStatusBadge, MemberBadge, OppStatusBadge, exclusionLabel, reasonLabel } from './badges';
-import { activityLabel, overdue } from './tables';
 
 export function PurchaseList({ purchases, items, timezone, canManage }: { purchases: PurchaseRow[]; items: Map<string, ItemRow[]>; timezone: string; canManage: boolean }) {
   if (purchases.length === 0) return <p className="text-sm text-muted">Nenhuma compra registrada.</p>;

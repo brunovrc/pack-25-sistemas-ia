@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { DataTable } from '@/components/app/data-table';
 import { Badge } from '@/components/ui/primitives';
 import type { CustomerListRow, OpportunityListRow, PurchaseListRow } from '@/lib/pv/data';
-import { ACTIVITY_LABELS, type ActivityType } from '@/lib/pv/filters';
 import { formatBRL, formatDate, formatDateTime, formatDays, formatPhone } from '@/lib/pv/format';
 import { OppStatusBadge, PriorityBadge, SegmentBadge, StateBadge, reasonLabel } from './badges';
 
@@ -73,7 +72,3 @@ export function OpportunitiesTable({ rows, owners, high, medium, empty }: { rows
   return <DataTable columns={columns} data={rows} caption="Oportunidades de reativação" empty={empty} />;
 }
 
-export const activityLabel = (t: string) => ACTIVITY_LABELS[t as ActivityType] ?? t;
-export function overdue(a: { due_at: string | null }, now: number): boolean {
-  return a.due_at !== null && Date.parse(a.due_at) < now;
-}

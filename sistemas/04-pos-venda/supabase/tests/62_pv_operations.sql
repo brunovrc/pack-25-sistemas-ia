@@ -240,13 +240,29 @@ reset role;
 do $$ begin assert test.throws(format($q$select public.pv_lift_suppression(%L)$q$, (select id from public.suppression_entries limit 1))), 'vendedor não levanta supressão'; end $$;
 reset role;
 
--- recompra depois do contato → resultado observado, uma vez só
+-- recompra depois do contato → resultado observado, uma vez só. A compra guarda só o DIA: a do MESMO dia do primeiro contato não conta (ambígua);
+-- a do dia seguinte conta. (Datas fora do limite de «amanhã» da função de criação entram direto, como a importação faria.)
+do $$
+declare org uuid := current_setting('t.org')::uuid; x2 uuid := current_setting('t.x2')::uuid;
+begin
+  insert into public.purchases (organization_id, customer_id, external_order_id, purchased_at, total_cents, status) values
+    (org, x2, 'POS-0', (((now() at time zone 'America/Sao_Paulo')::date)::timestamp + time '12:00') at time zone 'America/Sao_Paulo', 12345, 'completed');
+end $$;
 :as_m
 do $$
-declare org uuid := current_setting('t.org')::uuid; camp uuid := current_setting('t.camp')::uuid; x2 uuid := current_setting('t.x2')::uuid; r jsonb;
+declare org uuid := current_setting('t.org')::uuid; camp uuid := current_setting('t.camp')::uuid; x2 uuid := current_setting('t.x2')::uuid; pid uuid;
 begin
-  r := public.pv_purchase_create(x2, 'POS-1', now() + interval '2 hours', 30000);
-  assert (r ->> 'ok')::boolean, 'compra de recompra: ' || r::text;
+  perform public.pv_refresh(org);
+  assert (select count(*) from public.campaign_outcomes where campaign_id = camp and customer_id = x2) = 0, 'compra do mesmo dia do primeiro contato não conta como resultado';
+  reset role;
+  insert into public.purchases (organization_id, customer_id, external_order_id, purchased_at, total_cents, status) values
+    (org, x2, 'POS-1', (((now() at time zone 'America/Sao_Paulo')::date + 1)::timestamp + time '12:00') at time zone 'America/Sao_Paulo', 30000, 'completed') returning id into pid;
+  perform set_config('t.pos1', pid::text, true);
+end $$;
+:as_m
+do $$
+declare org uuid := current_setting('t.org')::uuid; camp uuid := current_setting('t.camp')::uuid; x2 uuid := current_setting('t.x2')::uuid;
+begin
   perform public.pv_refresh(org);
   perform public.pv_refresh(org);
   assert (select count(*) from public.campaign_outcomes where campaign_id = camp and customer_id = x2) = 1, 'recompra após o contato: um resultado observado (idempotente)';
@@ -255,7 +271,7 @@ begin
   assert (select completed_at from public.campaigns where id = camp) is not null and exists (select 1 from public.notifications where type = 'campaign_done'), 'concluída, com notificação';
   assert test.throws(format($q$select public.pv_campaign_set_status(%L, 'running')$q$, camp)), 'concluída é final';
   -- cancelar a compra remove o resultado (não conta o que deixou de valer)
-  perform public.pv_purchase_cancel((r ->> 'id')::uuid);
+  perform public.pv_purchase_cancel(current_setting('t.pos1')::uuid);
   assert (select count(*) from public.campaign_outcomes where campaign_id = camp and customer_id = x2) = 0, 'compra cancelada sai do resultado da campanha';
   raise notice 'PASS: resultados de campanha — recompra observada após contato, sem dupla contagem';
 end $$;

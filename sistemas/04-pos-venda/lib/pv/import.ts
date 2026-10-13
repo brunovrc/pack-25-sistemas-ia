@@ -25,31 +25,31 @@ export function normalizeHeader(header: string): string {
 }
 
 export const CUSTOMER_FIELDS: FieldDef[] = [
-  { key: 'name', out: 'name', label: 'Nome', required: true, kind: 'text', aliases: ['nome', 'name', 'cliente', 'razao_social', 'nome_completo'] },
-  { key: 'email', out: 'email', label: 'E-mail', kind: 'text', aliases: ['email', 'e_mail', 'mail'] },
-  { key: 'phone', out: 'phone', label: 'Telefone', hint: 'Com DDD.', kind: 'text', aliases: ['telefone', 'celular', 'fone', 'whatsapp', 'phone', 'tel'] },
-  { key: 'document', out: 'document', label: 'CPF/CNPJ', kind: 'text', aliases: ['cpf', 'cnpj', 'cpf_cnpj', 'documento', 'document'] },
+  { key: 'name', out: 'name', label: 'Nome', required: true, kind: 'text', aliases: ['nome', 'name', 'cliente', 'razao_social', 'nome_completo', 'nome_do_cliente', 'nome_cliente'] },
+  { key: 'email', out: 'email', label: 'E-mail', kind: 'text', aliases: ['email', 'e_mail', 'mail', 'email_do_cliente', 'e_mail_do_cliente'] },
+  { key: 'phone', out: 'phone', label: 'Telefone', hint: 'Com DDD.', kind: 'text', aliases: ['telefone', 'celular', 'fone', 'whatsapp', 'phone', 'tel', 'telefone_celular', 'celular_whatsapp'] },
+  { key: 'document', out: 'document', label: 'CPF/CNPJ', kind: 'text', aliases: ['cpf', 'cnpj', 'cpf_cnpj', 'documento', 'document', 'cpf_ou_cnpj'] },
   { key: 'company_name', out: 'company_name', label: 'Empresa', kind: 'text', aliases: ['empresa', 'company', 'company_name'] },
-  { key: 'external_id', out: 'external_id', label: 'Identificador no seu sistema', hint: 'Ajuda a evitar duplicidade.', kind: 'text', aliases: ['id', 'codigo', 'cod_cliente', 'id_cliente', 'external_id', 'customer_id'] },
+  { key: 'external_id', out: 'external_id', label: 'Identificador no seu sistema', hint: 'Ajuda a evitar duplicidade.', kind: 'text', aliases: ['id', 'codigo', 'cod_cliente', 'id_cliente', 'external_id', 'customer_id', 'codigo_do_cliente', 'id_do_cliente'] },
   { key: 'type', out: 'type', label: 'Tipo (pessoa/empresa)', kind: 'text', aliases: ['tipo', 'tipo_pessoa', 'type'] },
   { key: 'notes', out: 'notes', label: 'Observações', kind: 'text', aliases: ['observacoes', 'observacao', 'obs', 'notes', 'notas'] },
 ];
 
 export const PURCHASE_FIELDS: FieldDef[] = [
   { key: 'order_id', out: 'order_id', label: 'Número do pedido', hint: 'Evita importar o mesmo pedido duas vezes.', kind: 'text', aliases: ['pedido', 'numero_pedido', 'n_pedido', 'order', 'order_id', 'id_pedido', 'venda'] },
-  { key: 'date', out: 'date', label: 'Data da compra', required: true, hint: 'DD/MM/AAAA ou AAAA-MM-DD. A hora é ignorada.', kind: 'date', aliases: ['data', 'data_compra', 'data_da_compra', 'data_pedido', 'date', 'emissao'] },
-  { key: 'customer_email', out: 'customer_email', label: 'E-mail do cliente', kind: 'text', aliases: ['email', 'e_mail', 'email_cliente', 'customer_email'] },
-  { key: 'customer_document', out: 'customer_document', label: 'CPF/CNPJ do cliente', kind: 'text', aliases: ['cpf', 'cnpj', 'cpf_cnpj', 'documento', 'documento_cliente', 'customer_document'] },
-  { key: 'customer_external_id', out: 'customer_external_id', label: 'Identificador do cliente', kind: 'text', aliases: ['id_cliente', 'cod_cliente', 'codigo_cliente', 'customer_id', 'customer_external_id'] },
-  { key: 'customer_name', out: 'customer_name', label: 'Nome do cliente', hint: 'Só usado para cadastrar clientes ausentes.', kind: 'text', aliases: ['cliente', 'nome_cliente', 'nome', 'customer_name'] },
-  { key: 'total', out: 'total_cents', label: 'Valor total', hint: 'Em reais. Vazio: soma dos itens.', kind: 'money', aliases: ['valor', 'valor_total', 'total', 'total_pedido', 'amount', 'faturamento'] },
+  { key: 'date', out: 'date', label: 'Data da compra', required: true, hint: 'DD/MM/AAAA ou AAAA-MM-DD. A hora é ignorada.', kind: 'date', aliases: ['data', 'data_compra', 'data_da_compra', 'data_pedido', 'date', 'emissao', 'data_do_pedido', 'data_da_venda', 'data_venda'] },
+  { key: 'customer_email', out: 'customer_email', label: 'E-mail do cliente', kind: 'text', aliases: ['email', 'e_mail', 'email_cliente', 'customer_email', 'email_do_cliente', 'e_mail_do_cliente', 'e_mail_cliente'] },
+  { key: 'customer_document', out: 'customer_document', label: 'CPF/CNPJ do cliente', kind: 'text', aliases: ['cpf', 'cnpj', 'cpf_cnpj', 'documento', 'documento_cliente', 'customer_document', 'cpf_do_cliente', 'cnpj_do_cliente', 'cpf_cnpj_do_cliente', 'documento_do_cliente'] },
+  { key: 'customer_external_id', out: 'customer_external_id', label: 'Identificador do cliente', kind: 'text', aliases: ['id_cliente', 'cod_cliente', 'codigo_cliente', 'customer_id', 'customer_external_id', 'id_do_cliente', 'codigo_do_cliente'] },
+  { key: 'customer_name', out: 'customer_name', label: 'Nome do cliente', hint: 'Só usado para cadastrar clientes ausentes.', kind: 'text', aliases: ['cliente', 'nome_cliente', 'nome', 'customer_name', 'nome_do_cliente'] },
+  { key: 'total', out: 'total_cents', label: 'Valor total', hint: 'Em reais. Vazio: soma dos itens.', kind: 'money', aliases: ['valor', 'valor_total', 'total', 'total_pedido', 'amount', 'faturamento', 'valor_do_pedido', 'total_do_pedido', 'valor_total_do_pedido'] },
   { key: 'refunded', out: 'refunded_cents', label: 'Valor estornado', kind: 'money', aliases: ['estorno', 'valor_estornado', 'devolucao', 'devolvido', 'refund', 'refunded'] },
-  { key: 'status', out: 'status', label: 'Status', hint: 'concluída ou cancelada (vazio = concluída).', kind: 'status', aliases: ['status', 'situacao', 'estado'] },
-  { key: 'product', out: 'product', label: 'Produto', kind: 'text', aliases: ['produto', 'item', 'descricao', 'product', 'nome_produto'] },
+  { key: 'status', out: 'status', label: 'Status', hint: 'concluída ou cancelada (vazio = concluída).', kind: 'status', aliases: ['status', 'situacao', 'estado', 'status_do_pedido', 'situacao_do_pedido'] },
+  { key: 'product', out: 'product', label: 'Produto', kind: 'text', aliases: ['produto', 'item', 'descricao', 'product', 'nome_produto', 'nome_do_produto', 'descricao_do_produto'] },
   { key: 'sku', out: 'sku', label: 'SKU/Código do produto', kind: 'text', aliases: ['sku', 'codigo_produto', 'cod_produto'] },
-  { key: 'category', out: 'category', label: 'Categoria', kind: 'text', aliases: ['categoria', 'category', 'grupo', 'linha'] },
+  { key: 'category', out: 'category', label: 'Categoria', kind: 'text', aliases: ['categoria', 'category', 'grupo', 'linha', 'categoria_do_produto'] },
   { key: 'quantity', out: 'quantity', label: 'Quantidade', kind: 'number', aliases: ['quantidade', 'qtd', 'qtde', 'quantity'] },
-  { key: 'unit_price', out: 'unit_price_cents', label: 'Preço unitário', kind: 'money', aliases: ['preco', 'preco_unitario', 'valor_unitario', 'unit_price', 'price'] },
+  { key: 'unit_price', out: 'unit_price_cents', label: 'Preço unitário', kind: 'money', aliases: ['preco', 'preco_unitario', 'valor_unitario', 'unit_price', 'price', 'valor_unit', 'preco_unit'] },
 ];
 
 /** Mapeamento: chave do campo -> índice da coluna do arquivo (ou null). */

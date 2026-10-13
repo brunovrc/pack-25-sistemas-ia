@@ -196,14 +196,15 @@ begin
 end $$;
 
 -- ======================================================================= oportunidades de reativação
--- Reativação: o cliente tinha oportunidade aberta (risco/inatividade) e fez uma compra válida DEPOIS de identificada.
+-- Reativação: o cliente tinha oportunidade aberta (risco/inatividade) e fez uma compra válida DEPOIS de identificada. Compra guarda o DIA (sem hora):
+-- vale a data no fuso da organização, a partir do dia da identificação (quem já comprou antes nem teria sido identificado).
 create function private.pv_detect_reactivations(p_org uuid) returns integer
 language plpgsql security definer set search_path = '' as $$
-declare r record; n int := 0; pid uuid; pat timestamptz; pnet bigint;
+declare r record; n int := 0; pid uuid; pat timestamptz; pnet bigint; tz text := private.pv_tz(p_org);
 begin
   for r in select o.id, o.customer_id, o.reason, o.identified_at from public.reactivation_opportunities o where o.organization_id = p_org and o.status in ('open', 'in_progress') loop
     select pu.id, pu.purchased_at, pu.net_cents into pid, pat, pnet from public.purchases pu
-      where pu.customer_id = r.customer_id and pu.is_valid and pu.purchased_at > r.identified_at order by pu.purchased_at limit 1;
+      where pu.customer_id = r.customer_id and pu.is_valid and (pu.purchased_at at time zone tz)::date >= (r.identified_at at time zone tz)::date order by pu.purchased_at limit 1;
     if pid is null then continue; end if;
     update public.reactivation_opportunities set status = 'reactivated', resolved_at = pat, reactivated_purchase_id = pid where id = r.id;
     insert into public.customer_lifecycle_events (organization_id, customer_id, event_type, event_key, metadata, occurred_at)
@@ -218,18 +219,21 @@ begin
 end $$;
 revoke all on function private.pv_detect_reactivations(uuid) from public;
 
--- Resultado de campanha: recompra observada após o PRIMEIRO contato registrado, dentro da janela da campanha.
+-- Resultado de campanha: recompra observada após o PRIMEIRO contato registrado, dentro da janela da campanha. A compra guarda só o DIA:
+-- conta quem comprou em um dia POSTERIOR ao do primeiro contato (compra do mesmo dia é ambígua e não é contada, para não prometer o que não se sabe).
 create function private.pv_campaign_sync(p_campaign uuid) returns integer
 language plpgsql security definer set search_path = '' as $$
-declare c public.campaigns%rowtype; n int;
+declare c public.campaigns%rowtype; n int; tz text;
 begin
   select * into c from public.campaigns where id = p_campaign;
   if not found or c.status in ('draft', 'planned') then return 0; end if;
+  tz := private.pv_tz(c.organization_id);
   insert into public.campaign_outcomes (organization_id, campaign_id, customer_id, outcome_type, related_purchase_id, outcome_at)
   select c.organization_id, c.id, k.customer_id, 'rebought', pu.id, pu.purchased_at
   from (select ct.customer_id, min(ct.contacted_at) as first_contact from public.campaign_contacts ct
           where ct.campaign_id = c.id and ct.contact_status in ('contacted', 'responded') and ct.contacted_at is not null group by ct.customer_id) k
-  join public.purchases pu on pu.customer_id = k.customer_id and pu.is_valid and pu.purchased_at > k.first_contact and pu.purchased_at <= k.first_contact + make_interval(days => c.observation_days)
+  join public.purchases pu on pu.customer_id = k.customer_id and pu.is_valid
+     and (pu.purchased_at at time zone tz)::date > (k.first_contact at time zone tz)::date and (pu.purchased_at at time zone tz)::date <= (k.first_contact at time zone tz)::date + c.observation_days
   on conflict do nothing;
   get diagnostics n = row_count;
   update public.campaign_memberships m set status = 'rebought'
@@ -332,7 +336,7 @@ begin
       if nullif(btrim(coalesce(p_value, '')), '') is null then raise exception 'informe o motivo do descarte' using errcode = '23514'; end if;
       update public.reactivation_opportunities set status = 'discarded', resolved_at = now(), discard_reason = left(btrim(p_value), 300) where id = p_opp;
     when 'reactivated' then
-      select pu.id, pu.purchased_at into pid, pat from public.purchases pu where pu.customer_id = o.customer_id and pu.is_valid and pu.purchased_at > o.identified_at order by pu.purchased_at limit 1;
+      select pu.id, pu.purchased_at into pid, pat from public.purchases pu where pu.customer_id = o.customer_id and pu.is_valid and (pu.purchased_at at time zone private.pv_tz(o.organization_id))::date >= (o.identified_at at time zone private.pv_tz(o.organization_id))::date order by pu.purchased_at limit 1;
       if pid is null then raise exception 'não há compra válida depois da identificação: sem evidência de reativação' using errcode = '23514'; end if;
       perform private.pv_detect_reactivations(o.organization_id);
     else raise exception 'ação inválida' using errcode = '22023';

@@ -49,7 +49,7 @@ export function RevenueChart({ rows }: { rows: PeriodRow[] }) {
         <BarChart data={rows} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
           <Grid />
           <XAxis dataKey="label" tick={TICK} />
-          <YAxis tick={TICK} width={56} tickFormatter={brlAxis} />
+          <YAxis tick={TICK} width={72} tickFormatter={brlAxis} />
           <Tooltip formatter={brl} contentStyle={TOOLTIP} />
           <Legend />
           <Bar dataKey="first" name="Primeira compra" stackId="a" fill="#64748b" />
@@ -70,7 +70,7 @@ export function TicketChart({ rows }: { rows: PeriodRow[] }) {
         <LineChart data={rows} margin={{ top: 8, right: 12, left: 0, bottom: 0 }}>
           <Grid />
           <XAxis dataKey="label" tick={TICK} />
-          <YAxis tick={TICK} width={56} tickFormatter={brlAxis} />
+          <YAxis tick={TICK} width={72} tickFormatter={brlAxis} />
           <Tooltip formatter={brl} contentStyle={TOOLTIP} />
           <Line type="monotone" dataKey="ticket" name="Ticket médio" stroke="#7c3aed" strokeWidth={2} dot={{ r: 3 }} connectNulls={false} />
         </LineChart>

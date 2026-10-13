@@ -215,7 +215,10 @@ begin
     coalesce((select sum(pu.net_cents) from public.campaign_outcomes o join public.purchases pu on pu.id = o.related_purchase_id where o.campaign_id = c.id), 0)::bigint,
     (select count(*) from public.customer_activities a where a.campaign_id = c.id and a.completed_at is null),
     c.created_at
-  from public.campaigns c where c.organization_id = p_org and c.created_at >= w.t0 and c.created_at < w.t1 order by c.created_at desc;
+  -- campanhas «vivas» no período: em andamento/pausadas desde antes; rascunhos e planejadas só se criadas nele; encerradas se terminaram nele ou depois
+  from public.campaigns c where c.organization_id = p_org and c.created_at < w.t1
+    and coalesce(c.completed_at, case when c.status in ('running', 'paused') then 'infinity'::timestamptz else c.created_at end) >= w.t0
+  order by c.created_at desc;
 end $$;
 
 create function public.pv_campaign_series(p_org uuid, p_from date, p_to date)

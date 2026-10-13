@@ -2,12 +2,11 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Badge, EmptyState, PageHeader } from '@/components/ui/primitives';
 import { ActivityToggle } from '@/components/pv/customer-forms';
-import { activityLabel, overdue } from '@/components/pv/tables';
 import { requireContext } from '@/lib/auth/session';
 import { nowIso } from '@/lib/time';
 import { canWrite, isManager, one, type SearchParams } from '@/lib/pv/access';
 import { labelMap, listOpenActivities, loadPeople, loadSettings } from '@/lib/pv/data';
-import { formatDateTime } from '@/lib/pv/format';
+import { activityLabel, formatDateTime, overdue } from '@/lib/pv/format';
 
 export const metadata: Metadata = { title: 'Tarefas' };
 

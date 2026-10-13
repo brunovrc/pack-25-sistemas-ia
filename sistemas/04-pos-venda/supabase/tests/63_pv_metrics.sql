@@ -77,6 +77,11 @@ begin
     (org, '00000000-0000-4000-8000-0000000000c0', '00000000-0000-4000-8000-0000000000a1', 'phone', 'contacted', pg_temp.d(15)),
     (org, '00000000-0000-4000-8000-0000000000c0', '00000000-0000-4000-8000-0000000000a2', 'phone', 'responded', pg_temp.d(15)),
     (org, '00000000-0000-4000-8000-0000000000c0', '00000000-0000-4000-8000-0000000000a3', 'phone', 'planned', null);
+  -- campanhas criadas ANTES do período: a em andamento continua aparecendo; a concluída antes do período, não; o rascunho antigo, não
+  insert into public.campaigns (id, organization_id, name, channel, status, created_at, completed_at) values
+    ('00000000-0000-4000-8000-0000000000c1', org, 'Camp antiga em andamento', 'phone', 'running', pg_temp.d(100), null),
+    ('00000000-0000-4000-8000-0000000000c2', org, 'Camp antiga concluída', 'phone', 'completed', pg_temp.d(100), pg_temp.d(60)),
+    ('00000000-0000-4000-8000-0000000000c3', org, 'Camp rascunho antigo', 'phone', 'draft', pg_temp.d(100), null);
   insert into public.campaign_outcomes (organization_id, campaign_id, customer_id, outcome_type, related_purchase_id, outcome_at)
     select org, '00000000-0000-4000-8000-0000000000c0', '00000000-0000-4000-8000-0000000000a2', 'rebought', id, purchased_at from public.purchases where external_order_id = 'x2-2';
 end $$;
@@ -153,6 +158,9 @@ begin
   assert (select sum(contacts) from public.pv_campaign_series(org, pg_temp.dd(29), pg_temp.dd(0))) = 2, 'série de contatos';
   assert (select sum(rebuys) from public.pv_campaign_series(org, pg_temp.dd(29), pg_temp.dd(0))) = 1, 'série de recompras';
   assert test.count(format('select 1 from public.pv_campaign_stats(%L, current_date - 400, current_date - 300)', org)) = 0, 'campanha fora do período não aparece';
+  assert exists (select 1 from public.pv_campaign_stats(org, pg_temp.dd(29), pg_temp.dd(0)) where name = 'Camp antiga em andamento'), 'campanha em andamento criada antes do período continua aparecendo';
+  assert not exists (select 1 from public.pv_campaign_stats(org, pg_temp.dd(29), pg_temp.dd(0)) where name in ('Camp antiga concluída', 'Camp rascunho antigo')), 'concluída antes do período e rascunho antigo não aparecem';
+  assert exists (select 1 from public.pv_campaign_stats(org, pg_temp.dd(89), pg_temp.dd(50)) where name = 'Camp antiga concluída'), 'concluída dentro do período aparece';
 end $$;
 
 -- ================= alertas =================

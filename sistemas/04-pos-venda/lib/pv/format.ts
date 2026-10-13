@@ -95,3 +95,10 @@ export function variationPct(current: number | null, previous: number | null): n
   if (current === null || previous === null || previous === 0) return null;
   return Math.round(((current - previous) / previous) * 1000) / 10;
 }
+
+import { ACTIVITY_LABELS, type ActivityType } from './filters';
+export const activityLabel = (t: string) => ACTIVITY_LABELS[t as ActivityType] ?? t;
+/** Tarefa vencida? (prazo no passado) */
+export function overdue(a: { due_at: string | null }, now: number): boolean {
+  return a.due_at !== null && Date.parse(a.due_at) < now;
+}
