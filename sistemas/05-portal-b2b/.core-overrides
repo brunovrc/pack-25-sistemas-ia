@@ -1,0 +1,10 @@
+# Arquivos que o sistema 05 possui (o sync-core cria uma vez e nunca sobrescreve).
+package.json
+pnpm-lock.yaml
+lib/system.config.ts
+lib/auth/session.ts
+public/brand/**
+app/(app)/dashboard/**
+# Arquivos do Core que o sistema 05 não quer.
+-tests/e2e/core-dashboard.spec.ts
+-tests/e2e/screens.spec.ts

@@ -199,31 +199,37 @@
     },
     {
       "id": "05",
-      "slug": "portal-do-cliente",
-      "directory": "sistemas/05-portal-do-cliente",
-      "repo_name": "portal-do-cliente",
-      "name": "Portal do Cliente B2B",
+      "slug": "portal-b2b",
+      "directory": "sistemas/05-portal-b2b",
+      "repo_name": "portal-b2b",
+      "name": "Portal de Clientes B2B",
       "category": "Comercial",
-      "audience": "Empresas que atendem clientes corporativos recorrentes",
-      "pain": "Solicitações e documentos espalhados por e-mail",
-      "value_proposition": "Portal onde o cliente abre solicitações, acessa documentos e comenta, isolado por empresa",
+      "audience": "Agências, consultorias, escritórios contábeis, empresas de tecnologia, manutenção e engenharia que atendem clientes empresariais recorrentes",
+      "pain": "Solicitações, entregas e documentos espalhados por e-mail e planilhas, sem histórico, sem prazos visíveis e sem transparência para o cliente",
+      "value_proposition": "Painel da prestadora e portal exclusivo do cliente: solicitações com prazo e histórico, documentos privados, entregas, comentários e comunicados, com isolamento por empresa",
       "mvp_features": [
-        "Usuários clientes com acesso isolado",
-        "Solicitações",
-        "Documentos privados",
-        "Comentários",
-        "Notificações simples"
+        "Contas de clientes e usuários com convites seguros e acesso isolado por empresa",
+        "Solicitações com máquina de estados, responsável, prazo e SLA operacional",
+        "Comentários compartilhados e internos, histórico e notificações",
+        "Documentos privados com pastas, visibilidade e URLs assinadas de curta duração",
+        "Entregas com publicação explícita e confirmação de recebimento",
+        "Comunicados direcionados, dashboard, relatórios CSV e white-label"
       ],
       "exclusions": [
         "Cobrança integrada",
-        "Assinatura certificada"
+        "Assinatura eletrônica certificada",
+        "Chat em tempo real",
+        "ERP, emissão fiscal e gateway de pagamento",
+        "RAG sobre documentos"
       ],
       "kpis": [
-        "Solicitações abertas",
-        "Tempo de resposta",
+        "Solicitações abertas e atrasadas",
+        "Cumprimento de prazo",
+        "Tempo médio de resolução",
+        "Entregas publicadas",
         "Documentos compartilhados"
       ],
-      "complexity": "média",
+      "complexity": "alta",
       "implementation_price_brl_illustrative": {
         "min": 1500,
         "max": 3500
@@ -232,9 +238,10 @@
       "personal_data": [
         "nome",
         "e-mail",
+        "telefone",
         "documentos do cliente"
       ],
-      "status": "PLANEJADO"
+      "status": "EM_DESENVOLVIMENTO"
     },
     {
       "id": "06",

@@ -13,7 +13,7 @@
 | 02 | **Gestão de Propostas Comerciais** — Propostas profissionais com catálogo, preços, versões imutáveis, PDF, link seguro de aceite e indicadores comerciais | Comercial | `propostas-comerciais` | VALIDADO |
 | 03 | **Qualificador de Leads Inteligente** — Formulários públicos com condicionais, score transparente de 0 a 100, distribuição e indicadores por campanha | Comercial | `qualificador-leads` | VALIDADO |
 | 04 | **Pós-Venda e Reativação de Clientes** — Histórico de compras, RFM transparente, oportunidades de reativação e campanhas com resultados observados | Comercial | `pos-venda` | VALIDADO |
-| 05 | **Portal do Cliente B2B** — Portal onde o cliente abre solicitações, acessa documentos e comenta, isolado por empresa | Comercial | `portal-do-cliente` | PLANEJADO |
+| 05 | **Portal de Clientes B2B** — Painel da prestadora e portal do cliente: solicitações com prazo, documentos privados, entregas e comunicados, isolado por empresa | Comercial | `portal-b2b` | EM_DESENVOLVIMENTO |
 | 06 | **Financeiro Completo** — Controle de contas, categorias e fluxo de caixa com lançamentos auditáveis | Gestão | `financeiro-completo` | PLANEJADO |
 | 07 | **Controle de Estoque** — Saldo confiável por depósito com movimentação auditável e alerta de mínimo | Gestão | `controle-de-estoque` | PLANEJADO |
 | 08 | **Precificação** — Cálculo transparente de preço, margem e markup com cenários comparáveis | Gestão | `precificacao` | PLANEJADO |
