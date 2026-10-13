@@ -37,7 +37,8 @@ export async function POST(request: Request) {
   if (!(file instanceof File) || file.size === 0) return json({ ok: false, message: 'Escolha um arquivo.' }, 400);
   if (file.size > maxBytes) return json({ ok: false, message: `O arquivo excede o limite de ${settings.doc_max_mb} MB.` }, 413);
 
-  const raw = Object.fromEntries(['client', 'folder', 'title', 'description', 'visibility', 'request', 'comment', 'deliverable'].map((k) => [k, typeof form.get(k) === 'string' ? form.get(k) : '']));
+  // campos ausentes ou vazios usam o padrão do esquema (ex.: visibilidade «compartilhado»)
+  const raw = Object.fromEntries(['client', 'folder', 'title', 'description', 'visibility', 'request', 'comment', 'deliverable'].flatMap((k) => { const v = form.get(k); return typeof v === 'string' && v !== '' ? [[k, v]] : []; })) as Record<string, string>;
   const parsed = uploadMetaSchema.safeParse({ ...raw, client: actor.kind === 'client' ? actor.clientAccountId : raw.client });
   if (!parsed.success) return json({ ok: false, message: 'Dados do envio inválidos.' }, 400);
   const meta = parsed.data;

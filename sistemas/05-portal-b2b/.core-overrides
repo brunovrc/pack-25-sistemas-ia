@@ -2,6 +2,7 @@
 package.json
 pnpm-lock.yaml
 lib/system.config.ts
+next.config.ts
 lib/auth/session.ts
 public/brand/**
 app/(app)/dashboard/**
