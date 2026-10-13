@@ -1,5 +1,5 @@
 # MEMORY — PÓS-VENDA E REATIVAÇÃO DE CLIENTES
-Atualizado em: 2026-10-13 | Versão: 0.1.0 | Estado: EM VALIDAÇÃO (vira VALIDADO após CI verde e instalação isolada)
+Atualizado em: 2026-10-13 | Versão: 0.1.0 | Estado: VALIDADO
 
 ## Missão do sistema
 Mostrar quem compra, quem esfria e quem sumiu (RFM + regras de risco explicáveis) e organizar o contato manual de reativação com respeito à permissão de contato. Público: lojas, distribuidoras e serviços com clientes recorrentes.
@@ -15,7 +15,8 @@ Fora do escopo: ERP, disparo em massa/WhatsApp automático, previsão de churn p
 ## Implementado e verificado (evidência em docs/FEATURES.md)
 - Banco: 5 arquivos de teste SQL do sistema (fixtures RFM à mão, motor, operações, métricas, limites) e **78 mutações** reprovadas pela suíte.
 - Unitários: RFM (fixtures), importação BR, modelos de mensagem, filtros, segmentos, CSV.
-- E2E (Supabase local + build de produção): core 13, demo 7, fluxos 4, campanha 2, segurança 7, mobile 2.
+- E2E (Supabase local + build de produção): 35 testes (core 13, demo 7, fluxos 4, campanha 2, segurança 7, mobile 2), também na cópia exportada.
+- Instalação isolada validada (cópia exportada: install, lint, tipos, unit, build, test:db, E2E). CI do hub: jobs do 04 verdes.
 
 ## Pendências e riscos
 - Cohort e rótulos de mês dependem do calendário; E2E não afirma números de coorte.
