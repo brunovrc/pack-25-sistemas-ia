@@ -152,10 +152,20 @@ begin
   union all select 'deliverables_pending', (select count(*) from public.deliverables d where d.organization_id = p_org and d.status in ('draft', 'in_preparation', 'ready'));
 end $$;
 
+-- Exportação de CSV deixa rastro na auditoria (quem, qual relatório, quantas linhas; nunca os dados). Só gestão, e com MFA quando exigido.
+create function public.pt_log_export(p_org uuid, p_kind text, p_rows integer) returns void
+language plpgsql security definer set search_path = '' as $fn$
+begin
+  if not private.pt_is_manager(p_org) or not private.mfa_ok() then raise exception 'sem permissão' using errcode = '42501'; end if;
+  if p_kind is null or p_kind !~ '^[a-z0-9-]{2,40}$' then raise exception 'relatório inválido' using errcode = '22023'; end if;
+  insert into public.audit_log (organization_id, actor_id, action, entity, entity_id, changes)
+  values (p_org, (select auth.uid()), 'export', 'report', p_kind, jsonb_build_object('rows', greatest(coalesce(p_rows, 0), 0)));
+end $fn$;
+
 do $$
 declare f text;
 begin
-  foreach f in array array['public.pt_kpis(uuid, date, date, uuid, uuid, uuid, public.pt_priority, public.pt_request_status)', 'public.pt_series(uuid, date, date, uuid, uuid, uuid, public.pt_priority, public.pt_request_status)',
+  foreach f in array array['public.pt_log_export(uuid, text, integer)', 'public.pt_kpis(uuid, date, date, uuid, uuid, uuid, public.pt_priority, public.pt_request_status)', 'public.pt_series(uuid, date, date, uuid, uuid, uuid, public.pt_priority, public.pt_request_status)',
     'public.pt_status_distribution(uuid, uuid, uuid, uuid, public.pt_priority)', 'public.pt_priority_distribution(uuid, uuid, uuid, uuid, public.pt_request_status)',
     'public.pt_by_assignee(uuid, date, date, uuid)', 'public.pt_by_client(uuid, date, date)', 'public.pt_alerts(uuid)'] loop
     execute format('revoke all on function %s from public, anon', f);

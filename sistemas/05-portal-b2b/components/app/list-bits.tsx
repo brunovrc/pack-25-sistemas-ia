@@ -11,7 +11,8 @@ export function ListFilters({
   /** false: esconde o campo de busca (páginas sem busca por texto). */
   search?: boolean;
   placeholder?: string;
-  selects?: Array<{ name: string; label: string; value: string; options: Array<{ value: string; label: string }>; all: string }>;
+  /** `required`: sem a opção «todos» (a lista sempre tem um valor escolhido). */
+  selects?: Array<{ name: string; label: string; value: string; options: Array<{ value: string; label: string }>; all: string; required?: boolean }>;
   hidden?: Record<string, string>;
 }) {
   return (
@@ -27,7 +28,7 @@ export function ListFilters({
         <div key={s.name}>
           <label htmlFor={`f-${s.name}`} className="mb-1 block text-xs font-medium text-muted">{s.label}</label>
           <Select id={`f-${s.name}`} name={s.name} defaultValue={s.value} className="w-44">
-            <option value="">{s.all}</option>
+            {s.required ? null : <option value="">{s.all}</option>}
             {s.options.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
           </Select>
         </div>

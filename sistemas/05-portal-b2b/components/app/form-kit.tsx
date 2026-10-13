@@ -8,7 +8,7 @@ import type { ZodType } from 'zod';
 import { Alert, Button, Field, Input, Select, Textarea } from '@/components/ui/primitives';
 import type { ActionState } from '@/lib/actions/result';
 
-export type SaveResult = ActionState & { id?: string };
+export type SaveResult = ActionState & { id?: string; number?: number; link?: string };
 export type Opt = { value: string; label: string };
 
 /**

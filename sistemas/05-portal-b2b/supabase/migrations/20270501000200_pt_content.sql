@@ -357,6 +357,9 @@ begin
         then exists (select 1 from public.client_accounts ca where ca.id = split_part(name, '/', 2)::uuid and ca.organization_id = split_part(name, '/', 1)::uuid
           and (private.pt_staff_writes_client(ca.id) or private.pt_client_role(ca.id) is not null))
         else false end)$p$;
+    -- limpeza de órfãos: quem enviou pode apagar o PRÓPRIO objeto enquanto ele ainda não foi registrado em documents (falha entre o envio e o registro)
+    execute $p$create policy portal_docs_delete_orphan on storage.objects for delete to authenticated using (
+      bucket_id = 'portal-documents' and owner_id = (select auth.uid())::text and not exists (select 1 from public.documents d where d.storage_path = name))$p$;
   end if;
 end
 $storage$;

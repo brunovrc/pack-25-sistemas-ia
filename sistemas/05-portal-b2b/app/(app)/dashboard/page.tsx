@@ -1,62 +1,48 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { Card, PageHeader } from '@/components/ui/primitives';
+import { Alert, PageHeader } from '@/components/ui/primitives';
+import { DashboardView } from '@/components/portal/dashboard-view';
+import { FilterBar } from '@/components/portal/filter-bar';
 import { requireContext } from '@/lib/auth/session';
-import { daysAgoIso, nowIso } from '@/lib/time';
-import { isAdminRole, isPrivacyRole } from '@/lib/validation/org';
+import { runRefresh } from '@/lib/portal/actions';
+import { isManager, type SearchParams } from '@/lib/portal/access';
+import { loadDashboard } from '@/lib/portal/dashboard';
+import { labelMap, loadCategories, loadClientOptions, loadPeople, loadSettings, personOptions } from '@/lib/portal/data';
+import { filtersToQuery, parseFilters, todayIn } from '@/lib/portal/filters';
+import { formatDate } from '@/lib/portal/format';
 
 export const metadata: Metadata = { title: 'Painel' };
 
-function Kpi({ label, value, definition }: { label: string; value: number | null; definition: string }) {
-  return (
-    <Card>
-      <p className="text-sm text-muted">{label}</p>
-      <p className="mt-1 text-3xl font-semibold tabular-nums">{value === null ? '—' : value.toLocaleString('pt-BR')}</p>
-      <p className="mt-2 text-xs text-muted">{definition}</p>
-    </Card>
-  );
-}
-
-export default async function DashboardPage() {
+export default async function DashboardPage({ searchParams }: { searchParams: SearchParams }) {
   const ctx = await requireContext();
   const org = ctx.membership.organization_id;
-  const since = daysAgoIso(7);
+  const sp = await searchParams;
+  // Avisos de prazo e comunicados agendados: rotina idempotente, disparada ao abrir o painel (ver docs/WORKFLOWS.md).
+  await runRefresh();
+  const settings = await loadSettings(ctx, org);
+  const filters = parseFilters(sp, todayIn(settings.timezone));
+  const [people, categories, clients, data] = await Promise.all([loadPeople(ctx, org), loadCategories(ctx, org), loadClientOptions(ctx, org, true), loadDashboard(ctx.supabase, org, filters)]);
+  const query = filtersToQuery(filters);
 
-  const members = await ctx.supabase.from('organization_members').select('user_id', { count: 'exact', head: true }).eq('organization_id', org);
-
-  let openPrivacy: number | null = null;
-  let overduePrivacy: number | null = null;
-  if (isPrivacyRole(ctx.membership.role)) {
-    const open = await ctx.supabase.from('privacy_requests').select('id', { count: 'exact', head: true }).eq('organization_id', org).in('status', ['open', 'in_progress']);
-    const overdue = await ctx.supabase.from('privacy_requests').select('id', { count: 'exact', head: true }).eq('organization_id', org).in('status', ['open', 'in_progress']).lt('due_at', nowIso());
-    openPrivacy = open.count ?? 0;
-    overduePrivacy = overdue.count ?? 0;
+  if (data.error || !data.kpis) {
+    return (
+      <>
+        <PageHeader title="Painel" />
+        <Alert tone="error">Não foi possível carregar os indicadores agora. Tente novamente em instantes.</Alert>
+      </>
+    );
   }
-
-  let auditEvents: number | null = null;
-  if (isAdminRole(ctx.membership.role)) {
-    const audit = await ctx.supabase.from('audit_log').select('id', { count: 'exact', head: true }).eq('organization_id', org).gte('created_at', since);
-    auditEvents = audit.count ?? 0;
-  }
-
   return (
     <>
-      <PageHeader title="Painel" description={`Visão geral de ${ctx.membership.name}. Os números abaixo são calculados do banco de dados em tempo real.`} />
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Kpi label="Membros da equipe" value={members.count ?? 0} definition="Total de pessoas com acesso à organização." />
-        {openPrivacy !== null ? (
-          <Kpi label="Solicitações LGPD em aberto" value={openPrivacy} definition="Status 'aberta' ou 'em andamento'. Prazo padrão de resposta: 15 dias." />
-        ) : null}
-        {overduePrivacy !== null ? (
-          <Kpi label="Solicitações LGPD vencidas" value={overduePrivacy} definition="Em aberto com prazo de resposta já ultrapassado." />
-        ) : null}
-        {auditEvents !== null ? (
-          <Kpi label="Eventos de auditoria (7 dias)" value={auditEvents} definition="Alterações registradas nos últimos 7 dias, a partir de agora." />
-        ) : null}
-      </div>
-      <p className="mt-6 text-sm text-muted">
-        Precisa convidar alguém ou ajustar papéis? Acesse <Link className="underline" href="/members">Equipe</Link>.
-      </p>
+      <PageHeader title="Painel" description={`Período: ${formatDate(filters.from)} a ${formatDate(filters.to)} (fuso ${settings.timezone}). Números calculados do banco de dados; fórmulas em docs/METRICS.md.`}>
+        {isManager(ctx.membership.role) ? <Link className="inline-flex min-h-10 items-center rounded-md border border-border px-4 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5" href={`/relatorios?${query}`}>Relatórios</Link> : null}
+      </PageHeader>
+      <FilterBar
+        action="/dashboard" filters={filters} clients={clients.map((c) => ({ value: c.id, label: c.name }))} assignees={personOptions(people, ['owner', 'admin', 'manager', 'member', 'viewer'])}
+        categories={categories.map((c) => ({ value: c.id, label: c.name }))}
+      />
+      {ctx.membership.role === 'member' ? <div className="mb-4"><Alert tone="info">Você vê as empresas em que é gestor ou tem solicitações. Gestores e administradores veem todas.</Alert></div> : null}
+      <DashboardView data={data} labels={labelMap(people)} />
     </>
   );
 }

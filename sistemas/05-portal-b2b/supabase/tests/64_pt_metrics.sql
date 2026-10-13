@@ -213,6 +213,32 @@ begin
 end $$;
 reset role;
 
+-- ================= exportação CSV: só gestão, e deixa rastro (sem os dados)
+:as_ma
+select public.pt_log_export(current_setting('t.org')::uuid, 'solicitacoes', 7);
+reset role;
+do $$ begin
+  assert (select count(*) from public.audit_log where action = 'export' and entity_id = 'solicitacoes' and organization_id = current_setting('t.org')::uuid and (changes ->> 'rows')::int = 7 and actor_id = 'ffffffff-0000-4000-8000-0000000000a1') = 1, 'a exportação do gestor ficou na auditoria com a contagem de linhas';
+end $$;
+:as_ca
+do $$ begin
+  begin perform public.pt_log_export(current_setting('t.org')::uuid, 'solicitacoes', 1); assert false, 'colaborador não exporta';
+  exception when insufficient_privilege then null; end;
+end $$;
+reset role;
+:as_ua1
+do $$ begin
+  begin perform public.pt_log_export(current_setting('t.org')::uuid, 'solicitacoes', 1); assert false, 'cliente não exporta';
+  exception when insufficient_privilege then null; end;
+end $$;
+reset role;
+:as_ma
+do $$ begin
+  begin perform public.pt_log_export(current_setting('t.org')::uuid, 'Rel; drop', 1); assert false, 'nome de relatório inválido é recusado';
+  exception when invalid_parameter_value then null; end;
+end $$;
+reset role;
+
 do $$ begin raise notice 'PASS: indicadores com valores à mão, filtros, séries, rankings, alertas, escopo por papel e fronteiras de fuso'; end $$;
 rollback;
 select 'PASS 64_pt_metrics' as result;

@@ -1,5 +1,4 @@
 // Prefixos de rota acessíveis SEM sessão, além das rotas de autenticação (ver paths.ts).
-// O Core não tem nenhum. Um sistema que expõe páginas públicas (ex.: link de proposta, formulário público)
-// lista aqui o prefixo (com a barra final, ex.: '/p/') e declara este arquivo em .core-overrides.
-// Cada rota pública DEVE fazer a própria validação (token, limite de taxa) e nunca usar a sessão.
-export const PUBLIC_PREFIXES: readonly string[] = [];
+// Portal B2B: só a página de convite (/convite/<token>). Ela NÃO consulta o banco quando não há sessão e não revela
+// se o convite existe; a aceitação exige login e é validada por public.pt_invite_accept. Este arquivo está em .core-overrides.
+export const PUBLIC_PREFIXES: readonly string[] = ['/convite/'];

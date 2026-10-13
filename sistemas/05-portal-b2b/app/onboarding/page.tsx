@@ -16,6 +16,9 @@ export default async function OnboardingPage() {
           Você será o proprietário e deverá ativar a verificação em duas etapas em seguida. Os dados ficam isolados por organização.
         </p>
         <OnboardingForm />
+        <p className="mt-5 border-t border-border pt-4 text-xs text-muted">
+          Recebeu um <strong>convite</strong> de uma prestadora ou de uma empresa? Não crie uma organização: abra o link do convite que você recebeu, com esta mesma conta (o e-mail precisa ser o do convite).
+        </p>
       </div>
     </main>
   );
