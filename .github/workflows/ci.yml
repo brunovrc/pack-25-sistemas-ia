@@ -135,10 +135,22 @@ jobs:
       - name: Qualificador de Leads (mutação das regras críticas)
         working-directory: sistemas/03-qualificador-leads
         run: node scripts/mutation-check.mjs --jobs 2
-      - name: Pós-Venda e Reativação (RFM, risco, campanhas, importação, métricas, RLS)
+
+  pv-db:
+    name: Pós-Venda e Reativação (banco, RLS e mutação)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - name: Banco (Core + RFM, risco, campanhas, importação, métricas, RLS)
         working-directory: sistemas/04-pos-venda
         run: node scripts/test-db.mjs
-      - name: Pós-Venda e Reativação (mutação das regras críticas)
+      - name: Mutação das regras críticas
         working-directory: sistemas/04-pos-venda
         run: node scripts/mutation-check.mjs --jobs 2
 
