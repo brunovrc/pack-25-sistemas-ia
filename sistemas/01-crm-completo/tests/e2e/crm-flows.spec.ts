@@ -232,12 +232,13 @@ test('pipeline: mover por seletor e por arrastar, persistir, perdida exige motiv
   // reabrir pelo detalhe limpa o encerramento; depois ganhar
   await page.getByLabel('Etapa').selectOption({ label: 'Negociação' });
   await page.getByRole('button', { name: 'Mover' }).click();
-  await expect(page.getByText('Oportunidade movida.')).toBeVisible();
+  // a mensagem é passageira (some com a atualização da tela); o que vale é o estado novo, que aparece junto: aceita qualquer um dos dois, com folga para runners lentos
+  await expect(page.getByText('Oportunidade movida.').or(page.getByText('Aberta', { exact: true }))).toBeVisible({ timeout: 15_000 });
   await page.reload();
   await expect(page.getByText('Aberta', { exact: true })).toBeVisible();
   await page.getByLabel('Etapa').selectOption({ label: 'Ganho' });
   await page.getByRole('button', { name: 'Mover' }).click();
-  await expect(page.getByText('Oportunidade movida.')).toBeVisible();
+  await expect(page.getByText('Oportunidade movida.').or(page.getByText('Ganha', { exact: true }))).toBeVisible({ timeout: 15_000 });
   await page.reload();
   await expect(page.getByText('Ganha', { exact: true })).toBeVisible();
 });
