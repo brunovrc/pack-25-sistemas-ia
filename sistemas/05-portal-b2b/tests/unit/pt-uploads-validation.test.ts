@@ -3,7 +3,7 @@ import { assigneeRows, clientRows, flowRows, priorityRows, statusRows } from '@/
 import { safeFileName, sniffMime, titleFromFile } from '@/lib/portal/uploads';
 import { announcementSchema, clientAccountSchema, commentSchema, dueSchema, inviteSchema, inviteTokenSchema, portalSettingsSchema, requestCreateSchema } from '@/lib/portal/validation';
 // geradores dos arquivos de demonstração: servem aqui como exemplos VÁLIDOS de cada formato
-import { demoDocx, demoPdf, demoPng, demoTxt, demoXlsx } from '../../scripts/demo-files.mjs';
+import { demoDocx, demoPdf, demoPng, demoTxt, demoXlsx } from '@/scripts/demo-files.mjs';
 
 const bytes = (s: string) => new TextEncoder().encode(s);
 const uuid = '11111111-2222-4333-8444-555555555555';
