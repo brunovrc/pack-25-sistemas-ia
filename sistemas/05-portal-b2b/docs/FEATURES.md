@@ -1,6 +1,6 @@
 # FEATURES — Portal de Clientes B2B
 
-Status permitido: TODO, IN_PROGRESS, VERIFIED (com evidência: arquivo/teste). Última verificação completa: 2026-10-13 (lint e tipos limpos; 72 testes unitários; testes SQL 60–64 e os do Core; 33/33 mutações reprovadas; 49 testes E2E contra Supabase local + build de produção).
+Status: VERIFIED (com evidência: arquivo/teste), FORA DO MVP ou LIMITE DOCUMENTADO. Última verificação completa: 2026-10-13 (lint e tipos limpos; 72 testes unitários; testes SQL 60–64 e os do Core; 33/33 mutações reprovadas; 49 testes E2E contra Supabase local + build de produção).
 
 | Fluxo | Status | Evidência |
 |---|---|---|
@@ -21,9 +21,9 @@ Status permitido: TODO, IN_PROGRESS, VERIFIED (com evidência: arquivo/teste). �
 | White-label (nome, cores, contato, rodapé) | VERIFIED | `pt-smoke.spec.ts`, capturas |
 | Celular (390 px) sem rolagem horizontal | VERIFIED | `pt-mobile.spec.ts`, `docs/screenshots/*-mobile.png` |
 | Rotina de avisos por agendador (pg_cron) | VERIFIED (SQL) | `62_pt_workflow.sql` — agendamento real em produção: NÃO EXECUTADO |
-| Antivírus no envio de arquivos | TODO (fora do MVP) | `docs/DOCUMENTS.md` |
-| Feriados no cálculo de SLA | TODO (limite documentado) | `docs/WORKFLOWS.md` |
-| E-mail transacional de notificação | TODO (fora do MVP) | `docs/DECISIONS.md` D-13 |
+| Antivírus no envio de arquivos | FORA DO MVP | `docs/DOCUMENTS.md` |
+| Feriados no cálculo de SLA | LIMITE DOCUMENTADO | `docs/WORKFLOWS.md` |
+| E-mail transacional de notificação | FORA DO MVP | `docs/DECISIONS.md` D-13 |
 
 ## Evidências por comando
 `pnpm lint` · `pnpm typecheck` · `pnpm test` (72) · `pnpm test:db` · `pnpm test:mutation` (33/33) · `pnpm test:e2e` (49).
