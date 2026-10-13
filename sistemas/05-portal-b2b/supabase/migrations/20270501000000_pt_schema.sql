@@ -493,9 +493,9 @@ create policy settings_select on public.portal_settings for select to authentica
 create policy settings_update on public.portal_settings for update to authenticated using (private.pt_is_admin(organization_id)) with check (private.pt_is_admin(organization_id));
 create policy categories_select on public.service_categories for select to authenticated
   using (private.pt_is_staff(organization_id) or (active and private.pt_client_in_org(organization_id)));
-create policy categories_write on public.service_categories for all to authenticated using (private.pt_is_manager(organization_id)) with check (private.pt_is_manager(organization_id));
+create policy categories_write on public.service_categories for all to authenticated using (private.pt_is_admin(organization_id)) with check (private.pt_is_admin(organization_id));
 create policy sla_select on public.service_level_policies for select to authenticated using (private.pt_is_staff(organization_id));
-create policy sla_write on public.service_level_policies for all to authenticated using (private.pt_is_manager(organization_id)) with check (private.pt_is_manager(organization_id));
+create policy sla_write on public.service_level_policies for all to authenticated using (private.pt_is_admin(organization_id)) with check (private.pt_is_admin(organization_id));
 
 -- o ramo direto de gestor evita consultar a própria linha (INSERT ... RETURNING não a enxerga por função)
 create policy accounts_select on public.client_accounts for select to authenticated using (private.pt_is_manager(organization_id) or private.pt_staff_sees_client(id) or private.pt_client_role(id) is not null);

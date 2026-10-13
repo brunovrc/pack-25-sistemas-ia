@@ -84,7 +84,7 @@ export async function updateClientAccount(id: string, input: unknown): Promise<S
 }
 
 export async function archiveClientAccount(id: string, archive: boolean): Promise<ActionState> {
-  const auth = await actor({ staff: STAFF_ADMINS });
+  const auth = await actor({ staff: STAFF_MANAGERS });
   if ('error' in auth) return auth.error;
   const { ctx } = auth.actor as Extract<Actor, { kind: 'staff' }>;
   if (!idSchema.safeParse(id).success) return fail('Registro inválido.');
@@ -478,7 +478,7 @@ export async function switchClientAccount(formData: FormData): Promise<void> {
 
 /** Rotina de avisos (prazo próximo/vencido, comunicados agendados). Idempotente; chamada ao abrir o painel. */
 export async function runRefresh(): Promise<void> {
-  const s = await actionContext(STAFF_WRITERS);
+  const s = await actionContext(STAFF_MANAGERS);
   if (!('ctx' in s)) return;
   await s.ctx.supabase.rpc('pt_refresh', { p_org: s.ctx.membership.organization_id });
 }

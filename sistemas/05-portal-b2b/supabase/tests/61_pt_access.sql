@@ -140,6 +140,11 @@ do $$ begin
   assert test.throws(format($q$select public.pt_request_create(%L, 'Fora do escopo', null, null)$q$, current_setting('t.alfa'))), 'colaborador não cria solicitação em conta que não vê';
   assert test.throws(format($q$select public.pt_comment_add(%L, 'invasão', 'shared')$q$, current_setting('t.r1'))), 'nem comenta em solicitação de conta que não vê';
   assert test.throws(format($q$select public.pt_document_access(%L)$q$, current_setting('t.d_cli'))), 'nem acessa documento dela';
+  -- o que é da GESTÃO o colaborador não faz, mesmo na conta em que atua (Beta)
+  assert test.throws(format($q$select public.pt_request_set_due(%L, now() + interval '2 days', 'agreed', 'combinado')$q$, current_setting('t.r2'))), 'colaborador não define prazo combinado';
+  assert test.throws(format($q$select public.pt_document_archive(%L)$q$, current_setting('t.d_beta'))), 'colaborador não arquiva documento';
+  assert test.throws($q$insert into public.service_categories (organization_id, name) values ((select organization_id from public.client_accounts limit 1), 'Categoria do colaborador')$q$), 'colaborador não cria categoria';
+  assert test.throws($q$update public.service_level_policies set target_hours = 1000$q$) or (select count(*) from public.service_level_policies where target_hours = 1000) = 0, 'colaborador não altera SLA';
 end $$;
 reset role;
 :as_va

@@ -50,13 +50,13 @@ export default async function DocumentsPage({ searchParams }: { searchParams: Se
             <Card title="Nova pasta"><FolderForm clientId={client} parent={current} staff /></Card>
           </div>
         ) : null}
-        <Card title="Trilha de acessos" description="Quem enviou, visualizou ou baixou arquivos desta empresa (últimos 30 eventos). O registro não pode ser alterado.">
+        {manager ? <Card title="Trilha de acessos" description="Quem enviou, visualizou ou baixou arquivos desta empresa (últimos 30 eventos). O registro não pode ser alterado.">
           {logs.length === 0 ? <p className="text-sm text-muted">Nenhum acesso registrado.</p> : (
             <div className="overflow-x-auto"><table className="w-full min-w-[32rem] text-left text-sm"><caption className="sr-only">Acessos a documentos</caption>
               <thead className="text-muted"><tr><th scope="col" className="py-1 pr-3 font-medium">Quando</th><th scope="col" className="py-1 pr-3 font-medium">Quem</th><th scope="col" className="py-1 pr-3 font-medium">Ação</th><th scope="col" className="py-1 font-medium">Documento</th></tr></thead>
               <tbody>{logs.map((l) => <tr key={l.id} className="border-t border-border"><td className="py-1 pr-3 whitespace-nowrap">{formatDateTime(l.occurred_at, settings.timezone)}</td><td className="py-1 pr-3">{l.user_id ? names.get(l.user_id) ?? 'Usuário' : '—'}</td><td className="py-1 pr-3">{ACTION_LABELS[l.action] ?? l.action}</td><td className="py-1">{docTitle.get(l.document_id) ?? '—'}</td></tr>)}</tbody></table></div>
           )}
-        </Card>
+        </Card> : null}
       </div>
     </>
   );

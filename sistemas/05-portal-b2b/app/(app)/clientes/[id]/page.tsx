@@ -5,7 +5,7 @@ import { Badge, Card, PageHeader } from '@/components/ui/primitives';
 import { ArchiveClientButton, ClientAccountForm, InternalNotesForm } from '@/components/portal/client-forms';
 import { InviteForm, MemberControl, RevokeInviteButton } from '@/components/portal/invite-forms';
 import { requireContext } from '@/lib/auth/session';
-import { isAdmin, isManager, uuidOrEmpty } from '@/lib/portal/access';
+import { isManager, uuidOrEmpty } from '@/lib/portal/access';
 import { getClient, getInternalNotes, labelMap, listInvites, listMembers, loadPeople, loadSettings, personOptions } from '@/lib/portal/data';
 import { CLIENT_ROLE_LABELS, formatDateTime } from '@/lib/portal/format';
 import { nowMs } from '@/lib/time';
@@ -31,7 +31,7 @@ export default async function ClientPage({ params }: { params: Promise<{ id: str
         <div className="flex flex-wrap gap-2">
           <Link className="inline-flex min-h-10 items-center rounded-md border border-border px-4 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5" href={`/solicitacoes?client=${id}`}>Solicitações</Link>
           <Link className="inline-flex min-h-10 items-center rounded-md border border-border px-4 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/5" href={`/documentos?client=${id}`}>Documentos</Link>
-          {isAdmin(role) ? <ArchiveClientButton id={id} archived={client.archived_at !== null} /> : null}
+          {manager ? <ArchiveClientButton id={id} archived={client.archived_at !== null} /> : null}
         </div>
       </PageHeader>
 

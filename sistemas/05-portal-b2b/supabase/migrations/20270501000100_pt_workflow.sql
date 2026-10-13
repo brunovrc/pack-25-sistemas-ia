@@ -231,6 +231,7 @@ declare r public.requests%rowtype; reason text := nullif(private.pt_clean(p_reas
 begin
   select * into r from public.requests where id = p_request for update;
   if not found or private.pt_actor(r.client_account_id) <> 'staff' then raise exception 'sem permissão' using errcode = '42501'; end if;
+  if not private.pt_is_manager(r.organization_id) then raise exception 'sem permissão' using errcode = '42501'; end if; -- prazo combinado: gestão
   if r.status in ('completed', 'cancelled') then raise exception 'solicitação encerrada não tem prazo editável' using errcode = '23514'; end if;
   if p_kind not in ('agreed', 'estimate') then raise exception 'tipo de prazo inválido' using errcode = '22023'; end if;
   if p_due is null or p_due <= now() then raise exception 'o prazo precisa estar no futuro' using errcode = '22023'; end if;
@@ -265,11 +266,10 @@ end $$;
 
 -- ======================================================================= rotina de prazos e comunicados agendados
 -- Cria avisos de prazo próximo/vencido (uma vez por solicitação e prazo), registra estouro e dispara comunicados publicados ainda não avisados. Idempotente.
-create function public.pt_refresh(p_org uuid) returns jsonb
+create function private.pt_refresh_org(p_org uuid) returns jsonb
 language plpgsql security definer set search_path = '' as $$
 declare s public.portal_settings%rowtype; r record; a record; soon int := 0; late int := 0; ann int := 0; cl record;
 begin
-  if (select auth.uid()) is null or not private.pt_is_manager(p_org) or not private.mfa_ok() then raise exception 'sem permissão' using errcode = '42501'; end if;
   select * into s from public.portal_settings where organization_id = p_org;
   for r in select q.* from public.requests q where q.organization_id = p_org and q.status not in ('completed', 'cancelled') and q.due_at is not null and q.due_at <= now() + make_interval(hours => s.alert_due_soon_hours) loop
     if r.due_at > now() then
@@ -289,6 +289,29 @@ begin
   end loop;
   return jsonb_build_object('due_soon', soon, 'overdue', late, 'announcements', ann);
 end $$;
+revoke all on function private.pt_refresh_org(uuid) from public, anon, authenticated;
+
+-- Entrada para pessoas: gestão com MFA, pela interface.
+create function public.pt_refresh(p_org uuid) returns jsonb
+language plpgsql security definer set search_path = '' as $$
+begin
+  if (select auth.uid()) is null or not private.pt_is_manager(p_org) or not private.mfa_ok() then raise exception 'sem permissão' using errcode = '42501'; end if;
+  return private.pt_refresh_org(p_org);
+end $$;
+
+-- Entrada para o AGENDADOR (pg_cron roda como o dono do banco, sem usuário): todas as organizações. Ninguém da API a executa.
+-- Exemplo (Supabase): select cron.schedule('pt-refresh', '*/15 * * * *', 'select private.pt_refresh_all()');
+create function private.pt_refresh_all() returns jsonb
+language plpgsql security definer set search_path = '' as $$
+declare o record; r jsonb; soon int := 0; late int := 0; ann int := 0;
+begin
+  for o in select id from public.organizations loop
+    r := private.pt_refresh_org(o.id);
+    soon := soon + (r ->> 'due_soon')::int; late := late + (r ->> 'overdue')::int; ann := ann + (r ->> 'announcements')::int;
+  end loop;
+  return jsonb_build_object('due_soon', soon, 'overdue', late, 'announcements', ann);
+end $$;
+revoke all on function private.pt_refresh_all() from public, anon, authenticated;
 
 -- ======================================================================= nomes de usuários (sem expor e-mail a clientes)
 create function public.pt_user_labels(p_org uuid) returns table (user_id uuid, label text, kind text)

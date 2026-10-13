@@ -274,6 +274,7 @@ begin
 end $$;
 :as_ca
 do $$ begin assert test.throws(format($q$select public.pt_refresh(%L)$q$, current_setting('t.org'))), 'colaborador não roda a rotina (só a gestão)'; end $$;
+do $$ begin assert test.throws($q$select private.pt_refresh_all()$q$), 'a API (authenticated) não executa o agendador'; end $$;
 reset role;
 :as_ma
 do $$
@@ -290,6 +291,16 @@ begin
   assert (select count(*) from public.notifications where type = 'request_due_soon' and resource_id = current_setting('t.soon')::uuid) = 1, 'aviso de prazo próximo uma única vez (idempotente)';
   assert (select count(*) from public.notifications where type = 'request_overdue' and resource_id = current_setting('t.over')::uuid) = 1, 'aviso de vencimento uma única vez';
   assert (select breached_at from public.request_deadline_events where request_id = current_setting('t.over')::uuid) is not null, 'a rotina registrou o estouro';
+end $$;
+-- agendador (pg_cron roda como o dono do banco, sem usuário): cobre todas as organizações e é idempotente
+do $$
+declare k jsonb; k2 jsonb;
+begin
+  k := private.pt_refresh_all();
+  assert (k ->> 'due_soon')::int >= 0 and k ? 'announcements', 'o agendador responde sem usuário: ' || k::text;
+  k2 := private.pt_refresh_all();
+  assert (select count(*) from public.notifications where type = 'request_overdue' and resource_id = current_setting('t.over')::uuid) = 1, 'rodar o agendador de novo não duplica o aviso';
+  assert k2 = k, 'agendador idempotente: ' || k2::text;
 end $$;
 do $$ begin assert (select user_id from public.notifications where type = 'request_overdue' and resource_id = current_setting('t.over')::uuid) = 'ffffffff-0000-4000-8000-0000000000a2', 'o aviso vai para o responsável'; end $$;
 

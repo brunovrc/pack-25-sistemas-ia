@@ -31,7 +31,7 @@ language plpgsql security definer set search_path = '' as $$
 declare f public.document_folders%rowtype;
 begin
   select * into f from public.document_folders where id = p_folder;
-  if not found or private.pt_actor(f.client_account_id) <> 'staff' then raise exception 'sem permissão' using errcode = '42501'; end if;
+  if not found or private.pt_actor(f.client_account_id) <> 'staff' or not private.pt_is_manager(f.organization_id) then raise exception 'sem permissão' using errcode = '42501'; end if;
   if exists (select 1 from public.documents d where d.folder_id = p_folder and d.archived_at is null) or exists (select 1 from public.document_folders c where c.parent_folder_id = p_folder and c.archived_at is null) then
     raise exception 'esvazie a pasta antes de arquivá-la' using errcode = '23514';
   end if;
@@ -132,7 +132,7 @@ language plpgsql security definer set search_path = '' as $$
 declare d public.documents%rowtype;
 begin
   select * into d from public.documents where id = p_document for update;
-  if not found or private.pt_actor(d.client_account_id) <> 'staff' then raise exception 'sem permissão' using errcode = '42501'; end if;
+  if not found or private.pt_actor(d.client_account_id) <> 'staff' or not private.pt_is_manager(d.organization_id) then raise exception 'sem permissão' using errcode = '42501'; end if;
   if d.archived_at is not null then return; end if;
   update public.documents set archived_at = now() where id = p_document;
   insert into public.document_access_logs (organization_id, client_account_id, document_id, user_id, action) values (d.organization_id, d.client_account_id, d.id, (select auth.uid()), 'archived');

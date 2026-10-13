@@ -50,7 +50,7 @@ export function DashboardView({ data, labels, client = false }: { data: Dashboar
         {client ? (
           <Kpi label="Aguardando você" value={formatInt(data.statuses.find((s) => s.status === 'waiting_client')?.requests ?? 0)} hint="A equipe precisa de uma resposta sua." help="Solicitações na situação «aguardando você»: a equipe espera uma informação ou aprovação do seu lado." />
         ) : (
-          <Kpi label="Clientes ativos" value={formatInt(k.active_clients)} hint="Empresas com solicitação em aberto ou criada no período." help="Empresas clientes distintas com solicitações em aberto ou criadas no período." />
+          <Kpi label="Clientes ativos" value={formatInt(k.active_clients)} hint="Empresas clientes ativas que você enxerga." help="Empresas clientes ativas (não arquivadas) dentro do seu escopo. Foto de agora." />
         )}
         {client ? (
           <Kpi label="Documentos compartilhados" value={formatInt(k.docs_shared)} hint="Enviados ou compartilhados no período." help="Documentos visíveis a você, enviados no período." />

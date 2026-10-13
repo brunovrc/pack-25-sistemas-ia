@@ -1,4 +1,4 @@
-# CLAUDE — Portal do Cliente B2B
+# CLAUDE — Portal de Clientes B2B
 
 @AGENTS.md
 

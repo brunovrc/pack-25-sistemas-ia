@@ -34,6 +34,10 @@ const M = [
   { name: 'regras: resposta do cliente não muda a situação', file: 'pt_workflow', find: "if who = 'client' and r.status = 'waiting_client' then", replace: 'if false then' },
   { name: 'prazo: prazo no passado aceito', file: 'pt_workflow', find: 'if p_due is null or p_due <= now() then', replace: 'if p_due is null then' },
   { name: 'horas úteis: fim de semana conta', file: 'pt_workflow', find: 'if extract(isodow from t)::int = any (p_days) then', replace: 'if true then' },
+  { name: 'permissão: colaborador define prazo combinado', file: 'pt_workflow', find: "if not private.pt_is_manager(r.organization_id) then raise exception 'sem permissão' using errcode = '42501'; end if; -- prazo combinado: gestão", replace: '' },
+  { name: 'permissão: colaborador cria categorias', file: 'pt_schema', find: 'create policy categories_write on public.service_categories for all to authenticated using (private.pt_is_admin(organization_id))', replace: 'create policy categories_write on public.service_categories for all to authenticated using (true)' },
+  { name: 'permissão: colaborador arquiva documento', file: 'pt_content', find: "or not private.pt_is_manager(d.organization_id) then", replace: 'then' },
+  { name: 'rotina: qualquer usuário roda pt_refresh', file: 'pt_workflow', find: "if (select auth.uid()) is null or not private.pt_is_manager(p_org) or not private.mfa_ok() then raise exception 'sem permissão' using errcode = '42501'; end if;", replace: 'null;' },
   // --- notificações
   { name: 'notificações: preferência de silenciar ignorada', file: 'pt_workflow', find: 'and p_type = any (np.muted_types)) then return; end if;', replace: 'and false) then return; end if;' },
   // --- documentos
