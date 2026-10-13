@@ -263,7 +263,7 @@ begin
     insert into public.reactivation_opportunities (organization_id, customer_id, reason, priority, estimated_value_cents, explanation_json, assigned_to)
     select p_org, r.customer_id, r.reason::public.pv_opp_reason, prio, case when r.n_valid >= 3 then r.median_ticket_cents end,
            jsonb_build_object('days_since_last', r.days_since, 'purchases', r.n_valid, 'median_interval_days', r.median_interval, 'orders_recent', r.orders_recent, 'orders_previous', r.orders_prev,
-                              'last_purchase', r.last_at, 'reference_days', round(refd, 1), 'state', r.state, 'ticket_basis', case when r.n_valid >= 3 then 'ticket mediano histórico' else null end),
+                              'last_purchase', r.last_at, 'reference_days', round(refd, 1), 'value_percentile', round(r.pm * 100)::int, 'frequency_percentile', round(r.pf * 100)::int, 'state', r.state, 'ticket_basis', case when r.n_valid >= 3 then 'ticket mediano histórico' else null end),
            (select assigned_to from public.customers where id = r.customer_id)
     on conflict (organization_id, customer_id, reason) where status in ('open', 'in_progress')
       do update set priority = excluded.priority, estimated_value_cents = excluded.estimated_value_cents, explanation_json = excluded.explanation_json;

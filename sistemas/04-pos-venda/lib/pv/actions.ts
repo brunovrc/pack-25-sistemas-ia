@@ -444,7 +444,7 @@ export async function addActivity(customerId: string, input: unknown): Promise<S
   const v = parsed.data;
   const { data, error } = await ctx.supabase.from('customer_activities').insert({
     organization_id: org(ctx), customer_id: customerId, type: v.type, title: v.title, description: v.description, priority: v.priority, assigned_to: v.assigned_to ?? ctx.user.id,
-    campaign_id: v.campaign_id ?? null, opportunity_id: v.opportunity_id ?? null, due_at: v.due_at, completed_at: v.done ? new Date().toISOString() : null,
+    campaign_id: v.campaign_id, opportunity_id: v.opportunity_id, due_at: v.due_at, completed_at: v.done ? new Date().toISOString() : null,
   }).select('id').single();
   if (error) return fail(dbMessage(error));
   bust(`/clientes/${customerId}`, '/atividades', '/dashboard');

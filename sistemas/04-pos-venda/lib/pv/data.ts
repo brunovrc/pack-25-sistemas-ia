@@ -1,7 +1,8 @@
 import 'server-only';
 import type { Context } from '@/lib/auth/session';
-import { safeTimezone, type CustomerState } from './filters';
+import { safeTimezone, todayIn as todayInTz, type CustomerState } from './filters';
 import type { Criteria } from './segments';
+import { firstName, type TemplateVars } from './templates';
 
 // ------------------------------------------------------------------ tipos das linhas
 export type Person = { user_id: string; label: string };
@@ -351,4 +352,47 @@ export async function listImportJobs(ctx: Context, limit = 10): Promise<ImportJo
 export async function listCategories(ctx: Context): Promise<string[]> {
   const { data } = await ctx.supabase.from('purchase_items').select('category').eq('organization_id', ctx.membership.organization_id).not('category', 'is', null).limit(5000);
   return [...new Set(((data ?? []) as Array<{ category: string | null }>).map((r) => r.category as string))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+}
+
+export async function loadOpportunity(ctx: Context, id: string): Promise<{ opp: OpportunityRow; customer: CustomerRow | null; signal: Signal | null; segment: SegmentOf | null; activities: ActivityRow[] } | null> {
+  const db = ctx.supabase;
+  const { data } = await db.from('reactivation_opportunities').select(OPPORTUNITY_COLUMNS).eq('id', id).eq('organization_id', ctx.membership.organization_id).maybeSingle();
+  if (!data) return null;
+  const opp = data as OpportunityRow;
+  const settings = await loadSettings(ctx);
+  const [{ data: cust }, signals, run, { data: acts }] = await Promise.all([
+    db.from('customers').select(CUSTOMER_COLUMNS).eq('id', opp.customer_id).maybeSingle(),
+    loadSignals(ctx, todayInTz(settings.timezone)),
+    latestRun(ctx),
+    db.from('customer_activities').select(ACTIVITY_COLUMNS).eq('opportunity_id', id).order('created_at', { ascending: false }).limit(50),
+  ]);
+  const segs = await currentSegments(ctx, run);
+  return { opp, customer: (cust as CustomerRow | null) ?? null, signal: signals.get(opp.customer_id) ?? null, segment: segs.get(opp.customer_id) ?? null, activities: (acts ?? []) as ActivityRow[] };
+}
+
+/** Variáveis do modelo de mensagem de cada cliente (nome, última compra, produto, responsável…). Só para exibir/copiar; nada é enviado. */
+export async function loadMemberVars(ctx: Context, ids: string[], labels: Map<string, string>, today: string): Promise<Map<string, TemplateVars>> {
+  const out = new Map<string, TemplateVars>();
+  const uniq = [...new Set(ids)];
+  if (uniq.length === 0) return out;
+  const db = ctx.supabase;
+  const [{ data: custs }, signals, { data: purs }] = await Promise.all([
+    db.from('customers').select('id, name, company_name, assigned_to').in('id', uniq.slice(0, 2000)),
+    loadSignals(ctx, today),
+    db.from('purchases').select('id, customer_id, purchased_at').in('customer_id', uniq.slice(0, 2000)).eq('is_valid', true).order('purchased_at', { ascending: false }).limit(6000),
+  ]);
+  const lastPurchase = new Map<string, string>();
+  for (const p of (purs ?? []) as Array<{ id: string; customer_id: string }>) if (!lastPurchase.has(p.customer_id)) lastPurchase.set(p.customer_id, p.id);
+  const pids = [...lastPurchase.values()];
+  const { data: items } = pids.length ? await db.from('purchase_items').select('purchase_id, product_name').in('purchase_id', pids.slice(0, 2000)) : { data: [] };
+  const product = new Map<string, string>();
+  for (const it of (items ?? []) as Array<{ purchase_id: string; product_name: string }>) if (!product.has(it.purchase_id)) product.set(it.purchase_id, it.product_name);
+  for (const c of (custs ?? []) as Array<{ id: string; name: string; company_name: string | null; assigned_to: string | null }>) {
+    const s = signals.get(c.id);
+    out.set(c.id, {
+      nome: c.name, primeiro_nome: firstName(c.name), empresa: c.company_name, ultima_compra: s?.last_at ? s.last_at.split('-').reverse().join('/') : null,
+      dias_sem_comprar: s?.days_since == null ? null : String(s.days_since), produto: product.get(lastPurchase.get(c.id) ?? '') ?? null, vendedor: c.assigned_to ? labels.get(c.assigned_to) ?? null : null,
+    });
+  }
+  return out;
 }

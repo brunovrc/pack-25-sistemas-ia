@@ -72,7 +72,7 @@ export const purchaseSchema = z.object({
   total: z.string().trim(),
   source: optionalText(80),
   notes: optionalText(1000),
-  allow_duplicate: z.boolean().optional(),
+  allow_duplicate: z.boolean(),
   items: z.array(purchaseItemSchema).max(30, 'No máximo 30 itens.'),
 }).superRefine((v, ctx) => {
   if (v.total === '' && v.items.length === 0) ctx.addIssue({ code: 'custom', path: ['total'], message: 'Informe o valor da compra ou os itens.' });
@@ -90,9 +90,9 @@ export const activitySchema = z.object({
   priority: z.enum(['low', 'normal', 'high'], 'Prioridade inválida.'),
   assigned_to: optionalUuid,
   due_at: z.string().trim().refine((v) => v === '' || !Number.isNaN(Date.parse(v)), 'Data inválida.').transform((v) => (v === '' ? null : new Date(v).toISOString())),
-  campaign_id: optionalUuid.optional(),
-  opportunity_id: optionalUuid.optional(),
-  done: z.boolean().optional(),
+  campaign_id: optionalUuid,
+  opportunity_id: optionalUuid,
+  done: z.boolean(),
 });
 
 // ---------------------------------------------------------------- preferências e supressão

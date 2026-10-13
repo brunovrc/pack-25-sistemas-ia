@@ -256,10 +256,20 @@ language sql stable security definer set search_path = '' as $$
   from public.organization_members m left join public.profiles p on p.id = m.user_id where m.organization_id = p_org and private.is_member(p_org);
 $$;
 
+-- Exportação de CSV deixa rastro na auditoria (quem, qual relatório, quantas linhas; nunca os dados). Só gestão, e com MFA quando exigido.
+create function public.pv_log_export(p_org uuid, p_kind text, p_rows integer) returns void
+language plpgsql security definer set search_path = '' as $$
+begin
+  if not private.pv_is_manager(p_org) or not private.mfa_ok() then raise exception 'sem permissão' using errcode = '42501'; end if;
+  if p_kind is null or p_kind !~ '^[a-z0-9-]{2,40}$' then raise exception 'relatório inválido' using errcode = '22023'; end if;
+  insert into public.audit_log (organization_id, actor_id, action, entity, entity_id, changes)
+  values (p_org, (select auth.uid()), 'export', 'report', p_kind, jsonb_build_object('rows', greatest(coalesce(p_rows, 0), 0)));
+end $$;
+
 do $$
 declare f text;
 begin
-  foreach f in array array['public.pv_kpis(uuid, date, date, uuid, text, text, text)', 'public.pv_series(uuid, date, date, uuid, text, text, text)', 'public.pv_state_distribution(uuid, date, uuid, text)',
+  foreach f in array array['public.pv_log_export(uuid, text, integer)', 'public.pv_kpis(uuid, date, date, uuid, text, text, text)', 'public.pv_series(uuid, date, date, uuid, text, text, text)', 'public.pv_state_distribution(uuid, date, uuid, text)',
     'public.pv_rfm_distribution(uuid, uuid, uuid)', 'public.pv_frequency_bands(uuid, date, date, uuid, text, text, text)', 'public.pv_cohorts(uuid, integer, uuid)', 'public.pv_seller_ranking(uuid, date, date)',
     'public.pv_campaign_stats(uuid, date, date)', 'public.pv_campaign_series(uuid, date, date)', 'public.pv_alerts(uuid)', 'public.pv_user_labels(uuid)'] loop
     execute format('revoke all on function %s from public, anon', f);
