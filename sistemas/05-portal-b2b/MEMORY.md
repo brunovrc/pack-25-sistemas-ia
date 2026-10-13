@@ -1,5 +1,5 @@
 # MEMORY — PORTAL DE CLIENTES B2B
-Atualizado em: 2026-10-13 | Versão: 0.1.0 | Estado: EM VALIDAÇÃO (instalação isolada e publicação pendentes)
+Atualizado em: 2026-10-13 | Versão: 0.1.0 | Estado: VALIDADO
 
 ## Missão do sistema
 Dar às empresas que atendem clientes corporativos um portal exclusivo para o cliente (solicitações, entregas, documentos privados, comunicados) e um painel para a equipe, com isolamento por empresa. Público: agências, consultorias, escritórios e prestadores recorrentes.
@@ -17,7 +17,7 @@ Fora do escopo: ERP, fiscal, cobrança/gateway, assinatura certificada, chat omn
 - 49 E2E verdes (Supabase local + build de produção): fluxo equipe × cliente, 14 cenários de ameaça (API, Storage, upload forjado, 15/21 MB), convites ponta a ponta, painel = banco, celular.
 
 ## Pendências e riscos
-- NÃO EXECUTADO: instalação isolada (cópia exportada) e CI do hub para este sistema; publicação do repositório.
+- Instalação isolada validada em 2026-10-13 (cópia exportada: install, lint, tipos, 72 unitários, build, test:db, 33/33 mutações, 47 E2E sem as capturas). CI do hub: jobs portal-db, portal-web e portal-e2e verdes.
 - Sem antivírus no envio; sem feriados no SLA; sem e-mail transacional; limitador de taxa por instância.
 - `pt_refresh` precisa ser agendado em produção (`private.pt_refresh_all()` via pg_cron); agendamento real não testado.
 - Hospedagem serverless com limite de corpo pequeno exige ajustar `doc_max_mb` (docs/DEPLOYMENT.md).
@@ -34,4 +34,4 @@ D-1 prestadora = organização do Core · D-2 regras no banco · D-3 colaborador
 - `pt_user_labels.kind` é `staff|client`, não o papel.
 
 ## Próxima tarefa recomendada
-Validar a instalação isolada, publicar o repositório e marcar VALIDADO no catálogo. Depois, Sistema 06 — Gestão Financeira Empresarial.
+Personalizar para o cliente (nome, cores, SLA, categorias); agendar `private.pt_refresh_all()`; avaliar antivírus no envio. Próximo do Pack: Sistema 06 — Gestão Financeira Empresarial.

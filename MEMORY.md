@@ -1,5 +1,5 @@
 # MEMORY — PACK 25 SISTEMAS IA (raiz)
-Atualizado em: 2026-10-13 | Versão: 0.3.0 | Estado: EM_DESENVOLVIMENTO (4 de 25 VALIDADOS)
+Atualizado em: 2026-10-13 | Versão: 0.3.0 | Estado: EM_DESENVOLVIMENTO (5 de 25 VALIDADOS)
 
 ## Missão
 Produto de R$ 47 com 25 sistemas MVP independentes. Hub `pack-25-sistemas-ia` + um repositório espelho por sistema (`<slug>` (ex.: `crm-completo`)).
@@ -8,7 +8,8 @@ Produto de R$ 47 com 25 sistemas MVP independentes. Hub `pack-25-sistemas-ia` + 
 Next 16.4.0 + React 19.3.0 + TypeScript 6.0.3 + Tailwind 4 + Supabase (ADR-009). Existe: `catalogo/`, `core/supabase/` (3 migrações + testes), `core/web/` (app), `scripts/`, `docs/`, `sistemas/` (25 pastas planejadas). Detalhes em `docs/CORE_WEB.md`.
 
 ## Implementado e verificado
-- Catálogo de 25 sistemas: 01 `crm-completo`, 02 `propostas-comerciais`, 03 `qualificador-leads` e 04 `pos-venda` VALIDADOS, 21 `PLANEJADO` — `node scripts/validate-catalog.mjs`: OK.
+- Catálogo de 25 sistemas: 01 `crm-completo`, 02 `propostas-comerciais`, 03 `qualificador-leads`, 04 `pos-venda` e 05 `portal-b2b` VALIDADOS, 20 `PLANEJADO` — `node scripts/validate-catalog.mjs`: OK.
+- **Portal de Clientes B2B (05)**: prestadora × empresa cliente (usuário de cliente nunca em `organization_members`), regras no banco (RLS, funções `pt_*`, chaves compostas, históricos imutáveis), SLA em horas úteis, convites com hash, documentos em bucket privado com tipo real pelos bytes, URL assinada de 60 s e trilha imutável, painel único para equipe e cliente (10 KPIs, 8 gráficos), 72 unit, DB 60–64 com 33 mutações reprovadas, 49 E2E (14 cenários de ameaça); instalação isolada validada; jobs `portal-*` do CI verdes.
 - **Pós-Venda e Reativação (04)**: RFM determinístico em SQL com espelho TS (fixtures à mão, percentil em inteiros), sinais de risco com explicação, oportunidades com prioridade, segmentos sem SQL livre, campanhas manuais (ausência de permissão ≠ consentimento; recusa vira supressão; resultado «observado», nunca causal), importação CSV por assistente (prévia = gravação), painel (10 KPIs, 9 gráficos), 12 relatórios com CSV auditado, seed de 206 clientes; 137 unit, DB com 78 mutações reprovadas, 35 E2E (também na cópia exportada), CI verde nos jobs do 04 em 2026-10-13. Lição: comparações de compra (guarda só o DIA) com eventos são por data local; `cpSync` com filtro derrubou o Node no Windows (export-system agora copia manualmente).
 - **Qualificador de Leads (03)**: validação e pontuação no banco com espelho TS (mesmas fixtures de score e de formulário), versões imutáveis de formulário e modelo, captação pública (honeypot, limite de taxa no banco, duplicidade, UTM), distribuição com trava, Kanban, painel (10 KPIs, 9 gráficos), IA opcional separada do score, seed de 150 leads; 163 unit, DB com 31 mutações reprovadas, 31 E2E (também na cópia exportada), CI verde.
 - **Gestão de Propostas Comerciais (02)**: cálculo no banco com espelho TS (mesmas fixtures), snapshot imutável, PDF react-pdf, link público por hash, painel (8 KPIs, 7 gráficos), 115 unit, DB com 14 mutações detectadas, 37 E2E (também na cópia exportada), CI verde. Core ganhou `PUBLIC_ENDPOINT` e `public-prefixes`.
@@ -20,7 +21,7 @@ Next 16.4.0 + React 19.3.0 + TypeScript 6.0.3 + Tailwind 4 + Supabase (ADR-009).
 - Repositório público `pack-25-sistemas-ia/pack-25-sistemas-ia` (organização `pack-25-sistemas-ia`, transferido em 2026-10-12) com secret scanning, push protection e proteção do `main` (sem force-push; checks do CI obrigatórios). CI: ver histórico de execuções. `publish-mirrors.yml` **NÃO EXECUTADO** (sem sistema VALIDADO).
 
 ## Em implementação
-- Nada em andamento. Próximo (sistema 05, Fase D): um por vez, cada um com `docs/PLANO_IMPLEMENTACAO.md` antes do código.
+- Nada em andamento. Próximo (sistema 06, Gestão Financeira Empresarial; antes, publicar o 05): um por vez, cada um com `docs/PLANO_IMPLEMENTACAO.md` antes do código.
 
 ## Pendências e riscos
 - MÉDIA: testes do sistema 02 dependem da hora do dia (contam dias inteiros a partir de meio-dia; falham no CI antes do meio-dia em Brasília: `64_prop_metrics.sql` e `prop-dashboard.spec.ts`). Corrigir no 02 (usar datas locais) e republicar o espelho.
