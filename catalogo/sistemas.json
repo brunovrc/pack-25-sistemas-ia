@@ -153,32 +153,37 @@
     },
     {
       "id": "04",
-      "slug": "pos-venda-e-recompra",
-      "directory": "sistemas/04-pos-venda-e-recompra",
-      "repo_name": "pos-venda-e-recompra",
-      "name": "Pós-venda e Recompra",
+      "slug": "pos-venda",
+      "directory": "sistemas/04-pos-venda",
+      "repo_name": "pos-venda",
+      "name": "Pós-Venda e Reativação de Clientes",
       "category": "Comercial",
-      "audience": "Lojas e empresas com base de clientes recorrentes",
-      "pain": "Cliente compra uma vez e não é reativado",
-      "value_proposition": "Alertas de recompra e segmentação simples para contato ativo da equipe",
+      "audience": "Lojas, e-commerces, distribuidoras, empresas de serviços recorrentes e negócios B2B com carteira ativa de clientes",
+      "pain": "Clientes param de comprar sem que ninguém perceba; ninguém sabe quem são os melhores clientes, quem está em risco nem se as ações de recuperação funcionam",
+      "value_proposition": "Histórico de compras, segmentação RFM transparente, oportunidades de reativação explicadas, campanhas manuais com registro de contatos e resultados observados",
       "mvp_features": [
-        "Cadastro de compras",
-        "Cálculo de ciclo de recompra",
-        "Segmentação simples",
-        "Alertas de contato",
-        "Registro de contatos"
+        "Clientes e histórico de compras com importação CSV (mapeamento, validação, deduplicação)",
+        "Motor RFM determinístico com histórico e segmentos configuráveis",
+        "Clientes em risco por inatividade, ciclo de recompra e queda de frequência, com explicação",
+        "Segmentos dinâmicos validados (sem SQL livre)",
+        "Campanhas de reativação com contatos, permissões e supressões",
+        "Tarefas, notificações internas, dashboards e relatórios"
       ],
       "exclusions": [
-        "Disparo em massa",
-        "Automação de WhatsApp"
+        "ERP completo",
+        "Disparo em massa de WhatsApp",
+        "Predição de churn como modelo estatístico",
+        "Cálculo de incrementalidade",
+        "Gateway de pagamento"
       ],
       "kpis": [
+        "Clientes com compra recente",
+        "Clientes em risco e inativos",
+        "Taxa de reativação observada",
         "Taxa de recompra",
-        "Clientes inativos",
-        "Intervalo médio entre compras",
-        "Contatos realizados"
+        "Ticket médio"
       ],
-      "complexity": "baixa",
+      "complexity": "alta",
       "implementation_price_brl_illustrative": {
         "min": 900,
         "max": 1800
@@ -190,7 +195,7 @@
         "e-mail",
         "histórico de compras"
       ],
-      "status": "PLANEJADO"
+      "status": "EM_DESENVOLVIMENTO"
     },
     {
       "id": "05",
