@@ -163,7 +163,7 @@ begin
     ('${uid(U.dono)}', 'dono@demo.exemplo', 'Helena Proprietária'), ('${uid(U.gerente)}', 'gerente@demo.exemplo', 'Rafael Gestor'), ('${uid(U.colab1)}', 'colaborador1@demo.exemplo', 'Camila Atendimento'),
     ('${uid(U.colab2)}', 'colaborador2@demo.exemplo', 'Diego Criação'), ('${uid(U.leitor)}', 'leitor@demo.exemplo', 'Lívia Leitora'),
     ('${uid(CU.alfaAdmin)}', 'alfa.admin@demo.exemplo', 'Ana Alfa'), ('${uid(CU.alfaUser)}', 'alfa.usuario@demo.exemplo', 'Alberto Alfa'),
-    ('${uid(CU.betaAdmin)}', 'beta.admin@demo.exemplo', 'Beatriz Beta'), ('${uid(CU.betaUser)}', 'beta.usuario@demo.exemplo', 'Bruno Beta'), ('${uid(CU.gamaAdmin)}', 'gama.admin@demo.exemplo', 'Gabriela Gama')
+    ('${uid(CU.betaAdmin)}', 'beta.admin@demo.exemplo', 'Beatriz Beta'), ('${uid(CU.betaUser)}', 'beta.usuario@demo.exemplo', 'Bernardo Beta'), ('${uid(CU.gamaAdmin)}', 'gama.admin@demo.exemplo', 'Gabriela Gama')
   ) as v(id, email, nome);
   insert into auth.identities (id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
   select gen_random_uuid(), u.id, u.email, jsonb_build_object('sub', u.id::text, 'email', u.email, 'email_verified', true), 'email', now(), now(), now()

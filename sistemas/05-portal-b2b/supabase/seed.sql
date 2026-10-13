@@ -261,7 +261,7 @@ begin
     ('a5a5a5a5-0000-4000-8000-0000000000a1', 'dono@demo.exemplo', 'Helena Proprietária'), ('a5a5a5a5-0000-4000-8000-0000000000a2', 'gerente@demo.exemplo', 'Rafael Gestor'), ('a5a5a5a5-0000-4000-8000-0000000000a3', 'colaborador1@demo.exemplo', 'Camila Atendimento'),
     ('a5a5a5a5-0000-4000-8000-0000000000a4', 'colaborador2@demo.exemplo', 'Diego Criação'), ('a5a5a5a5-0000-4000-8000-0000000000a5', 'leitor@demo.exemplo', 'Lívia Leitora'),
     ('a5a5a5a5-0000-4000-8000-0000000000c1', 'alfa.admin@demo.exemplo', 'Ana Alfa'), ('a5a5a5a5-0000-4000-8000-0000000000c2', 'alfa.usuario@demo.exemplo', 'Alberto Alfa'),
-    ('a5a5a5a5-0000-4000-8000-0000000000c3', 'beta.admin@demo.exemplo', 'Beatriz Beta'), ('a5a5a5a5-0000-4000-8000-0000000000c4', 'beta.usuario@demo.exemplo', 'Bruno Beta'), ('a5a5a5a5-0000-4000-8000-0000000000c5', 'gama.admin@demo.exemplo', 'Gabriela Gama')
+    ('a5a5a5a5-0000-4000-8000-0000000000c3', 'beta.admin@demo.exemplo', 'Beatriz Beta'), ('a5a5a5a5-0000-4000-8000-0000000000c4', 'beta.usuario@demo.exemplo', 'Bernardo Beta'), ('a5a5a5a5-0000-4000-8000-0000000000c5', 'gama.admin@demo.exemplo', 'Gabriela Gama')
   ) as v(id, email, nome);
   insert into auth.identities (id, user_id, provider_id, identity_data, provider, last_sign_in_at, created_at, updated_at)
   select gen_random_uuid(), u.id, u.email, jsonb_build_object('sub', u.id::text, 'email', u.email, 'email_verified', true), 'email', now(), now(), now()
