@@ -1,4 +1,4 @@
-# CLAUDE — Pós-venda e Recompra
+# CLAUDE — Pós-Venda e Reativação de Clientes
 
 @AGENTS.md
 

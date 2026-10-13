@@ -1,36 +1,38 @@
-# MEMORY — PÓS-VENDA E RECOMPRA
-Atualizado em: 2026-10-11 | Versão: 0.1.0 | Estado: PLANEJADO
+# MEMORY — PÓS-VENDA E REATIVAÇÃO DE CLIENTES
+Atualizado em: 2026-10-13 | Versão: 0.1.0 | Estado: EM VALIDAÇÃO (vira VALIDADO após CI verde e instalação isolada)
 
 ## Missão do sistema
-Cliente compra uma vez e não é reativado. Público: Lojas e empresas com base de clientes recorrentes. Valor: Alertas de recompra e segmentação simples para contato ativo da equipe.
+Mostrar quem compra, quem esfria e quem sumiu (RFM + regras de risco explicáveis) e organizar o contato manual de reativação com respeito à permissão de contato. Público: lojas, distribuidoras e serviços com clientes recorrentes.
 
 ## Stack e caminhos-chave
-Next.js (App Router) + TypeScript strict + Tailwind + shadcn/ui + Supabase (Auth, Storage, RLS). Pastas: app/, components/, lib/, supabase/migrations/, tests/, docs/.
-Comandos do sistema: ainda não existem (app não criado).
+Next.js 16 (App Router, `proxy.ts`) + TypeScript strict + Tailwind 4 + Supabase (Auth, Postgres/RLS). Raiz do Core (sem `src/`). Banco: `supabase/migrations` (4 do sistema: schema, engine, operations, metrics), testes SQL em `supabase/tests` (60–64). Libs: `lib/pv/*`; componentes: `components/pv/*`.
+Comandos: `pnpm lint | typecheck | test | build | test:db | test:mutation | test:e2e`; `node scripts/gen-fixtures-sql.mjs`; `node scripts/gen-seed.mjs`.
 
-## Escopo contratado do MVP
-Cadastro de compras; Cálculo de ciclo de recompra; Segmentação simples; Alertas de contato; Registro de contatos.
-Fora do escopo: Disparo em massa; Automação de WhatsApp.
+## Escopo entregue
+Clientes/compras com importação CSV (assistente); RFM em SQL+TS com histórico imutável; sinais de risco (inatividade, ciclo, queda, mudança de segmento); oportunidades com prioridade e explicação; segmentos dinâmicos sem SQL livre; campanhas manuais com permissão/supressão e resultado observado; tarefas; notificações; painel (10 KPIs, 9 gráficos); 12 relatórios com CSV auditado; LGPD; seed de 206 clientes e ~1.260 compras fictícios.
+Fora do escopo: ERP, disparo em massa/WhatsApp automático, previsão de churn por modelo, incrementalidade, RAG, onboarding por entrevista.
 
-## Implementado e verificado
-- Nada. Apenas a estrutura de pastas e a documentação inicial existem.
-
-## Em implementação
-- Nenhuma tarefa iniciada.
+## Implementado e verificado (evidência em docs/FEATURES.md)
+- Banco: 5 arquivos de teste SQL do sistema (fixtures RFM à mão, motor, operações, métricas, limites) e **78 mutações** reprovadas pela suíte.
+- Unitários: RFM (fixtures), importação BR, modelos de mensagem, filtros, segmentos, CSV.
+- E2E (Supabase local + build de produção): core 13, demo 7, fluxos 4, campanha 2, segurança 7, mobile 2.
 
 ## Pendências e riscos
-- Risco LGPD: médio (dados: nome, telefone, e-mail, histórico de compras).
-- Aguardar o Core web (auth, organização, UX base) antes de iniciar este sistema.
+- Cohort e rótulos de mês dependem do calendário; E2E não afirma números de coorte.
+- Demo: números do painel dependem de a base ter sido semeada no mesmo dia (datas relativas a hoje).
+- Importação limitada a 2.000 linhas / 2 MB por arquivo (dividir arquivos maiores).
+- Listas de clientes carregam até 5.000 registros por tela (estado/segmento calculados à parte).
+- Filtro de campanha no painel geral não existe: a visão de campanhas é o próprio painel de campanhas.
 
-## Decisões relevantes
-- 2026-10-11 — Estrutura criada por scripts/generate-systems.mjs a partir do catálogo.
+## Decisões relevantes (docs/DECISIONS.md)
+D-1 motor no banco com espelho TS · D-2 compra guarda o dia; comparação por data local · D-3 ausência de preferência não é consentimento · D-4 sem envio de mensagens · D-5 «observado», nunca causal · D-6 segmentos sem SQL livre · D-7 sem fila pg-boss (refresh sob demanda) · D-8 sem `src/` (raiz do Core).
 
-## Testes e deploy
-- Último lint/typecheck/unit/e2e/build: NÃO EXECUTADO
-- Ambiente de deploy: não configurado
+## Armadilhas aprendidas
+- `$$` em JS `replace` vira `$`: corrompe SQL. Use Edit/sed.
+- `now()` constante na transação de teste: datas de teste usam dias.
+- Aritmética de percentil em inteiros (float erra nas bordas).
+- Funções exportadas de arquivo `'use client'` não podem ser chamadas em Server Components.
+- Rode `pnpm build` antes do E2E ao mudar código; use porta própria (3114) e o Supabase 583xx deste projeto.
 
 ## Próxima tarefa recomendada
-1. Fazer a avaliação de referências deste sistema em docs/REFERENCES.md antes de qualquer código.
-
-## Referências
-- docs/FEATURES.md; docs/DATA_MODEL.md; docs/DEPLOYMENT.md
+Personalizar para o cliente: limites de risco, pesos de prioridade, modelos de mensagem e base legal por canal.

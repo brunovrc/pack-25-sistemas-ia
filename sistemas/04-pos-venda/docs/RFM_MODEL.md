@@ -57,5 +57,11 @@ Cada alerta guarda a **explicação** (valores usados). Limites são por organiz
 `prioridade = round(w_valor × P_M + w_freq × P_F + w_atraso × min(1, atraso))`, com pesos em % (padrão 40/20/40), `P_M` e `P_F` = posição percentual (percent_rank, 0–1) do cliente em valor e frequência históricos, e `atraso = dias_sem_comprar ÷ referência` (referência = `cycle_factor × Md` quando há ciclo; senão `inactive_days`). Faixas: alta ≥ 70, média ≥ 40 (configuráveis). Cliente de alto valor **não** é presumido mais propenso a voltar: a prioridade ordena o esforço comercial, não prevê retorno.
 `estimated_value_cents` só é preenchido com ≥ 3 compras válidas e é o **ticket mediano histórico** do cliente (rotulado assim; não é previsão).
 
+## Notas de implementação
+- **Percentil em inteiros:** com `n` clientes pontuados e `abaixo` = quantos têm valor menor, F e M valem `min(5, 1 + ⌊5·abaixo ÷ (n−1)⌋)`; R é invertido (`abaixo` entre os de **maior** recência em dias). Empates dividem a mesma posição. `n ≤ 1`: R5/F1/M1. Menos de 5 pontuados = **amostra pequena** (sinalizada na rodada e na tela).
+- **Estado × segmento:** o estado (ativo, em risco, inativo, sem compras) vem dos sinais de **hoje** (`pv_customer_signals`); o segmento vem da última **rodada** e pode estar defasado até a próxima. Inativo = dias sem comprar ≥ `inactive_days` (o sinal de inatividade é mantido).
+- **Datas:** a compra guarda o dia (meio-dia no fuso da organização). Reativação conta do dia da identificação em diante; resultado de campanha, de um dia posterior ao do primeiro contato (ver `CAMPAIGN_RULES.md`).
+- **Testes:** 27 casos à mão em `tests/fixtures/rfm-cases.json` (SQL e TS) + limites exatos em `64_pv_boundaries.sql`.
+
 ## Limitações
 Pequenas amostras, sazonalidade e mudança de catálogo afetam qualquer RFM. Os segmentos são ferramenta de priorização, não de decisão automática sobre pessoas.
