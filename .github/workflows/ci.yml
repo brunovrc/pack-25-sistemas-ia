@@ -788,6 +788,10 @@ jobs:
       - name: Concorrência real (publicação única, sem duplicidade, sem impasse)
         working-directory: sistemas/08-precificacao
         run: node scripts/test-concurrency.mjs
+      - run: npm install --global pnpm@12.6.0
+      - name: Dependências (a suíte unitária da mutação precisa do vitest)
+        working-directory: sistemas/08-precificacao
+        run: pnpm install --frozen-lockfile
       - name: Mutação das regras críticas
         working-directory: sistemas/08-precificacao
         run: node scripts/mutation-check.mjs --jobs 2
