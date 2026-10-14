@@ -3,7 +3,7 @@
 25 sistemas MVP para pequenas e médias empresas, prontos para você personalizar com **Claude Code** ou **Codex**, conectar a um banco Supabase seu e publicar.
 
 > ## Estado real (2026-10-13)
-> **7 dos 25 sistemas estão validados: CRM Completo, Gestão de Propostas Comerciais, Qualificador de Leads, Pós-Venda e Reativação, Portal de Clientes B2B, Financeiro Completo e Controle de Estoque.** Os outros 18 estão planejados e ainda não estão disponíveis para uso. O repositório traz o catálogo, os padrões de segurança e privacidade, o núcleo (organizações, papéis, RLS e auditoria) e o CRM, com testes executados e CI verde. O status de cada sistema abaixo é lido de [catalogo/sistemas.json](catalogo/sistemas.json) e só muda após os gates de qualidade. Nada aqui promete renda ou vendas: o pack reduz tempo de desenvolvimento; implantar e vender depende de adequação, testes, hospedagem, suporte e prospecção.
+> **8 dos 25 sistemas estão validados: CRM Completo, Gestão de Propostas Comerciais, Qualificador de Leads, Pós-Venda e Reativação, Portal de Clientes B2B, Financeiro Completo, Controle de Estoque e Precificação.** Os outros 17 estão planejados e ainda não estão disponíveis para uso. O repositório traz o catálogo, os padrões de segurança e privacidade, o núcleo (organizações, papéis, RLS e auditoria) e o CRM, com testes executados e CI verde. O status de cada sistema abaixo é lido de [catalogo/sistemas.json](catalogo/sistemas.json) e só muda após os gates de qualidade. Nada aqui promete renda ou vendas: o pack reduz tempo de desenvolvimento; implantar e vender depende de adequação, testes, hospedagem, suporte e prospecção.
 
 ## Catálogo
 
@@ -16,7 +16,7 @@
 | 05 | **Portal de Clientes B2B** — Painel da prestadora e portal do cliente: solicitações com prazo, documentos privados, entregas e comunicados, isolado por empresa | Comercial | `portal-b2b` | VALIDADO |
 | 06 | **Financeiro Completo** — Controle de contas, categorias e fluxo de caixa com lançamentos auditáveis | Gestão | `financeiro-completo` | VALIDADO |
 | 07 | **Controle de Estoque** — Saldo confiável por depósito com movimentação auditável e alerta de mínimo | Gestão | `controle-de-estoque` | VALIDADO |
-| 08 | **Precificação** — Cálculo transparente de preço, margem e markup com cenários comparáveis | Gestão | `precificacao` | PLANEJADO |
+| 08 | **Precificação** — Cálculo transparente de preço, margem e markup com cenários comparáveis | Gestão | `precificacao` | VALIDADO |
 | 09 | **Dashboard Executivo** — Importação de CSV com mapeamento de colunas e KPIs comparativos por período | Gestão | `dashboard-executivo` | PLANEJADO |
 | 10 | **Gestão de Comissões** — Planos de comissão por faixa com estornos e fechamentos rastreáveis | Gestão | `gestao-de-comissoes` | PLANEJADO |
 | 11 | **Agendamento Online** — Reserva pública com disponibilidade real, bloqueios e reagendamento | Operações | `agendamento-online` | PLANEJADO |
