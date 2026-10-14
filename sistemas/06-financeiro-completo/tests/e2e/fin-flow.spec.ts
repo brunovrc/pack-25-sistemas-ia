@@ -342,14 +342,14 @@ test('extrato bancário + conciliação manual: sugestão, diferença com justif
   await expect(page.getByText('PAGTO INSUMOS')).toBeVisible();
   const line = page.locator('li', { hasText: 'PAGTO INSUMOS' });
   await openReconcile(line);
-  await line.getByRole('radio').first().check();
+  await line.locator('label').filter({ hasText: '333,34' }).filter({ hasNotText: 'diferença' }).getByRole('radio').check();
   await line.getByRole('button', { name: 'Conciliar selecionado' }).click();
   await expect(page.getByText('Conciliado.').first()).toBeVisible();
   await expect(line.getByRole('button', { name: 'Conciliar selecionado' })).toBeHidden();
   // tarifa de R$ 15,00 → o ajuste de -15,00; linha de -2,00 não tem par
   const tar = page.locator('li', { hasText: 'TARIFA' });
   await openReconcile(tar);
-  await tar.getByRole('radio').first().check();
+  await tar.locator('label').filter({ hasText: '15,00' }).filter({ hasNotText: 'diferença' }).getByRole('radio').check();
   await tar.getByRole('button', { name: 'Conciliar selecionado' }).click();
   await expect(page.getByText('Conciliado.').first()).toBeVisible();
   await expect(tar.getByRole('button', { name: 'Conciliar selecionado' })).toBeHidden();

@@ -311,14 +311,14 @@ begin
   assert test.errmsg(format($q$select public.fin_create_import(%L, 'customers', 'b.csv', %L, null, jsonb_build_array(%L::jsonb))$q$, test.t('org'), test.h('file-b'),
     test.row(1, 'b1', jsonb_build_object('name', 'Cliente B')))) like '%sem permissão%', 'B não importa em A';
   assert test.errmsg(format($q$select public.fin_suggest_matches(%L, %L)$q$, test.t('org'), test.t('banco'))) is null and (select count(*) from public.fin_suggest_matches(test.t('org'), test.t('banco'))) = 0, 'B não recebe sugestões de A (RLS)';
-  assert test.errmsg(format($q$select public.fin_reconciliation_summary(%L, %L, current_date - 10, current_date)$q$, test.t('org'), test.t('banco'))) like '%sem permissão%', 'B não lê resumo de A';
+  assert test.errmsg(format($q$select public.fin_reconciliation_summary(%L, %L, test.today() - 10, test.today())$q$, test.t('org'), test.t('banco'))) like '%sem permissão%', 'B não lê resumo de A';
 end $$;
 reset role;
 :as_oa
 do $$
 begin
   assert test.errmsg($q$update public.bank_statement_lines set amount_cents = 1$q$) is not null, 'escrita direta em extrato negada';
-  assert test.errmsg($q$insert into public.bank_statement_lines (organization_id, account_id, transaction_date, amount_cents, description, normalized_hash) values (gen_random_uuid(), gen_random_uuid(), current_date, 1, 'x', repeat('a', 64))$q$) is not null, 'insert direto em extrato negado';
+  assert test.errmsg($q$insert into public.bank_statement_lines (organization_id, account_id, transaction_date, amount_cents, description, normalized_hash) values (gen_random_uuid(), gen_random_uuid(), test.today(), 1, 'x', repeat('a', 64))$q$) is not null, 'insert direto em extrato negado';
   assert test.errmsg($q$update public.reconciliation_matches set status = 'undone'$q$) is not null, 'escrita direta em vínculos negada';
   assert test.errmsg($q$update public.import_rows set status = 'valid'$q$) is not null, 'escrita direta em linhas de importação negada';
 end $$;

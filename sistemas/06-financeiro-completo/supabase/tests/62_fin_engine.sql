@@ -129,30 +129,30 @@ reset role;
 do $$
 declare org uuid := test.t('org'); e uuid;
 begin
-  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Zero', null, null, null, 0, current_date, current_date, current_date, 1)$q$, org)) like '%positivo%', 'valor zero';
-  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Negativo', null, null, null, -100, current_date, current_date, current_date, 1)$q$, org)) like '%positivo%', 'valor negativo';
-  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Acima do teto', null, null, null, 100000000000000, current_date, current_date, current_date, 1)$q$, org)) like '%positivo%', 'acima do teto';
-  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Sem parcelas', null, null, null, 100, current_date, current_date, current_date, 0)$q$, org)) like '%parcelas%', 'zero parcelas';
-  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Parcelas demais', null, null, null, 100, current_date, current_date, current_date, 361)$q$, org)) like '%parcelas%', '361 parcelas';
-  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Vence antes', null, null, null, 100, current_date, current_date, current_date - 1, 1)$q$, org)) like '%anterior à emissão%', 'vencimento antes da emissão';
-  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Categoria errada', null, %L, null, 100, current_date, current_date, current_date, 1)$q$, org, test.t('cat_in'))) like '%natureza incompatível%', 'categoria de receita em despesa';
-  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Cliente em despesa', %L, null, null, 100, current_date, current_date, current_date, 1)$q$, org, test.t('cust'))) like '%incompatível%', 'cliente em conta a pagar';
-  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'receivable', 'Fornecedor em receita', %L, null, null, 100, current_date, current_date, current_date, 1)$q$, org, test.t('sup'))) like '%incompatível%', 'fornecedor em conta a receber';
-  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Parcelas fora de ordem', null, null, null, 100, current_date, current_date, current_date, 2, 'monthly', null, null, null, array[current_date + 10, current_date]::date[])$q$, org)) like '%ordem%', 'datas fora de ordem';
+  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Zero', null, null, null, 0, test.today(), test.today(), test.today(), 1)$q$, org)) like '%positivo%', 'valor zero';
+  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Negativo', null, null, null, -100, test.today(), test.today(), test.today(), 1)$q$, org)) like '%positivo%', 'valor negativo';
+  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Acima do teto', null, null, null, 100000000000000, test.today(), test.today(), test.today(), 1)$q$, org)) like '%positivo%', 'acima do teto';
+  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Sem parcelas', null, null, null, 100, test.today(), test.today(), test.today(), 0)$q$, org)) like '%parcelas%', 'zero parcelas';
+  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Parcelas demais', null, null, null, 100, test.today(), test.today(), test.today(), 361)$q$, org)) like '%parcelas%', '361 parcelas';
+  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Vence antes', null, null, null, 100, test.today(), test.today(), test.today() - 1, 1)$q$, org)) like '%anterior à emissão%', 'vencimento antes da emissão';
+  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Categoria errada', null, %L, null, 100, test.today(), test.today(), test.today(), 1)$q$, org, test.t('cat_in'))) like '%natureza incompatível%', 'categoria de receita em despesa';
+  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Cliente em despesa', %L, null, null, 100, test.today(), test.today(), test.today(), 1)$q$, org, test.t('cust'))) like '%incompatível%', 'cliente em conta a pagar';
+  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'receivable', 'Fornecedor em receita', %L, null, null, 100, test.today(), test.today(), test.today(), 1)$q$, org, test.t('sup'))) like '%incompatível%', 'fornecedor em conta a receber';
+  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Parcelas fora de ordem', null, null, null, 100, test.today(), test.today(), test.today(), 2, 'monthly', null, null, null, array[test.today() + 10, test.today()]::date[])$q$, org)) like '%ordem%', 'datas fora de ordem';
   -- idempotência de criação
-  e := public.fin_create_entry(org, 'payable', 'Licença anual', null, null, null, 120000, current_date, current_date, current_date + 10, 1, 'monthly', null, 'create-key-0001');
-  assert public.fin_create_entry(org, 'payable', 'Licença anual', null, null, null, 120000, current_date, current_date, current_date + 10, 1, 'monthly', null, 'create-key-0001') = e, 'repetição devolve o mesmo título';
+  e := public.fin_create_entry(org, 'payable', 'Licença anual', null, null, null, 120000, test.today(), test.today(), test.today() + 10, 1, 'monthly', null, 'create-key-0001');
+  assert public.fin_create_entry(org, 'payable', 'Licença anual', null, null, null, 120000, test.today(), test.today(), test.today() + 10, 1, 'monthly', null, 'create-key-0001') = e, 'repetição devolve o mesmo título';
   assert (select count(*) from public.financial_entries where idempotency_key = 'create-key-0001') = 1, 'título único';
-  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Licença anual', null, null, null, 120001, current_date, current_date, current_date + 10, 1, 'monthly', null, 'create-key-0001')$q$, org)) like '%idempotência%', 'chave com outros dados';
+  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Licença anual', null, null, null, 120001, test.today(), test.today(), test.today() + 10, 1, 'monthly', null, 'create-key-0001')$q$, org)) like '%idempotência%', 'chave com outros dados';
   -- categoria desativada e contraparte arquivada
   update public.financial_categories set active = false where id = test.t('cat_out');
-  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Categoria inativa', null, %L, null, 100, current_date, current_date, current_date, 1)$q$, org, test.t('cat_out'))) like '%desativada%', 'categoria desativada';
+  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Categoria inativa', null, %L, null, 100, test.today(), test.today(), test.today(), 1)$q$, org, test.t('cat_out'))) like '%desativada%', 'categoria desativada';
   update public.financial_categories set active = true where id = test.t('cat_out');
   update public.counterparties set archived_at = now() where id = test.t('sup');
-  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Fornecedor arquivado', %L, null, null, 100, current_date, current_date, current_date, 1)$q$, org, test.t('sup'))) like '%arquivado%', 'contraparte arquivada';
+  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Fornecedor arquivado', %L, null, null, 100, test.today(), test.today(), test.today(), 1)$q$, org, test.t('sup'))) like '%arquivado%', 'contraparte arquivada';
   update public.counterparties set archived_at = null where id = test.t('sup');
   -- edição de metadados
-  perform public.fin_update_entry(e, 'Licença anual (renovada)', test.t('sup'), test.t('cat_out'), null, current_date, 'obs');
+  perform public.fin_update_entry(e, 'Licença anual (renovada)', test.t('sup'), test.t('cat_out'), null, test.today(), 'obs');
   assert (select description from public.financial_entries where id = e) = 'Licença anual (renovada)', 'edição de descrição';
   raise notice 'PASS: validações de título (valor, parcelas, datas, categoria, contraparte) e idempotência da criação';
 end $$;
@@ -220,7 +220,7 @@ declare org uuid := test.t('org'); cc1 uuid; cc2 uuid; e uuid; e2 uuid; i uuid;
 begin
   insert into public.cost_centers (organization_id, name, code) values (org, 'Comercial', 'COM') returning id into cc1;
   insert into public.cost_centers (organization_id, name, code) values (org, 'Operações', 'OPS') returning id into cc2;
-  e := public.fin_create_entry(org, 'payable', 'Despesa rateada', null, null, null, 10001, current_date, current_date, current_date, 1, 'monthly', null, null,
+  e := public.fin_create_entry(org, 'payable', 'Despesa rateada', null, null, null, 10001, test.today(), test.today(), test.today(), 1, 'monthly', null, null,
          jsonb_build_array(jsonb_build_object('cost_center_id', cc1, 'weight', 60), jsonb_build_object('cost_center_id', cc2, 'weight', 40)));
   assert (select amount_cents from public.financial_allocations where entry_id = e and cost_center_id = cc1) = 6001 and
          (select amount_cents from public.financial_allocations where entry_id = e and cost_center_id = cc2) = 4000, 'rateio 60/40 de 100,01 = 60,01 + 40,00';
@@ -236,22 +236,22 @@ begin
   perform set_config('t.e6', e::text, true);
 
   -- replanejar título SEM baixas: rateio acompanha o novo valor
-  perform public.fin_replan_entry(e, 30000, 3, current_date + 5, 'monthly');
+  perform public.fin_replan_entry(e, 30000, 3, test.today() + 5, 'monthly');
   assert (select sum(amount_cents) from public.financial_installments where entry_id = e) = 30000 and (select count(*) from public.financial_installments where entry_id = e) = 3, 'replanejado em 3 parcelas de 100,00';
   assert (select sum(amount_cents) from public.financial_allocations where entry_id = e) = 30000, 'rateio reescalado para o novo valor';
   assert (select amount_cents from public.financial_allocations where entry_id = e and cost_center_id = cc2) = 22501 and (select amount_cents from public.financial_allocations where entry_id = e and cost_center_id = cc1) = 7499, 'rateio reescalado mantém a proporção (2500:7501 de 300,00 = 74,99 + 225,01)';
   -- com baixa (mesmo estornada) não replaneja
   select id into i from public.financial_installments where entry_id = e and installment_number = 1;
   perform public.fin_settle_installment(i, test.t('poup'), 10000, now(), 'pix', null, 'settle-e6-0001');
-  assert test.errmsg(format($q$select public.fin_replan_entry(%L, 50000, 2, current_date, 'monthly')$q$, e)) like '%já tem baixas%', 'replanejar com baixa recusado';
+  assert test.errmsg(format($q$select public.fin_replan_entry(%L, 50000, 2, test.today(), 'monthly')$q$, e)) like '%já tem baixas%', 'replanejar com baixa recusado';
   perform public.fin_reverse_settlement((select id from public.settlements where idempotency_key = 'settle-e6-0001'), 'baixa lançada na parcela errada');
-  assert test.errmsg(format($q$select public.fin_replan_entry(%L, 50000, 2, current_date, 'monthly')$q$, e)) like '%já tem baixas%', 'histórico de baixas estornadas também protege o plano';
+  assert test.errmsg(format($q$select public.fin_replan_entry(%L, 50000, 2, test.today(), 'monthly')$q$, e)) like '%já tem baixas%', 'histórico de baixas estornadas também protege o plano';
   -- reagendar
-  assert test.errmsg(format($q$select public.fin_reschedule_installment(%L, current_date - 400)$q$, i)) like '%anterior à emissão%', 'vencimento antes da emissão';
-  perform public.fin_reschedule_installment(i, current_date + 20);
-  assert (select due_date from public.financial_installments where id = i) = current_date + 20, 'parcela reagendada';
+  assert test.errmsg(format($q$select public.fin_reschedule_installment(%L, test.today() - 400)$q$, i)) like '%anterior à emissão%', 'vencimento antes da emissão';
+  perform public.fin_reschedule_installment(i, test.today() + 20);
+  assert (select due_date from public.financial_installments where id = i) = test.today() + 20, 'parcela reagendada';
   -- cancelamento
-  e2 := public.fin_create_entry(org, 'receivable', 'Venda cancelável', test.t('cust'), null, null, 7777, current_date, current_date, current_date + 1, 1);
+  e2 := public.fin_create_entry(org, 'receivable', 'Venda cancelável', test.t('cust'), null, null, 7777, test.today(), test.today(), test.today() + 1, 1);
   select id into i from public.financial_installments where entry_id = e2;
   perform public.fin_settle_installment(i, test.t('banco'), 777, now(), 'pix', null, 'settle-e7-0001');
   assert test.errmsg(format($q$select public.fin_cancel_entry(%L, 'cancelar com baixa ativa')$q$, e2)) like '%baixas ativas%', 'não cancela com baixa ativa';
@@ -260,7 +260,7 @@ begin
   perform public.fin_cancel_entry(e2, 'venda desfeita pelo cliente');
   assert test.st(i) = 'cancelled' and test.pend(i) = 7777, 'status cancelado (pendente não conta nos totais por status)';
   assert test.errmsg(format($q$select public.fin_settle_installment(%L, %L, 1, now(), 'pix', null, 'settle-e7-0002')$q$, i, test.t('banco'))) like '%cancelado%', 'título cancelado não recebe baixa';
-  assert test.errmsg(format($q$select public.fin_update_entry(%L, 'Edição pós-cancelamento', null, null, null, current_date, null)$q$, e2)) like '%cancelado%', 'título cancelado não edita';
+  assert test.errmsg(format($q$select public.fin_update_entry(%L, 'Edição pós-cancelamento', null, null, null, test.today(), null)$q$, e2)) like '%cancelado%', 'título cancelado não edita';
   assert test.errmsg(format($q$select public.fin_cancel_entry(%L, 'cancelamento repetido')$q$, e2)) like '%já cancelado%', 'cancelamento repetido';
   perform public.fin_archive_entry(e2);
   assert (select archived_at from public.financial_entries where id = e2) is not null, 'cancelado pode ser arquivado';
@@ -276,18 +276,18 @@ declare org uuid := test.t('org'); novo uuid; e uuid; n integer;
 begin
   assert test.errmsg(format($q$select public.fin_archive_account(%L)$q$, test.t('banco'))) like '%saldo%', 'conta com saldo não arquiva';
   novo := public.fin_create_account(org, 'Conta temporária', 'digital', null, 0, test.today() - 10);
-  e := public.fin_create_entry(org, 'payable', 'Previsto na conta temporária', null, null, novo, 5000, current_date, current_date, current_date + 3, 1);
+  e := public.fin_create_entry(org, 'payable', 'Previsto na conta temporária', null, null, novo, 5000, test.today(), test.today(), test.today() + 3, 1);
   assert test.errmsg(format($q$select public.fin_archive_account(%L)$q$, novo)) like '%em aberto%', 'conta com título em aberto previsto não arquiva';
   perform public.fin_cancel_entry(e, 'título previsto por engano');
   perform public.fin_archive_account(novo);
   assert (select active from public.financial_accounts where id = novo) = false, 'conta zerada e sem pendências arquiva';
   assert test.errmsg(format($q$select public.fin_settle_installment(%L, %L, 1, now(), 'pix', null, 'settle-arq-0001')$q$, (select id from public.financial_installments where entry_id = test.t('e2') and installment_number = 3), novo)) like '%arquivada%', 'conta arquivada não recebe movimento';
-  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Em conta arquivada', null, null, %L, 100, current_date, current_date, current_date, 1)$q$, org, novo)) like '%arquivada%', 'conta prevista arquivada recusada';
+  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Em conta arquivada', null, null, %L, 100, test.today(), test.today(), test.today(), 1)$q$, org, novo)) like '%arquivada%', 'conta prevista arquivada recusada';
   perform public.fin_unarchive_account(novo);
   assert (select active from public.financial_accounts where id = novo), 'reativada';
   -- nome duplicado
-  assert test.errmsg(format($q$select public.fin_create_account(%L, 'Banco', 'checking', null, 0, current_date)$q$, org)) like '%já existe%', 'nome duplicado';
-  assert test.errmsg(format($q$select public.fin_create_account(%L, 'Futura', 'checking', null, 0, current_date + 5)$q$, org)) like '%data do saldo inicial%', 'saldo inicial no futuro';
+  assert test.errmsg(format($q$select public.fin_create_account(%L, 'Banco', 'checking', null, 0, test.today())$q$, org)) like '%já existe%', 'nome duplicado';
+  assert test.errmsg(format($q$select public.fin_create_account(%L, 'Futura', 'checking', null, 0, test.today() + 5)$q$, org)) like '%data do saldo inicial%', 'saldo inicial no futuro';
   -- saldo inicial: motivo, data e movimentos anteriores
   assert test.errmsg(format($q$select public.fin_set_opening_balance(%L, 1, test.today(), '')$q$, test.t('banco'))) like '%motivo%', 'correção exige motivo';
   perform public.fin_settle_installment((select id from public.financial_installments where entry_id = test.t('e2') and installment_number = 3), test.t('banco'), 100, now() - interval '30 days', 'pix', null, 'settle-hist-0001');

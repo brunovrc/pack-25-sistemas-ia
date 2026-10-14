@@ -11,6 +11,7 @@ begin;
 create function test.errmsg(q text) returns text language plpgsql as $$ begin execute q; return null; exception when others then return sqlerrm; end $$;
 create function test.t(k text) returns uuid language sql as $$ select current_setting('t.' || k)::uuid $$;
 create function test.dates(rule uuid) returns date[] language sql as $$ select array_agg(scheduled_date order by occurrence_index) from public.recurring_occurrences where recurring_rule_id = rule $$;
+create function test.today() returns date language sql as $$ select (now() at time zone 'America/Sao_Paulo')::date $$;
 grant execute on all functions in schema test to anon, authenticated;
 
 insert into auth.users (id, email) values
@@ -137,7 +138,7 @@ reset role;
 do $$
 declare org uuid := test.t('org');
 begin
-  assert test.errmsg(format($q$select public.fin_create_recurring_rule(%L, 'payable', 'Consulta', null, null, null, 5000, 'monthly', 1, current_date, null, 0)$q$, org)) like '%sem permissão%', 'consulta não cria regra';
+  assert test.errmsg(format($q$select public.fin_create_recurring_rule(%L, 'payable', 'Consulta', null, null, null, 5000, 'monthly', 1, test.today(), null, 0)$q$, org)) like '%sem permissão%', 'consulta não cria regra';
   assert test.errmsg(format($q$select public.fin_generate_recurring(%L)$q$, org)) like '%sem permissão%', 'consulta não gera';
   assert test.errmsg(format($q$select public.fin_pause_recurring_rule(%L)$q$, test.t('r1'))) like '%sem permissão%', 'consulta não pausa';
   assert (select count(*) from public.recurring_rules) >= 6 and (select count(*) from public.recurring_occurrences) > 0, 'consulta lê regras e ocorrências';
@@ -156,10 +157,10 @@ reset role;
 do $$
 declare org uuid := test.t('org');
 begin
-  assert test.errmsg(format($q$select public.fin_create_recurring_rule(%L, 'payable', 'Zero', null, null, null, 0, 'monthly', 1, current_date, null, 0)$q$, org)) like '%positivo%', 'valor zero';
-  assert test.errmsg(format($q$select public.fin_create_recurring_rule(%L, 'payable', 'Fim antes do início', null, null, null, 100, 'monthly', 1, current_date, current_date - 1, 0)$q$, org)) like '%término%', 'término anterior ao início';
-  assert test.errmsg(format($q$select public.fin_create_recurring_rule(%L, 'payable', 'Categoria errada', null, %L, null, 100, 'monthly', 1, current_date, null, 0)$q$, org, test.t('cat_in'))) like '%natureza incompatível%', 'categoria de receita em despesa';
-  assert test.errmsg(format($q$select public.fin_create_recurring_rule(%L, 'payable', 'Intervalo inválido', null, null, null, 100, 'monthly', 13, current_date, null, 0)$q$, org)) is not null, 'intervalo fora de 1–12';
+  assert test.errmsg(format($q$select public.fin_create_recurring_rule(%L, 'payable', 'Zero', null, null, null, 0, 'monthly', 1, test.today(), null, 0)$q$, org)) like '%positivo%', 'valor zero';
+  assert test.errmsg(format($q$select public.fin_create_recurring_rule(%L, 'payable', 'Fim antes do início', null, null, null, 100, 'monthly', 1, test.today(), test.today() - 1, 0)$q$, org)) like '%término%', 'término anterior ao início';
+  assert test.errmsg(format($q$select public.fin_create_recurring_rule(%L, 'payable', 'Categoria errada', null, %L, null, 100, 'monthly', 1, test.today(), null, 0)$q$, org, test.t('cat_in'))) like '%natureza incompatível%', 'categoria de receita em despesa';
+  assert test.errmsg(format($q$select public.fin_create_recurring_rule(%L, 'payable', 'Intervalo inválido', null, null, null, 100, 'monthly', 13, test.today(), null, 0)$q$, org)) is not null, 'intervalo fora de 1–12';
   assert test.errmsg($q$update public.recurring_occurrences set status = 'skipped'$q$) is not null, 'ocorrências não são editáveis';
   raise notice 'PASS: recorrência — permissões, isolamento e validações';
 end $$;

@@ -181,9 +181,9 @@ begin
   values (org, 'Receita do trimestre', 'income', 5000000, test.today() - 30, test.today() + 60, 'ffffffff-0000-4000-8000-0000000000a1') returning id into g;
   update public.financial_goals set target_amount_cents = 6000000 where id = g;
   assert (select target_amount_cents from public.financial_goals where id = g) = 6000000, 'gestor cria e edita meta';
-  assert test.errmsg(format($q$insert into public.financial_goals (organization_id, name, metric_type, target_amount_cents, period_start, period_end, created_by) values (%L, 'Meta em nome de outro', 'income', 100, current_date, current_date, 'ffffffff-0000-4000-8000-0000000000a0')$q$, org)) is not null, 'meta não pode ser criada em nome de outro usuário';
-  assert test.errmsg(format($q$insert into public.financial_goals (organization_id, name, metric_type, target_amount_cents, period_start, period_end, created_by) values (%L, 'Período invertido', 'income', 100, current_date, current_date - 1, 'ffffffff-0000-4000-8000-0000000000a1')$q$, org)) is not null, 'período invertido';
-  assert test.errmsg(format($q$insert into public.financial_goals (organization_id, name, metric_type, target_amount_cents, period_start, period_end, created_by) values (%L, 'Valor zero', 'income', 0, current_date, current_date, 'ffffffff-0000-4000-8000-0000000000a1')$q$, org)) is not null, 'valor zero';
+  assert test.errmsg(format($q$insert into public.financial_goals (organization_id, name, metric_type, target_amount_cents, period_start, period_end, created_by) values (%L, 'Meta em nome de outro', 'income', 100, test.today(), test.today(), 'ffffffff-0000-4000-8000-0000000000a0')$q$, org)) is not null, 'meta não pode ser criada em nome de outro usuário';
+  assert test.errmsg(format($q$insert into public.financial_goals (organization_id, name, metric_type, target_amount_cents, period_start, period_end, created_by) values (%L, 'Período invertido', 'income', 100, test.today(), test.today() - 1, 'ffffffff-0000-4000-8000-0000000000a1')$q$, org)) is not null, 'período invertido';
+  assert test.errmsg(format($q$insert into public.financial_goals (organization_id, name, metric_type, target_amount_cents, period_start, period_end, created_by) values (%L, 'Valor zero', 'income', 0, test.today(), test.today(), 'ffffffff-0000-4000-8000-0000000000a1')$q$, org)) is not null, 'valor zero';
   perform set_config('t.goal', g::text, true);
 end $$;
 reset role;
@@ -191,7 +191,7 @@ reset role;
 do $$
 declare org uuid := test.t('org');
 begin
-  assert test.errmsg(format($q$insert into public.financial_goals (organization_id, name, metric_type, target_amount_cents, period_start, period_end, created_by) values (%L, 'Meta do analista', 'income', 100, current_date, current_date, 'ffffffff-0000-4000-8000-0000000000a2')$q$, org)) is not null, 'analista não cria meta';
+  assert test.errmsg(format($q$insert into public.financial_goals (organization_id, name, metric_type, target_amount_cents, period_start, period_end, created_by) values (%L, 'Meta do analista', 'income', 100, test.today(), test.today(), 'ffffffff-0000-4000-8000-0000000000a2')$q$, org)) is not null, 'analista não cria meta';
   assert test.affected(format($q$delete from public.financial_goals where id = %L$q$, test.t('goal'))) = 0, 'analista não apaga meta';
   assert (select count(*) from public.financial_goals) = 1, 'analista lê metas';
 end $$;

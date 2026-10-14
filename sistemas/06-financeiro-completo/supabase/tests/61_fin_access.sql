@@ -12,6 +12,7 @@
 begin;
 
 create function test.errmsg(q text) returns text language plpgsql as $$ begin execute q; return null; exception when others then return sqlerrm; end $$;
+create function test.today() returns date language sql as $$ select (now() at time zone 'America/Sao_Paulo')::date $$;
 grant execute on all functions in schema test to anon, authenticated;
 
 insert into auth.users (id, email) values
@@ -50,29 +51,29 @@ reset role;
 do $$
 declare org uuid := current_setting('t.org')::uuid; a1 uuid; a2 uuid;
 begin
-  a1 := public.fin_create_account(org, 'Banco A', 'checking', 'Banco Fictício', 100000, current_date - 120);
-  a2 := public.fin_create_account(org, 'Caixa', 'cash', null, 0, current_date - 120, true, false);
+  a1 := public.fin_create_account(org, 'Banco A', 'checking', 'Banco Fictício', 100000, test.today() - 120);
+  a2 := public.fin_create_account(org, 'Caixa', 'cash', null, 0, test.today() - 120, true, false);
   perform set_config('t.acc1', a1::text, true); perform set_config('t.acc2', a2::text, true);
 end $$;
 reset role;
 :as_ob
 do $$
 declare orgb uuid := current_setting('t.orgb')::uuid;
-begin perform set_config('t.accb', public.fin_create_account(orgb, 'Banco B', 'checking', null, 50000, current_date - 120)::text, true); end $$;
+begin perform set_config('t.accb', public.fin_create_account(orgb, 'Banco B', 'checking', null, 50000, test.today() - 120)::text, true); end $$;
 reset role;
 
 :as_na
 do $$
 declare org uuid := current_setting('t.org')::uuid;
 begin
-  assert test.errmsg(format($q$select public.fin_create_account(%L, 'Conta do analista', 'cash', null, 0, current_date)$q$, org)) like '%sem permissão%', 'analista não cria conta';
+  assert test.errmsg(format($q$select public.fin_create_account(%L, 'Conta do analista', 'cash', null, 0, test.today())$q$, org)) like '%sem permissão%', 'analista não cria conta';
 end $$;
 reset role;
 :as_va
 do $$
 declare org uuid := current_setting('t.org')::uuid;
 begin
-  assert test.errmsg(format($q$select public.fin_create_account(%L, 'Conta da consulta', 'cash', null, 0, current_date)$q$, org)) like '%sem permissão%', 'consulta não cria conta';
+  assert test.errmsg(format($q$select public.fin_create_account(%L, 'Conta da consulta', 'cash', null, 0, test.today())$q$, org)) like '%sem permissão%', 'consulta não cria conta';
   assert test.count('select 1 from public.financial_accounts') = 2, 'consulta enxerga as contas da própria empresa';
 end $$;
 reset role;
@@ -80,15 +81,15 @@ reset role;
 do $$
 declare org uuid := current_setting('t.org')::uuid;
 begin
-  assert test.errmsg(format($q$select public.fin_create_account(%L, 'Conta sem MFA', 'cash', null, 0, current_date)$q$, org)) like '%duas etapas%', 'admin sem AAL2 barrado pelo banco';
-  assert test.errmsg(format($q$select public.fin_set_opening_balance(%L, 1, current_date - 100, 'tentativa sem mfa')$q$, current_setting('t.acc1'))) like '%duas etapas%', 'admin sem AAL2 não corrige saldo';
+  assert test.errmsg(format($q$select public.fin_create_account(%L, 'Conta sem MFA', 'cash', null, 0, test.today())$q$, org)) like '%duas etapas%', 'admin sem AAL2 barrado pelo banco';
+  assert test.errmsg(format($q$select public.fin_set_opening_balance(%L, 1, test.today() - 100, 'tentativa sem mfa')$q$, current_setting('t.acc1'))) like '%duas etapas%', 'admin sem AAL2 não corrige saldo';
 end $$;
 reset role;
 :as_ob
 do $$
 declare org uuid := current_setting('t.org')::uuid;
 begin
-  assert test.errmsg(format($q$select public.fin_create_account(%L, 'Invasão', 'cash', null, 0, current_date)$q$, org)) like '%sem permissão%', 'outra empresa não cria conta em A';
+  assert test.errmsg(format($q$select public.fin_create_account(%L, 'Invasão', 'cash', null, 0, test.today())$q$, org)) like '%sem permissão%', 'outra empresa não cria conta em A';
   assert test.count(format('select 1 from public.financial_accounts where organization_id = %L', org)) = 0, 'B não enxerga contas de A';
   assert test.count('select 1 from public.financial_accounts') = 1, 'B enxerga só a própria conta';
   assert test.count('select 1 from public.fin_account_balances') = 1, 'visão de saldos respeita a RLS';
@@ -107,12 +108,12 @@ reset role;
 do $$
 declare org uuid := current_setting('t.org')::uuid; acc uuid := current_setting('t.acc1')::uuid;
 begin
-  assert test.throws(format($q$insert into public.financial_accounts (organization_id, name, account_type, opening_balance_date) values (%L, 'direta', 'cash', current_date)$q$, org)), 'insert direto em conta';
+  assert test.throws(format($q$insert into public.financial_accounts (organization_id, name, account_type, opening_balance_date) values (%L, 'direta', 'cash', test.today())$q$, org)), 'insert direto em conta';
   assert test.throws(format($q$update public.financial_accounts set opening_balance_cents = 999999 where id = %L$q$, acc)), 'update direto do saldo inicial';
   assert test.throws(format($q$delete from public.financial_accounts where id = %L$q$, acc)), 'delete direto de conta';
   assert test.throws(format($q$insert into public.account_movements (organization_id, account_id, movement_type, amount_cents, effective_at, adjustment_id) values (%L, %L, 'adjustment', 100, now(), gen_random_uuid())$q$, org, acc)), 'insert direto no livro';
   assert test.throws(format($q$insert into public.settlements (organization_id, installment_id, account_id, amount_cents, settled_at, idempotency_key) values (%L, gen_random_uuid(), %L, 100, now(), 'direta-123')$q$, org, acc)), 'insert direto de baixa';
-  assert test.throws(format($q$insert into public.financial_entries (organization_id, entry_type, description, amount_cents, issue_date, due_date, competence_date) values (%L, 'payable', 'direto', 100, current_date, current_date, current_date)$q$, org)), 'insert direto de título';
+  assert test.throws(format($q$insert into public.financial_entries (organization_id, entry_type, description, amount_cents, issue_date, due_date, competence_date) values (%L, 'payable', 'direto', 100, test.today(), test.today(), test.today())$q$, org)), 'insert direto de título';
   assert test.throws(format($q$insert into public.audit_log (organization_id, action, entity) values (%L, 'x', 'y')$q$, org)), 'auditoria não é gravável';
   raise notice 'PASS: escrita direta em contas, livro, baixas e títulos negada até ao dono';
 end $$;
@@ -175,13 +176,13 @@ reset role;
 do $$
 declare org uuid := current_setting('t.org')::uuid; e uuid; i uuid;
 begin
-  e := public.fin_create_entry(org, 'receivable', 'Serviço de consultoria', current_setting('t.cust')::uuid, null, null, 100000, current_date - 10, current_date - 10, current_date + 5, 2, 'monthly', null, 'entry-key-001');
+  e := public.fin_create_entry(org, 'receivable', 'Serviço de consultoria', current_setting('t.cust')::uuid, null, null, 100000, test.today() - 10, test.today() - 10, test.today() + 5, 2, 'monthly', null, 'entry-key-001');
   select id into i from public.financial_installments where entry_id = e and installment_number = 1;
   perform set_config('t.entry', e::text, true); perform set_config('t.inst', i::text, true);
   assert test.errmsg(format($q$select public.fin_settle_installment(%L, %L, 1000, now(), 'pix', null, 'settle-key-na-1')$q$, i, current_setting('t.acc1'))) like '%sem permissão%', 'analista não faz baixa';
   assert test.errmsg(format($q$select public.fin_create_transfer(%L, %L, %L, 100, now(), null, 'transfer-key-na-1')$q$, org, current_setting('t.acc1'), current_setting('t.acc2'))) like '%sem permissão%', 'analista não transfere';
   assert test.errmsg(format($q$select public.fin_cancel_entry(%L, 'cancelamento pelo analista')$q$, e)) like '%sem permissão%', 'analista não cancela título';
-  assert test.errmsg(format($q$select public.fin_set_opening_balance(%L, 1, current_date - 100, 'tentativa do analista')$q$, current_setting('t.acc1'))) like '%sem permissão%', 'analista não altera saldo inicial';
+  assert test.errmsg(format($q$select public.fin_set_opening_balance(%L, 1, test.today() - 100, 'tentativa do analista')$q$, current_setting('t.acc1'))) like '%sem permissão%', 'analista não altera saldo inicial';
   assert test.errmsg(format($q$select public.fin_create_adjustment(%L, %L, 100, 'manual', 'ajuste do analista', now(), 'adjust-key-na-1')$q$, org, current_setting('t.acc1'))) like '%sem permissão%', 'analista não ajusta saldo';
 end $$;
 reset role;
@@ -189,7 +190,7 @@ reset role;
 do $$
 declare org uuid := current_setting('t.org')::uuid;
 begin
-  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Despesa da consulta', null, null, null, 100, current_date, current_date, current_date, 1)$q$, org)) like '%sem permissão%', 'consulta não cria título';
+  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Despesa da consulta', null, null, null, 100, test.today(), test.today(), test.today(), 1)$q$, org)) like '%sem permissão%', 'consulta não cria título';
   assert test.errmsg(format($q$select public.fin_settle_installment(%L, %L, 1000, now(), 'pix', null, 'settle-key-va-1')$q$, current_setting('t.inst'), current_setting('t.acc1'))) like '%sem permissão%', 'consulta não faz baixa';
   assert test.count('select 1 from public.fin_installments_view') = 2, 'consulta enxerga os títulos';
 end $$;
@@ -201,7 +202,7 @@ begin
   s := public.fin_settle_installment(current_setting('t.inst')::uuid, current_setting('t.acc1')::uuid, 20000, now(), 'pix', null, 'settle-key-ma-1');
   perform set_config('t.settle', s::text, true);
   assert (select balance_cents from public.fin_account_balances where account_id = current_setting('t.acc1')::uuid) = 120000, 'gestão baixa e o saldo sobe';
-  assert test.errmsg(format($q$select public.fin_set_opening_balance(%L, 1, current_date - 100, 'tentativa da gestão')$q$, current_setting('t.acc1'))) like '%sem permissão%', 'gestão não altera saldo inicial (só administrador)';
+  assert test.errmsg(format($q$select public.fin_set_opening_balance(%L, 1, test.today() - 100, 'tentativa da gestão')$q$, current_setting('t.acc1'))) like '%sem permissão%', 'gestão não altera saldo inicial (só administrador)';
   assert test.affected(format($q$update public.fin_settings set timezone = 'UTC' where organization_id = %L$q$, org)) = 0, 'gestão não altera configurações';
 end $$;
 reset role;
@@ -227,9 +228,9 @@ reset role;
 do $$
 declare org uuid := current_setting('t.org')::uuid;
 begin
-  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Conta prevista de outra empresa', null, null, %L, 100, current_date, current_date, current_date, 1)$q$, org, current_setting('t.accb'))) like '%não encontrada%', 'conta prevista de outra empresa recusada';
+  assert test.errmsg(format($q$select public.fin_create_entry(%L, 'payable', 'Conta prevista de outra empresa', null, null, %L, 100, test.today(), test.today(), test.today(), 1)$q$, org, current_setting('t.accb'))) like '%não encontrada%', 'conta prevista de outra empresa recusada';
   assert test.errmsg(format($q$select public.fin_settle_installment(%L, %L, 100, now(), 'pix', null, 'settle-key-oa-x')$q$, current_setting('t.inst'), current_setting('t.accb'))) like '%inválida%', 'baixa em conta de outra empresa recusada';
-  perform public.fin_set_opening_balance(current_setting('t.acc1')::uuid, 90000, current_date - 100, 'correção após conferência do extrato');
+  perform public.fin_set_opening_balance(current_setting('t.acc1')::uuid, 90000, test.today() - 100, 'correção após conferência do extrato');
   assert (select balance_cents from public.fin_account_balances where account_id = current_setting('t.acc1')::uuid) = 110000, 'administrador corrige saldo inicial (90.000 + 20.000)';
   assert (select count(*) from public.account_opening_history where account_id = current_setting('t.acc1')::uuid) = 2, 'histórico do saldo inicial registrado';
   update public.fin_settings set alert_days_before = 5 where organization_id = org;
@@ -255,7 +256,7 @@ do $$
 begin
   assert test.throws('select * from public.financial_accounts'), 'anon sem acesso às contas';
   assert test.throws('select * from public.fin_installments_view'), 'anon sem acesso à visão de títulos';
-  assert test.throws($q$select public.fin_create_account(gen_random_uuid(), 'x', 'cash', null, 0, current_date)$q$), 'anon não executa funções';
+  assert test.throws($q$select public.fin_create_account(gen_random_uuid(), 'x', 'cash', null, 0, test.today())$q$), 'anon não executa funções';
   raise notice 'PASS: anônimo sem acesso';
 end $$;
 reset role;
