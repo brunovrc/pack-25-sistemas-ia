@@ -3,7 +3,7 @@
 25 sistemas MVP para pequenas e médias empresas, prontos para você personalizar com **Claude Code** ou **Codex**, conectar a um banco Supabase seu e publicar.
 
 > ## Estado real (2026-10-13)
-> **5 dos 25 sistemas estão validados: CRM Completo, Gestão de Propostas Comerciais, Qualificador de Leads, Pós-Venda e Reativação e Portal de Clientes B2B.** Os outros 20 estão planejados e ainda não estão disponíveis para uso. O repositório traz o catálogo, os padrões de segurança e privacidade, o núcleo (organizações, papéis, RLS e auditoria) e o CRM, com testes executados e CI verde. O status de cada sistema abaixo é lido de [catalogo/sistemas.json](catalogo/sistemas.json) e só muda após os gates de qualidade. Nada aqui promete renda ou vendas: o pack reduz tempo de desenvolvimento; implantar e vender depende de adequação, testes, hospedagem, suporte e prospecção.
+> **6 dos 25 sistemas estão validados: CRM Completo, Gestão de Propostas Comerciais, Qualificador de Leads, Pós-Venda e Reativação, Portal de Clientes B2B e Financeiro Completo.** Os outros 19 estão planejados e ainda não estão disponíveis para uso. O repositório traz o catálogo, os padrões de segurança e privacidade, o núcleo (organizações, papéis, RLS e auditoria) e o CRM, com testes executados e CI verde. O status de cada sistema abaixo é lido de [catalogo/sistemas.json](catalogo/sistemas.json) e só muda após os gates de qualidade. Nada aqui promete renda ou vendas: o pack reduz tempo de desenvolvimento; implantar e vender depende de adequação, testes, hospedagem, suporte e prospecção.
 
 ## Catálogo
 
@@ -14,7 +14,7 @@
 | 03 | **Qualificador de Leads Inteligente** — Formulários públicos com condicionais, score transparente de 0 a 100, distribuição e indicadores por campanha | Comercial | `qualificador-leads` | VALIDADO |
 | 04 | **Pós-Venda e Reativação de Clientes** — Histórico de compras, RFM transparente, oportunidades de reativação e campanhas com resultados observados | Comercial | `pos-venda` | VALIDADO |
 | 05 | **Portal de Clientes B2B** — Painel da prestadora e portal do cliente: solicitações com prazo, documentos privados, entregas e comunicados, isolado por empresa | Comercial | `portal-b2b` | VALIDADO |
-| 06 | **Financeiro Completo** — Controle de contas, categorias e fluxo de caixa com lançamentos auditáveis | Gestão | `financeiro-completo` | PLANEJADO |
+| 06 | **Financeiro Completo** — Controle de contas, categorias e fluxo de caixa com lançamentos auditáveis | Gestão | `financeiro-completo` | VALIDADO |
 | 07 | **Controle de Estoque** — Saldo confiável por depósito com movimentação auditável e alerta de mínimo | Gestão | `controle-de-estoque` | PLANEJADO |
 | 08 | **Precificação** — Cálculo transparente de preço, margem e markup com cenários comparáveis | Gestão | `precificacao` | PLANEJADO |
 | 09 | **Dashboard Executivo** — Importação de CSV com mapeamento de colunas e KPIs comparativos por período | Gestão | `dashboard-executivo` | PLANEJADO |
