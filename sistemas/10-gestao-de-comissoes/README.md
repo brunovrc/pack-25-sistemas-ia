@@ -1,30 +1,38 @@
 # Gestão de Comissões
 
-> **Status: PLANEJADO.** Este sistema ainda NÃO está implementado nem disponível para uso.
+> Cálculo de comissões comerciais **auditável**: planos versionados, faixas, rateio entre vendedores, estornos, aprovação, fechamento mensal e registro de pagamentos — sem planilha e sem folha de pagamento.
 
-**Público:** Empresas com vendedores comissionados
-**Problema:** Cálculo manual de comissão gera erro e disputa
-**Proposta:** Planos de comissão por faixa com estornos e fechamentos rastreáveis
+**Público:** empresas com vendedores comissionados · **Problema:** cálculo manual gera erro e disputa · **Proposta:** cada centavo tem memória de cálculo, histórico imutável e fechamento rastreável.
 
-## Escopo do MVP
-- Planos de comissão
-- Vendedores
-- Vendas
-- Faixas
-- Estornos
-- Fechamento de período
+## O que faz
+- **Planos de comissão versionados** (percentual, valor fixo, faixas marginal/atingida, margem, valor recebido), regras por produto, categoria, canal, equipe ou vendedor, com precedência explícita e detecção de conflito.
+- **Vendas, itens, recebimentos, devoluções e cancelamentos.** O plano de cada venda é **fixado na confirmação**: mudar a taxa depois não reescreve o passado.
+- **Motor decimal** (centavos inteiros, arredondamento meio-para-cima, rateio por maior resto) com **memória de cálculo** de cada lançamento.
+- **Livro imutável**: lançamentos nunca são editados; correções são estornos/ajustes que referenciam o original. Reprocessar é **idempotente**.
+- **Calculado ≠ aprovado ≠ pago**: aprovação (com justificativa e segregação de funções opcional), contestação do vendedor, ajustes manuais aprovados.
+- **Fechamento mensal** por vendedor, saldo devedor transportado, reabertura controlada, **pagamentos apenas registrados** (o sistema não movimenta dinheiro).
+- **Demonstrativos em PDF** versionados, **metas e bônus**, **simulador**, painel, relatórios CSV/PDF, **importação CSV** com prévia e erros por linha, notificações internas.
+- **Multiempresa com RLS** e cinco perfis: administrador, gestor (só a equipe que gere), financeiro, vendedor (só o próprio) e consulta (só agregados).
 
 ## Fora do escopo
-- Folha de pagamento
-- Pagamento automático
+Folha de pagamento, encargos trabalhistas, pagamento bancário/PIX/remessa, emissão fiscal, integração contábil automática, XLSX.
 
-## Indicadores
-- Comissão por vendedor
-- Estornos
-- Custo de comissão sobre receita
+## Começando (local)
+```bash
+pnpm install --frozen-lockfile
+supabase start && supabase db reset     # migrações + dados fictícios (NovaSales)
+cp .env.example .env.local              # preencha com `supabase status`
+pnpm dev                                # http://localhost:3000
+```
+Usuários de demonstração (senha `DemoLocal#2026`): `admin@`, `gestor@`, `gestor2@`, `financeiro@`, `vend1@`…`vend4@`, `consulta@` — todos `@demo.exemplo`. O administrador cadastra o 2º fator no primeiro acesso.
+
+## Qualidade
+`pnpm lint` · `pnpm typecheck` · `pnpm test` (motor) · `pnpm test:db` (SQL: RLS, domínio, segurança) · `pnpm test:concurrency` (sessões simultâneas reais) · `pnpm test:mutation` (quebra regras de propósito e exige que algum teste falhe) · `pnpm test:e2e` (Playwright). Detalhes e resultados em `MEMORY.md`.
+
+## Documentação
+`docs/ARCHITECTURE.md` · `COMMISSION_ENGINE.md` · `CALCULATION_RULES.md` · `TIER_RULES.md` · `ELIGIBILITY_RULES.md` · `SPLIT_RULES.md` · `REVERSALS.md` · `CLOSING_RULES.md` · `METRICS.md` · `PERMISSIONS.md` · `DATABASE.md` · `DATA_MODEL.md` · `DECISIONS.md` · `DEPLOYMENT.md` · `OPEN_SOURCE_AUDIT.md` · `FEATURES.md`.
 
 ## Privacidade (LGPD)
-Risco estimado: **médio**. Dados pessoais tratados: nome do vendedor, remuneração variável.
-Quem implanta o sistema é o controlador dos dados; este software não substitui assessoria jurídica.
+Dados pessoais tratados: **nome do vendedor e remuneração variável** (risco médio). Sem CPF, dados bancários ou endereço. Arquivos importados não são guardados. Acesso, exportação e download de demonstrativo ficam na auditoria. Quem implanta é o controlador dos dados; este software não substitui assessoria jurídica.
 
-> Valor de implantação ilustrativo e sem promessa de resultado: veja catalogo/sistemas.json.
+> Valor de implantação ilustrativo e sem promessa de resultado: veja `catalogo/sistemas.json` no repositório do Pack.
