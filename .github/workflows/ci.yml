@@ -1018,7 +1018,7 @@ jobs:
         run: node scripts/test-concurrency.mjs
 
   gestao-de-comissoes-mutation:
-    name: Gestão de Comissões (mutação das regras críticas: motor, banco e concorrência)
+    name: Gestão de Comissões (mutação das regras críticas, em motor, banco e concorrência)
     runs-on: ubuntu-latest
     timeout-minutes: 150
     steps:
