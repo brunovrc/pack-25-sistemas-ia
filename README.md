@@ -2,8 +2,8 @@
 
 25 sistemas MVP para pequenas e médias empresas, prontos para você personalizar com **Claude Code** ou **Codex**, conectar a um banco Supabase seu e publicar.
 
-> ## Estado real (2026-10-13)
-> **10 dos 25 sistemas estão validados: CRM Completo, Gestão de Propostas Comerciais, Qualificador de Leads, Pós-Venda e Reativação, Portal de Clientes B2B, Financeiro Completo, Controle de Estoque, Precificação, Dashboard Executivo e Gestão de Comissões.** Os outros 15 estão planejados e ainda não estão disponíveis para uso. O repositório traz o catálogo, os padrões de segurança e privacidade, o núcleo (organizações, papéis, RLS e auditoria) e o CRM, com testes executados e CI verde. O status de cada sistema abaixo é lido de [catalogo/sistemas.json](catalogo/sistemas.json) e só muda após os gates de qualidade. Nada aqui promete renda ou vendas: o pack reduz tempo de desenvolvimento; implantar e vender depende de adequação, testes, hospedagem, suporte e prospecção.
+> ## Estado real (2026-10-17)
+> **11 dos 25 sistemas estão validados: CRM Completo, Gestão de Propostas Comerciais, Qualificador de Leads, Pós-Venda e Reativação, Portal de Clientes B2B, Financeiro Completo, Controle de Estoque, Precificação, Dashboard Executivo, Gestão de Comissões e Agendamento Online.** Os outros 14 estão planejados e ainda não estão disponíveis para uso. O repositório traz o catálogo, os padrões de segurança e privacidade, o núcleo (organizações, papéis, RLS e auditoria) e o CRM, com testes executados e CI verde. O status de cada sistema abaixo é lido de [catalogo/sistemas.json](catalogo/sistemas.json) e só muda após os gates de qualidade. Nada aqui promete renda ou vendas: o pack reduz tempo de desenvolvimento; implantar e vender depende de adequação, testes, hospedagem, suporte e prospecção.
 
 ## Catálogo
 
@@ -19,7 +19,7 @@
 | 08 | **Precificação** — Cálculo transparente de preço, margem e markup com cenários comparáveis | Gestão | `precificacao` | VALIDADO |
 | 09 | **Dashboard Executivo** — Importação de CSV com mapeamento de colunas e KPIs comparativos por período | Gestão | `dashboard-executivo` | VALIDADO |
 | 10 | **Gestão de Comissões** — Planos de comissão por faixa com estornos e fechamentos rastreáveis | Gestão | `gestao-de-comissoes` | VALIDADO |
-| 11 | **Agendamento Online** — Reserva pública com disponibilidade real, bloqueios e reagendamento | Operações | `agendamento-online` | PLANEJADO |
+| 11 | **Agendamento Online** — Reserva pública com disponibilidade real, bloqueios e reagendamento | Operações | `agendamento-online` | VALIDADO |
 | 12 | **Central de Chamados** — Tickets com SLA, responsáveis, notas e métricas | Operações | `central-de-chamados` | PLANEJADO |
 | 13 | **Ordens de Serviço** — Ciclo completo da OS com checklist, peças, fotos e aceite simples | Operações | `ordens-de-servico` | PLANEJADO |
 | 14 | **Gestão de Projetos** — Quadro Kanban por projeto com prazos, responsáveis e comentários | Operações | `gestao-de-projetos` | PLANEJADO |
